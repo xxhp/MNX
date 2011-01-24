@@ -1,5 +1,8 @@
 #import "MNXAppDelegate.h"
 
+static NSString *const kPortPopUpButtonItem = @"kPortPopUpButtonItem";
+static NSString *const kDownloadItem = @"kDownloadItem";
+
 @implementation MNXAppDelegate
 
 - (void)dealloc
@@ -11,6 +14,10 @@
 
 - (void)awakeFromNib
 {
+	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"toolbar"] autorelease];
+	[toolbar setDelegate:self];
+	[window setToolbar:toolbar];	
+	
 	[tracksTableView setDataSource:self];
 	[tracksTableView setDelegate:self];
 	[pointsTableView setDataSource:self];
@@ -20,9 +27,28 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification 
 {
-	// Insert code here to initialize your application 
 	dataManager = [[MNXDataManager alloc] init];
 	dataManager.delegate = self;
+	[self updatePorts];
+}
+
+#pragma mark -
+
+- (void)updatePorts
+{
+	NSArray *ports = [[AMSerialPortList sharedPortList] serialPorts];
+	NSMutableArray *a = [NSMutableArray array];
+	for (AMSerialPort *p in ports) {
+		if ([[p type] isEqualToString:[NSString stringWithUTF8String:kIOSerialBSDModemType]]) {
+			[a addObject:p];
+		}
+	}
+	
+	[portListArrayController setContent:[NSMutableArray arrayWithArray:a]];	
+}
+
+- (IBAction)download:(id)sender
+{
 	[dataManager downloadDataFromDevice];
 }
 
@@ -78,7 +104,6 @@
 			MNXTrack *aTrack = [dataManager.tracks objectAtIndex:selectedRow];
 			self.currentTrack = aTrack;
 			[pointsTableView reloadData];
-			NSLog(@"%@", [self.currentTrack HTML]);
 			[[webView mainFrame] loadHTMLString:[self.currentTrack HTML] baseURL:nil];
 		}
 	}
@@ -109,7 +134,48 @@
 
 #pragma mark -
 
+#pragma mark -
+
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag;
+{
+	if ([itemIdentifier isEqualToString:kPortPopUpButtonItem]) {
+		NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:kPortPopUpButtonItem] autorelease];
+		[item setLabel:@"Device"];
+		[item setToolTip:@"Device"];
+		[item setView:portPopUpButton];
+		[item setMaxSize:NSMakeSize(200.0, 32.0)];
+		[item setMinSize:NSMakeSize(120.0, 32.0)];
+		return item;
+	}
+	if ([itemIdentifier isEqualToString:kDownloadItem]) {
+		NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:kDownloadItem] autorelease];
+		[item setLabel:@"Download"];
+		[item setToolTip:@"Download"];
+		[item setTarget:self];
+		[item setAction:@selector(download:)];
+		return item;
+	}
+	
+	return nil;
+}
+
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
+{
+	return [NSArray arrayWithObjects:kPortPopUpButtonItem, kDownloadItem, nil];
+}
+
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
+{
+	return [NSArray arrayWithObjects:kPortPopUpButtonItem, kDownloadItem, nil];
+}
+
+
+#pragma mark -
+
 @synthesize currentTrack;
 @synthesize window, tracksTableView, pointsTableView, webView;
+@synthesize sheetWindow, messageLabel, progressIndicator;
+@synthesize portListArrayController;
+@synthesize portPopUpButton;
 
 @end
