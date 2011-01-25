@@ -134,7 +134,8 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 - (id)tableView:(NSTableView *)inTableView objectValueForTableColumn:(NSTableColumn *)inTableColumn row:(NSInteger)inRow
 {
 	if (inTableView == tracksTableView) {
-		return @"Track";
+		MNXTrack *track = [dataManager.tracks objectAtIndex:inRow];
+		return [track title];
 	}
 	else if (inTableView == pointsTableView) {
 		NSString *ci = [inTableColumn identifier];
@@ -256,6 +257,7 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 	}
 	if ([itemIdentifier isEqualToString:kDownloadItem]) {
 		NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:kDownloadItem] autorelease];
+		[item setImage:[NSImage imageNamed:@"download"]];
 		[item setLabel:@"Download"];
 		[item setToolTip:@"Download"];
 		[item setTarget:self];

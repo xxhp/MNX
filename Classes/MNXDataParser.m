@@ -28,7 +28,7 @@ static NSUInteger intFromBoolArray(NSArray *array)
 
 @implementation MNXDataParser
 
-- (void) dealloc
+- (void)dealloc
 {
 	[calendar release];
 	[delegate release];

@@ -20,18 +20,29 @@
 
 - (NSString *)title
 {
-	return nil;
+	if (![pointArray count]) {
+		return @"Empty Track";
+	}
+	
+	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+	[formatter setDateStyle:NSDateFormatterShortStyle];
+	[formatter setTimeStyle:NSDateFormatterShortStyle];
+	MNXPoint *point = [pointArray objectAtIndex:0];
+	return [formatter stringFromDate:point.date];
 }
 
 - (NSData *)GPXData
 {
 	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
 	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en"] autorelease]];
-	[formatter setDateFormat:@"yyyy-MM-dd'T'hh:mm:ssZ"];
+	[formatter setDateFormat:@"yyyy-MM-dd'T'hh:mm:ss'Z'"];
 	
 	NSXMLElement *root = (NSXMLElement *)[NSXMLNode elementWithName:@"gpx"];
 	[root addNamespace:[NSXMLNode namespaceWithName:@"xsi" stringValue:@"http://www.w3.org/2001/XMLSchema-instance"]];
-	[root addAttribute:[NSXMLNode attributeWithName:@"xsi:schemaLocation" stringValue:@"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd"]];
+	[root addNamespace:[NSXMLNode namespaceWithName:@"gpxx" stringValue:@"http://www.garmin.com/xmlschemas/GpxExtensions/v3"]];
+	[root addNamespace:[NSXMLNode namespaceWithName:@"gpxtpx" stringValue:@"http://www.garmin.com/xmlschemas/TrackPointExtension/v1"]];
+	
+	[root addAttribute:[NSXMLNode attributeWithName:@"xsi:schemaLocation" stringValue:@"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd"]];
 	[root addAttribute:[NSXMLNode attributeWithName:@"version" stringValue:@"1.1"]];
 	[root addAttribute:[NSXMLNode attributeWithName:@"creator" stringValue:@"MNX"]];
 	
@@ -51,13 +62,12 @@
 		NSXMLElement *trkpt = [NSXMLNode elementWithName:@"trkpt"];
 		[trkpt addChild:time];
 		[trkpt addChild:ele];
+		[trkpt addAttribute:lat];	
 		[trkpt addAttribute:lon];
-		[trkpt addAttribute:lat];
 		[trkseg addChild:trkpt];
 	}
 	[trk addChild:trkseg];
 	NSData *data = [xml XMLData];
-	[data writeToFile:@"/tmp/a.gpx" atomically:YES];
 	return data;
 }
 

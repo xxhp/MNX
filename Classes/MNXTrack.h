@@ -5,6 +5,7 @@
 	NSMutableArray *pointArray;
 }
 
+- (NSString *)title;
 - (NSData *)GPXData;
 - (NSString *)HTML;
 

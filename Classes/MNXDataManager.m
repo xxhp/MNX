@@ -20,6 +20,10 @@
 		[operationQueue setMaxConcurrentOperationCount:1];
 		dataParser = [[MNXDataParser alloc] init];
 		dataParser.delegate = self;
+		
+		NSString *path = [[NSBundle mainBundle] pathForResource:@"data" ofType:@"dat"];
+		NSData *data = [NSData dataWithContentsOfFile:path];
+		[dataParser parseData:data logSize:354608];
 	}
 	return self;
 }

@@ -26,6 +26,7 @@
 		D4520BE712EE275800FF0DA2 /* AMStandardEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = D4520BE112EE275800FF0DA2 /* AMStandardEnumerator.m */; };
 		D4520BED12EE277000FF0DA2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4520BEC12EE277000FF0DA2 /* IOKit.framework */; };
 		D45211D612EEF57E00FF0DA2 /* MNXDataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = D45211D512EEF57E00FF0DA2 /* MNXDataParser.m */; };
+		D452124712EF03FA00FF0DA2 /* download.png in Resources */ = {isa = PBXBuildFile; fileRef = D452124612EF03FA00FF0DA2 /* download.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,6 +69,7 @@
 		D4520BEC12EE277000FF0DA2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		D45211D412EEF57E00FF0DA2 /* MNXDataParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXDataParser.h; sourceTree = "<group>"; };
 		D45211D512EEF57E00FF0DA2 /* MNXDataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXDataParser.m; sourceTree = "<group>"; };
+		D452124612EF03FA00FF0DA2 /* download.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = download.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +139,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D452124512EF03F900FF0DA2 /* Images */,
 				D452075A12EDC7F000FF0DA2 /* Test Data */,
 				8D1107310486CEB800E47090 /* MNX-Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
@@ -218,6 +221,14 @@
 			path = AMSerialPort;
 			sourceTree = "<group>";
 		};
+		D452124512EF03F900FF0DA2 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				D452124612EF03FA00FF0DA2 /* download.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -271,6 +282,7 @@
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				D452075C12EDC7F000FF0DA2 /* data.dat in Resources */,
+				D452124712EF03FA00FF0DA2 /* download.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
