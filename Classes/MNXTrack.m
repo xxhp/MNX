@@ -17,7 +17,6 @@ CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 	CGFloat theta = lon1 - lon2;
 	CGFloat dist = sin(degreeToRadian(lat1)) * sin(degreeToRadian(lat2)) + cos(degreeToRadian(lat1)) * cos(degreeToRadian(lat2)) * cos(degreeToRadian(theta));
 	dist = acos(dist) * 6373.0;
-	NSLog(@"dist:%f", dist);
 	return dist;
 }
 						
@@ -212,21 +211,21 @@ CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 	strokeOpacity: 1.0,\n\
 	strokeWeight: 3\n\
 	}\n\
-	poly = new google.maps.Polyline(polyOptions);\n\
+	var poly = new google.maps.Polyline(polyOptions);\n\
 	poly.setMap(map);\n\
 	%@\n\
 	}\n\
 	</script>\
 	<style type=\"text/css\" media=\"screen\">\n\
 	#map {\n\
-		width: 100%;\n\
-		min-height: 500px;\n\
-		height: 100%;\n\
+		width: 100%%;\n\
+		// min-height: 500px;\n\
+		height: 100%%;\n\
 	}\n\
-	body {\n\
-	width: 100%;\n\
-	min-height: 500px;\n\
-	height: 100%;\n\
+	body, html {\n\
+	width: 100%%;\n\
+	// min-height: 500px;\n\
+	height: 100%%;\n\
 	margin: 0;\n\
 		padding: 0;\n\
 	}\n\
@@ -264,10 +263,16 @@ CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 			left = point.longitude;
 		}		
 	}
+	NSString *boundsString = [NSString stringWithFormat:@"var bounds = new google.maps.LatLngBounds(new google.maps.LatLng(%f, %f), new google.maps.LatLng(%f, %f));\n", top, left, bottom, right];
+	[addLineString appendString:boundsString];
+	[addLineString appendString:@"map.fitBounds(bounds);\n"];
 	
 	NSString *HTML = [NSString stringWithFormat:template, (bottom + (top - bottom) / 2.0),
 					  (right + (left - right) / 2.0),
 					  addLineString];
+	
+	NSLog(HTML);
+	
 	return HTML;
 }
 

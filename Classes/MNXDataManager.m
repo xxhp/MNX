@@ -45,6 +45,16 @@
 		[o cancel];
 	}
 }
+- (NSString *)tempFilePathWithExtension:(NSString *)ext
+{
+	CFUUIDRef uuid = CFUUIDCreate(NULL);
+	CFStringRef uuidString = CFUUIDCreateString(NULL, uuid);
+	if ([ext length]) {
+		uuidString = [uuidString stringByAppendingPathExtension:ext];
+	}
+	NSString *tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:(NSString *)uuidString];
+	return tempPath;
+}
 
 #pragma mark -
 

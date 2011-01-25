@@ -23,7 +23,6 @@
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="582"/>
 			<integer value="578"/>
-			<integer value="548"/>
 			<integer value="81"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
@@ -249,9 +248,17 @@
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
-								<object class="NSMenuItem" id="634484266">
+								<object class="NSMenuItem" id="785347063">
 									<reference key="NSMenu" ref="720053764"/>
 									<string key="NSTitle">Export As KML File…</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="35465992"/>
+									<reference key="NSMixedImage" ref="502551668"/>
+								</object>
+								<object class="NSMenuItem" id="568925698">
+									<reference key="NSMenu" ref="720053764"/>
+									<string key="NSTitle">Open In Google Earth</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="35465992"/>
@@ -812,7 +819,7 @@
 				<nil key="NSViewClass"/>
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<object class="NSView" key="NSWindowView" id="439893737">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -945,7 +952,6 @@
 											</object>
 											<string key="NSFrame">{{0, 17}, {221, 697}}</string>
 											<reference key="NSSuperview" ref="199477437"/>
-											<reference key="NSNextKeyView" ref="814106564"/>
 											<reference key="NSDocView" ref="814106564"/>
 											<reference key="NSBGColor" ref="566594958"/>
 											<int key="NScvFlags">4</int>
@@ -979,7 +985,6 @@
 											</object>
 											<string key="NSFrameSize">{221, 17}</string>
 											<reference key="NSSuperview" ref="199477437"/>
-											<reference key="NSNextKeyView" ref="995144370"/>
 											<reference key="NSDocView" ref="995144370"/>
 											<reference key="NSBGColor" ref="566594958"/>
 											<int key="NScvFlags">4</int>
@@ -988,7 +993,6 @@
 									</object>
 									<string key="NSFrameSize">{221, 714}</string>
 									<reference key="NSSuperview" ref="851828818"/>
-									<reference key="NSNextKeyView" ref="512850710"/>
 									<int key="NSsFlags">560</int>
 									<reference key="NSVScroller" ref="138642065"/>
 									<reference key="NSHScroller" ref="1048908405"/>
@@ -1192,7 +1196,6 @@
 													</object>
 													<string key="NSFrame">{{0, 17}, {665, 317}}</string>
 													<reference key="NSSuperview" ref="143728523"/>
-													<reference key="NSNextKeyView" ref="526958730"/>
 													<reference key="NSDocView" ref="526958730"/>
 													<reference key="NSBGColor" ref="566594958"/>
 													<int key="NScvFlags">4</int>
@@ -1225,7 +1228,6 @@
 													</object>
 													<string key="NSFrameSize">{665, 17}</string>
 													<reference key="NSSuperview" ref="143728523"/>
-													<reference key="NSNextKeyView" ref="832663933"/>
 													<reference key="NSDocView" ref="832663933"/>
 													<reference key="NSBGColor" ref="566594958"/>
 													<int key="NScvFlags">4</int>
@@ -1234,7 +1236,6 @@
 											</object>
 											<string key="NSFrameSize">{665, 334}</string>
 											<reference key="NSSuperview" ref="994146420"/>
-											<reference key="NSNextKeyView" ref="638548205"/>
 											<int key="NSsFlags">560</int>
 											<reference key="NSVScroller" ref="661339938"/>
 											<reference key="NSHScroller" ref="37109425"/>
@@ -1269,7 +1270,6 @@
 											</object>
 											<string key="NSFrame">{{0, 344}, {665, 370}}</string>
 											<reference key="NSSuperview" ref="994146420"/>
-											<reference key="NSNextKeyView"/>
 											<string key="FrameName"/>
 											<string key="GroupName"/>
 											<object class="WebPreferences" key="Preferences">
@@ -1306,7 +1306,6 @@
 						</object>
 					</object>
 					<string key="NSFrameSize">{887, 714}</string>
-					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
@@ -1956,9 +1955,17 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">exportKML:</string>
 						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="634484266"/>
+						<reference key="destination" ref="785347063"/>
 					</object>
 					<int key="connectionID">616</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">googleEarth:</string>
+						<reference key="source" ref="976324537"/>
+						<reference key="destination" ref="568925698"/>
+					</object>
+					<int key="connectionID">618</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2051,7 +2058,8 @@
 							<reference ref="288262818"/>
 							<reference ref="505159314"/>
 							<reference ref="573993170"/>
-							<reference ref="634484266"/>
+							<reference ref="785347063"/>
+							<reference ref="568925698"/>
 						</object>
 						<reference key="parent" ref="379814623"/>
 					</object>
@@ -2889,7 +2897,12 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">615</int>
-						<reference key="object" ref="634484266"/>
+						<reference key="object" ref="785347063"/>
+						<reference key="parent" ref="720053764"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">617</int>
+						<reference key="object" ref="568925698"/>
 						<reference key="parent" ref="720053764"/>
 					</object>
 				</object>
@@ -3103,6 +3116,7 @@
 					<string>608.IBPluginDependency</string>
 					<string>609.IBPluginDependency</string>
 					<string>615.IBPluginDependency</string>
+					<string>617.IBPluginDependency</string>
 					<string>73.IBPluginDependency</string>
 					<string>73.ImportedFromIB2</string>
 					<string>81.IBEditorWindowLastContentRect</string>
@@ -3236,9 +3250,9 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{123, 152}, {887, 714}}</string>
+					<string>{{123, 229}, {887, 714}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{123, 152}, {887, 714}}</string>
+					<string>{{123, 229}, {887, 714}}</string>
 					<integer value="1"/>
 					<string>{{33, 99}, {480, 360}}</string>
 					<string>{3.40282e+38, 3.40282e+38}</string>
@@ -3330,8 +3344,9 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{164, 713}, {218, 123}}</string>
+					<string>{{164, 693}, {222, 143}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{145, 474}, {199, 203}}</string>
@@ -3357,7 +3372,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">616</int>
+			<int key="maxID">618</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

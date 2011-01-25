@@ -144,6 +144,25 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 
 - (IBAction)googleEarth:(id)sender
 {
+	NSWorkspace *space = [NSWorkspace sharedWorkspace];
+	NSString *path = [space absolutePathForAppBundleWithIdentifier:@"com.Google.GoogleEarthPlus"];
+	if (!path) {
+		NSAlert *alert = [NSAlert alertWithMessageText:@"Google Earth is not installed." defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:@"Please install Google Earth."];
+		[alert beginSheetModalForWindow:window modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+		return;
+	}
+	
+	if ([tracksTableView selectedRow] < 0) {
+		return;
+	}
+	if (![dataManager.tracks count]) {
+		return;
+	}	
+	MNXTrack *aTrack = [dataManager.tracks objectAtIndex:[tracksTableView selectedRow]];	
+	
+	NSString *filePath = [dataManager tempFilePathWithExtension:@"kml"];
+	[[aTrack KMLData] writeToURL:[NSURL fileURLWithPath:filePath] atomically:YES];
+	[space openFile:filePath withApplication:@"Google Earth"];
 }
 - (IBAction)showWindow:(id)sender
 {
@@ -383,7 +402,8 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 		return NO;
 	}
 	if ([menuItem action] == @selector(exportGPX:) ||
-		[menuItem action] == @selector(exportKML:)
+		[menuItem action] == @selector(exportKML:) ||
+		[menuItem action] == @selector(googleEarth:)
 		) {
 		if ([tracksTableView selectedRow] < 0) {
 			return NO;
@@ -404,7 +424,18 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	}
 	if ([window attachedSheet]) {
 		return NO;
-	}	
+	}
+	if ([theItem action] == @selector(exportGPX:) ||
+		[theItem action] == @selector(exportKML:) ||
+		[theItem action] == @selector(googleEarth:)
+		) {
+		if ([tracksTableView selectedRow] < 0) {
+			return NO;
+		}
+		if (![dataManager.tracks count]) {
+			return NO;
+		}		
+	}
 	return YES;
 }
 
