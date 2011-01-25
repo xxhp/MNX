@@ -19,5 +19,6 @@
 - (void)parseData:(NSData *)inData logSize:(NSUInteger)logSize;
 
 @property (assign, nonatomic) id <MNXDataParserDelegate> delegate;
+@property (retain, nonatomic) NSTimeZone *timeZone;
 
 @end

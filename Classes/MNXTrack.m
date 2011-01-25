@@ -2,17 +2,17 @@
 #import "MNXPoint.h"
 #include <math.h>
 
-CGFloat degreeToRadian(CGFloat degree)
+static CGFloat degreeToRadian(CGFloat degree)
 {
 	return (CGFloat)(degree * M_PI / 180.0);
 }
 
-CGFloat radianToDegree(CGFloat radian)
+static CGFloat radianToDegree(CGFloat radian)
 {
 	return (CGFloat)(radian / M_PI * 180);
 }
 
-CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
+static CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 {
 	CGFloat theta = lon1 - lon2;
 	CGFloat dist = sin(degreeToRadian(lat1)) * sin(degreeToRadian(lat2)) + cos(degreeToRadian(lat1)) * cos(degreeToRadian(lat2)) * cos(degreeToRadian(theta));
@@ -55,7 +55,8 @@ CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 {
 	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
 	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en"] autorelease]];
-	[formatter setDateFormat:@"yyyy-MM-dd'T'hh:mm:ss'Z'"];
+	[formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
+	[formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
 	
 	NSXMLElement *root = (NSXMLElement *)[NSXMLNode elementWithName:@"gpx"];	
 	[root addNamespace:[NSXMLNode namespaceWithName:@"" stringValue:@"http://www.topografix.com/GPX/1/1"]];
@@ -95,7 +96,9 @@ CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 {
 	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
 	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en"] autorelease]];
-	[formatter setDateFormat:@"yyyy-MM-dd'T'hh:mm:ss'Z'"];
+	[formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
+	[formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+	
 	NSXMLElement *root = (NSXMLElement *)[NSXMLNode elementWithName:@"kml"];
 	[root addNamespace:[NSXMLNode namespaceWithName:@"" stringValue:@"http://www.opengis.net/kml/2.2"]];
 	[root addNamespace:[NSXMLNode namespaceWithName:@"gx" stringValue:@"http://www.google.com/kml/ext/2.2"]];
@@ -185,9 +188,7 @@ CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 	
 	NSData *data = [xml XMLData];
 	return data;
-
 }
-
 
 - (NSString *)HTML
 {
@@ -207,9 +208,9 @@ CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 	};\n\
 	var map = new google.maps.Map(document.getElementById(\"map\"), myOptions);\n\
 	var polyOptions = {\n\
-	strokeColor: '#000000',\n\
+	strokeColor: '#6666aa',\n\
 	strokeOpacity: 1.0,\n\
-	strokeWeight: 3\n\
+	strokeWeight: 6\n\
 	}\n\
 	var poly = new google.maps.Polyline(polyOptions);\n\
 	poly.setMap(map);\n\
@@ -278,11 +279,49 @@ CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 - (void)setPoints:(NSArray *)inPoints
 {
 	[pointArray setArray:inPoints];
+	if ([pointArray count] < 1) {
+		totalDistance = 0.0;
+		duration = 0.0;
+		averagePaceKM = 0.0;
+		averageSpeedKM = 0.0;
+		return;
+	}
+	CGFloat newDistamce = 0.0;
+	for (NSInteger i = 1; i < [pointArray count]; i++) {
+		MNXPoint *currentPoint = [pointArray objectAtIndex:i];
+		MNXPoint *previousPoint = [pointArray objectAtIndex:i - 1];
+		CGFloat aDistance = distance(currentPoint.latitude, currentPoint.longitude, previousPoint.latitude, previousPoint.longitude);
+		newDistamce += aDistance;
+	}
+	MNXPoint *firstPoint = [pointArray objectAtIndex:0];
+	MNXPoint *lastPoint = [pointArray lastObject];
+	NSTimeInterval newDuration = [lastPoint.date timeIntervalSinceDate:firstPoint.date];
+	self.totalDistance = newDistamce;
+	self.duration = newDuration;
+	if (newDistamce > 0.0) {
+		self.averagePaceKM = newDuration / newDistamce;
+	}
+	else {
+		self.averagePaceKM = 0.0;
+	}
+	if (newDuration) {
+		self.averageSpeedKM = (newDistamce / newDuration) * 60.0 * 60.0;
+	}
+	else {
+		self.averageSpeedKM = 0.0;
+	}
+//	NSLog(@"%f %f %f %f", totalDistance, duration, averagePaceKM, averageSpeedKM);
 }
 
 - (NSArray *)points
 {
 	return [[pointArray copy] autorelease];
 }
+
+
+@synthesize totalDistance;
+@synthesize duration;
+@synthesize averagePaceKM;
+@synthesize averageSpeedKM;
 
 @end

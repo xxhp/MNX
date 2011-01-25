@@ -53,9 +53,13 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@"Devices"] autorelease];
 	NSUInteger tag = 0;
 	for (AMSerialPort *p in a) {
-		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:[p name] action:@selector(selectDevice:) keyEquivalent:@""];
+		NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:[p name] action:@selector(selectDevice:) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
 		[menuItem setTag:tag++];
+		[menu addItem:menuItem];
+	}
+	if (![a count]) {
+		NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:@"No Device" action:NULL keyEquivalent:@""] autorelease];	
 		[menu addItem:menuItem];
 	}
 	[deviceListMenuItem setSubmenu:menu];
@@ -70,6 +74,20 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAddPorts:) name:AMSerialPortListDidAddPortsNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRemovePorts:) name:AMSerialPortListDidRemovePortsNotification object:nil];
+}
+- (void)applicationDidBecomeActive:(NSNotification *)notification
+{
+	if (![window isVisible]) {
+		[window makeKeyAndOrderFront:self];
+	}
+}
+- (NSMenu *)applicationDockMenu:(NSApplication *)sender
+{
+	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@"Dock Menu"] autorelease];
+	NSMenuItem *mainItem = [[[NSMenuItem alloc] initWithTitle:@"MNX" action:@selector(showWindow:) keyEquivalent:@""] autorelease];
+	[mainItem setTarget:self];
+	[menu addItem:mainItem];
+	return menu;
 }
 
 #pragma mark -
@@ -246,7 +264,10 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 			self.currentTrack = aTrack;
 			[pointsTableView reloadData];
 			[[webView mainFrame] loadHTMLString:[self.currentTrack HTML] baseURL:nil];
-			[aTrack KMLData];
+			if ([self.currentTrack.points count]) {
+				[pointsTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+				[pointsTableView scrollRowToVisible:0];
+			}			
 		}
 	}
 }

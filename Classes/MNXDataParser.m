@@ -172,6 +172,19 @@ static NSUInteger intFromBoolArray(NSArray *array)
 	free(p);
 }
 
+- (void)setTimeZone:(NSTimeZone *)inTimeZone
+{
+	if (!inTimeZone) {
+		inTimeZone = [NSTimeZone systemTimeZone];
+	}
+	[calendar setTimeZone:inTimeZone];
+}
+
+- (NSTimeZone *)timeZone
+{
+	return [calendar timeZone];
+}
+
 @synthesize delegate;
 
 @end
