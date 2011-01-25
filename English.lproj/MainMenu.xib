@@ -21,9 +21,10 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="578"/>
 			<integer value="582"/>
-			<integer value="29"/>
+			<integer value="578"/>
+			<integer value="548"/>
+			<integer value="81"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -242,7 +243,15 @@
 								</object>
 								<object class="NSMenuItem" id="873520021">
 									<reference key="NSMenu" ref="720053764"/>
-									<string key="NSTitle">Export as GPX File</string>
+									<string key="NSTitle">Export As GPX File…</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="35465992"/>
+									<reference key="NSMixedImage" ref="502551668"/>
+								</object>
+								<object class="NSMenuItem" id="634484266">
+									<reference key="NSMenu" ref="720053764"/>
+									<string key="NSTitle">Export As KML File…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="35465992"/>
@@ -803,7 +812,7 @@
 				<nil key="NSViewClass"/>
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<object class="NSView" key="NSWindowView" id="439893737">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1297,6 +1306,7 @@
 						</object>
 					</object>
 					<string key="NSFrameSize">{887, 714}</string>
+					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
@@ -1942,6 +1952,14 @@
 					</object>
 					<int key="connectionID">614</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">exportKML:</string>
+						<reference key="source" ref="976324537"/>
+						<reference key="destination" ref="634484266"/>
+					</object>
+					<int key="connectionID">616</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -2033,6 +2051,7 @@
 							<reference ref="288262818"/>
 							<reference ref="505159314"/>
 							<reference ref="573993170"/>
+							<reference ref="634484266"/>
 						</object>
 						<reference key="parent" ref="379814623"/>
 					</object>
@@ -2868,6 +2887,11 @@
 						<reference key="object" ref="251178307"/>
 						<reference key="parent" ref="835318025"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">615</int>
+						<reference key="object" ref="634484266"/>
+						<reference key="parent" ref="720053764"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -3078,6 +3102,7 @@
 					<string>607.IBPluginDependency</string>
 					<string>608.IBPluginDependency</string>
 					<string>609.IBPluginDependency</string>
+					<string>615.IBPluginDependency</string>
 					<string>73.IBPluginDependency</string>
 					<string>73.ImportedFromIB2</string>
 					<string>81.IBEditorWindowLastContentRect</string>
@@ -3304,8 +3329,9 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{164, 733}, {200, 103}}</string>
+					<string>{{164, 713}, {218, 123}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{145, 474}, {199, 203}}</string>
@@ -3331,7 +3357,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">614</int>
+			<int key="maxID">616</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3346,12 +3372,14 @@
 							<string>cancelDownload:</string>
 							<string>download:</string>
 							<string>exportGPX:</string>
+							<string>exportKML:</string>
 							<string>googleEarth:</string>
 							<string>selectDevice:</string>
 							<string>showWindow:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3367,6 +3395,7 @@
 							<string>cancelDownload:</string>
 							<string>download:</string>
 							<string>exportGPX:</string>
+							<string>exportKML:</string>
 							<string>googleEarth:</string>
 							<string>selectDevice:</string>
 							<string>showWindow:</string>
@@ -3383,6 +3412,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">exportGPX:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">exportKML:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">

@@ -7,6 +7,7 @@
 
 - (NSString *)title;
 - (NSData *)GPXData;
+- (NSData *)KMLData;
 - (NSString *)HTML;
 
 @property (readonly, nonatomic) NSString *title;

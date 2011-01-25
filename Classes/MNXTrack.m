@@ -1,5 +1,26 @@
 #import "MNXTrack.h"
 #import "MNXPoint.h"
+#include <math.h>
+
+CGFloat degreeToRadian(CGFloat degree)
+{
+	return (CGFloat)(degree * M_PI / 180.0);
+}
+
+CGFloat radianToDegree(CGFloat radian)
+{
+	return (CGFloat)(radian / M_PI * 180);
+}
+
+CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
+{
+	CGFloat theta = lon1 - lon2;
+	CGFloat dist = sin(degreeToRadian(lat1)) * sin(degreeToRadian(lat2)) + cos(degreeToRadian(lat1)) * cos(degreeToRadian(lat2)) * cos(degreeToRadian(theta));
+	dist = acos(dist) * 6373.0;
+	NSLog(@"dist:%f", dist);
+	return dist;
+}
+						
 
 @implementation MNXTrack
 
@@ -37,7 +58,8 @@
 	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en"] autorelease]];
 	[formatter setDateFormat:@"yyyy-MM-dd'T'hh:mm:ss'Z'"];
 	
-	NSXMLElement *root = (NSXMLElement *)[NSXMLNode elementWithName:@"gpx"];
+	NSXMLElement *root = (NSXMLElement *)[NSXMLNode elementWithName:@"gpx"];	
+	[root addNamespace:[NSXMLNode namespaceWithName:@"" stringValue:@"http://www.topografix.com/GPX/1/1"]];
 	[root addNamespace:[NSXMLNode namespaceWithName:@"xsi" stringValue:@"http://www.w3.org/2001/XMLSchema-instance"]];
 	[root addNamespace:[NSXMLNode namespaceWithName:@"gpxx" stringValue:@"http://www.garmin.com/xmlschemas/GpxExtensions/v3"]];
 	[root addNamespace:[NSXMLNode namespaceWithName:@"gpxtpx" stringValue:@"http://www.garmin.com/xmlschemas/TrackPointExtension/v1"]];
@@ -70,6 +92,103 @@
 	NSData *data = [xml XMLData];
 	return data;
 }
+- (NSData *)KMLData
+{
+	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en"] autorelease]];
+	[formatter setDateFormat:@"yyyy-MM-dd'T'hh:mm:ss'Z'"];
+	NSXMLElement *root = (NSXMLElement *)[NSXMLNode elementWithName:@"kml"];
+	[root addNamespace:[NSXMLNode namespaceWithName:@"" stringValue:@"http://www.opengis.net/kml/2.2"]];
+	[root addNamespace:[NSXMLNode namespaceWithName:@"gx" stringValue:@"http://www.google.com/kml/ext/2.2"]];
+	[root addNamespace:[NSXMLNode namespaceWithName:@"kml" stringValue:@"http://www.opengis.net/kml/2.2"]];
+	[root addNamespace:[NSXMLNode namespaceWithName:@"atom" stringValue:@"http://www.w3.org/2005/Atom"]];
+	
+	NSXMLDocument *xml = [[[NSXMLDocument alloc] initWithRootElement:root] autorelease];
+	[xml setVersion:@"1.0"];
+	[xml setCharacterEncoding:@"UTF-8"];
+	NSXMLElement *document = (NSXMLElement *)[NSXMLNode elementWithName:@"Document"];
+	[root addChild:document];
+
+	[document addChild:[NSXMLNode elementWithName:@"name" stringValue:[self title]]];
+	NSXMLElement *lookAt = (NSXMLElement *)[NSXMLNode elementWithName:@"LookAt"];
+	
+	if (![pointArray count]) {
+		NSData *data = [xml XMLData];
+		return data;
+	}
+		
+	MNXPoint *point = [pointArray objectAtIndex:0];
+	
+	CGFloat top = point.latitude;
+	CGFloat bottom = point.latitude;
+	CGFloat left = point.longitude;
+	CGFloat right = point.longitude;
+
+	for (MNXPoint *point in pointArray) {
+		if (point.latitude > top) {
+			top = point.latitude;
+		}
+		if (point.latitude < bottom) {
+			bottom = point.latitude;
+		}
+		if (point.longitude > right) {
+			right = point.longitude;
+		}
+		if (point.longitude < left) {
+			left = point.longitude;
+		}		
+	}
+	
+	NSXMLElement *style = (NSXMLElement *)[NSXMLNode elementWithName:@"Style"];
+	[style addAttribute:[NSXMLNode attributeWithName:@"id" stringValue:@"track_style"]];
+	NSXMLElement *lineStyle = (NSXMLElement *)[NSXMLNode elementWithName:@"LineStyle"];	
+	[lineStyle addChild:[NSXMLNode elementWithName:@"color" stringValue:@"99ffac59"]];
+	[lineStyle addChild:[NSXMLNode elementWithName:@"width" stringValue:@"6"]];	 
+	NSXMLElement *polyStyle = (NSXMLElement *)[NSXMLNode elementWithName:@"PolyStyle"];	
+	[polyStyle addChild:[NSXMLNode elementWithName:@"color" stringValue:@"99ffac59"]];
+	[polyStyle addChild:[NSXMLNode elementWithName:@"width" stringValue:@"6"]];	 
+
+	NSXMLElement *iconStyle = (NSXMLElement *)[NSXMLNode elementWithName:@"IconStyle"];	
+	NSXMLElement *icon = (NSXMLElement *)[NSXMLNode elementWithName:@"Icon"];
+	[icon addChild:[NSXMLNode elementWithName:@"href" stringValue:@"http://earth.google.com/images/kml-icons/track-directional/track-0.png"]];
+	[iconStyle addChild:icon];
+	
+	[style addChild:lineStyle];
+	[style addChild:polyStyle];
+	[style addChild:iconStyle];
+	[document addChild:style];
+	
+	[lookAt addChild:[NSXMLNode elementWithName:@"longitude" stringValue:[NSString stringWithFormat:@"%f", (right + (left - right) / 2.0)]]];
+	[lookAt addChild:[NSXMLNode elementWithName:@"latitude" stringValue:[NSString stringWithFormat:@"%f", (bottom + (top - bottom) / 2.0)]]];
+	[lookAt addChild:[NSXMLNode elementWithName:@"altitude" stringValue:@"0"]];
+	[lookAt addChild:[NSXMLNode elementWithName:@"heading" stringValue:@"0"]];
+	[lookAt addChild:[NSXMLNode elementWithName:@"tilt" stringValue:@"0"]];
+	CGFloat dist = distance(top, left, bottom, right);
+	NSInteger range = (NSUInteger)(dist * 1.5 * 1000);
+	[lookAt addChild:[NSXMLNode elementWithName:@"range" stringValue:[NSString stringWithFormat:@"%d", range]]];
+	[document addChild:lookAt];
+	
+	NSXMLElement *placemark = (NSXMLElement *)[NSXMLNode elementWithName:@"Placemark"];
+	[placemark addChild:[NSXMLNode elementWithName:@"styleUrl" stringValue:@"#track_style"]];
+	[placemark addChild:[NSXMLNode elementWithName:@"name" stringValue:[self title]]];
+	[placemark addChild:[NSXMLNode elementWithName:@"gx:balloonVisibility" stringValue:@"1"]];
+	NSXMLElement *track = (NSXMLElement *)[NSXMLNode elementWithName:@"gx:Track"];
+	for (MNXPoint *point in pointArray) {
+		[track addChild:[NSXMLNode elementWithName:@"when" stringValue:[formatter stringFromDate:point.date]]];		
+	}
+	for (MNXPoint *point in pointArray) {
+		NSString *line = [NSString stringWithFormat:@"%f %f %f", point.longitude, point.latitude, point.elevation];
+		[track addChild:[NSXMLNode elementWithName:@"gx:coord" stringValue:line]];		
+	}
+	
+	[placemark addChild:track];
+	[document addChild:placemark];
+	
+	NSData *data = [xml XMLData];
+	return data;
+
+}
+
 
 - (NSString *)HTML
 {

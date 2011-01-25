@@ -114,6 +114,30 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 		}		
 	}];
 }
+- (IBAction)exportKML:(id)sender
+{
+	if ([tracksTableView selectedRow] < 0) {
+		return;
+	}
+	if (![dataManager.tracks count]) {
+		return;
+	}	
+	MNXTrack *aTrack = [dataManager.tracks objectAtIndex:[tracksTableView selectedRow]];
+	
+	NSSavePanel *savePanel = [NSSavePanel savePanel];
+	[savePanel setAllowedFileTypes:[NSArray arrayWithObject:@"kml"]];
+	[savePanel setAllowsOtherFileTypes:NO];
+	[savePanel setPrompt:@"Export"];
+	[savePanel setNameFieldLabel:@"Export As:"];
+	[savePanel setNameFieldStringValue:[aTrack title]];
+	[savePanel beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
+		if (result == NSOKButton) {
+			NSURL *URL = [savePanel URL];
+			[[aTrack KMLData] writeToURL:URL atomically:YES];
+		}		
+	}];	
+}
+
 - (IBAction)googleEarth:(id)sender
 {
 }
@@ -199,6 +223,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 			self.currentTrack = aTrack;
 			[pointsTableView reloadData];
 			[[webView mainFrame] loadHTMLString:[self.currentTrack HTML] baseURL:nil];
+			[aTrack KMLData];
 		}
 	}
 }
@@ -353,7 +378,9 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	if ([window attachedSheet]) {
 		return NO;
 	}
-	if ([menuItem action] == @selector(exportGPX:)) {
+	if ([menuItem action] == @selector(exportGPX:) ||
+		[menuItem action] == @selector(exportKML:)
+		) {
 		if ([tracksTableView selectedRow] < 0) {
 			return NO;
 		}
