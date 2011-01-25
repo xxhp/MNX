@@ -1,4 +1,5 @@
 #import "MNXAppDelegate.h"
+#import "MNXTrackCell.h"
 
 static NSString *const kPortPopUpButtonItem = @"kPortPopUpButtonItem";
 static NSString *const kDownloadItem = @"kDownloadItem";
@@ -22,9 +23,14 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	[toolbar setAllowsUserCustomization:YES];
 	[window setToolbar:toolbar];
 	[window setExcludedFromWindowsMenu:YES];
+
+	MNXTrackCell *cell = [[[MNXTrackCell alloc] init] autorelease];
+	NSTableColumn *tracksColumn = [tracksTableView tableColumnWithIdentifier:@"tracks"];
+	[tracksColumn setDataCell:cell];
 	
 	[tracksTableView setDataSource:self];
 	[tracksTableView setDelegate:self];
+	
 	[pointsTableView setDataSource:self];
 	[pointsTableView setDelegate:self];
 	
@@ -93,16 +99,19 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	if (![dataManager.tracks count]) {
 		return;
 	}	
+	MNXTrack *aTrack = [dataManager.tracks objectAtIndex:[tracksTableView selectedRow]];
 	
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
 	[savePanel setAllowedFileTypes:[NSArray arrayWithObject:@"gpx"]];
 	[savePanel setAllowsOtherFileTypes:NO];
-	[savePanel beginWithCompletionHandler:^(NSInteger result) {
+	[savePanel setPrompt:@"Export"];
+	[savePanel setNameFieldLabel:@"Export As:"];
+	[savePanel setNameFieldStringValue:[aTrack title]];
+	[savePanel beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
 		if (result == NSOKButton) {
 			NSURL *URL = [savePanel URL];
-			MNXTrack *aTrack = [dataManager.tracks objectAtIndex:[tracksTableView selectedRow]];
 			[[aTrack GPXData] writeToURL:URL atomically:YES];
-		}
+		}		
 	}];
 }
 - (IBAction)googleEarth:(id)sender
@@ -114,6 +123,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 }
 
 #pragma mark -
+#pragma mark AMSerialPortListDidAddPortsNotification and AMSerialPortListDidRemovePortsNotification
 
 - (void)didAddPorts:(NSNotification *)theNotification
 {
@@ -126,6 +136,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 }
 
 #pragma mark -
+#pragma mark NSTableViewDataSource and NSTableViewDelegate
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)inTableView
 {
@@ -256,8 +267,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 }
 
 #pragma mark -
-
-#pragma mark -
+#pragma mark NSToolbarDelegate
 
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag;
 {
@@ -368,6 +378,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 }
 
 #pragma mark -
+#pragma mark Properties
 
 @synthesize currentTrack;
 @synthesize window, tracksTableView, pointsTableView, webView;

@@ -51,7 +51,7 @@
 	[xml setCharacterEncoding:@"UTF-8"];
 	NSXMLElement *trk = (NSXMLElement *)[NSXMLNode elementWithName:@"trk"];
 	[root addChild:trk];
-	NSXMLElement *name = (NSXMLElement *)[NSXMLNode elementWithName:@"name" stringValue:@"Track"];
+	NSXMLElement *name = (NSXMLElement *)[NSXMLNode elementWithName:@"name" stringValue:[self title]];
 	[trk addChild:name];
 	NSXMLElement *trkseg = (NSXMLElement *)[NSXMLNode elementWithName:@"trkseg"];
 	for (MNXPoint *point in pointArray) {
