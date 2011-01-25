@@ -582,7 +582,6 @@
 					break;
 				}
 			}
-			
 			// Reduce the timeout value by the amount of time actually spent so far
 			remainingTimeout = totalTimeout - [[NSDate date] timeIntervalSinceDate:startTime];
 		}

@@ -2,6 +2,7 @@
 #import "MNXDownloadOperation.h"
 #import "MNXPoint.h"
 #import "MNXTrack.h"
+#import "AMSerialPort.h"
 
 @class MNXDataManager;
 
@@ -13,6 +14,7 @@
 - (void)downloadManagerDidStartParsingData:(MNXDataManager *)inManager;
 - (void)downloadManager:(MNXDataManager *)inManager didFinishParsingData:(NSArray *)inTracks;
 - (void)downloadManagerCanceled:(MNXDataManager *)inManager;
+- (void)downloadManager:(MNXDataManager *)inManager didFailedWithMessage:(NSString *)message;
 
 @end
 
@@ -23,7 +25,7 @@
 	NSOperationQueue *operationQueue;
 }
 
-- (void)downloadDataFromDevice;
+- (void)downloadDataFromPort:(AMSerialPort *)inPort;
 
 @property (assign, nonatomic) id <MNXDataManagerDelegate> delegate;
 @property (readonly) NSArray *tracks;

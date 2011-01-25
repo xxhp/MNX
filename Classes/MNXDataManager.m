@@ -21,12 +21,13 @@
 	return self;
 }
 
-- (void)downloadDataFromDevice
+- (void)downloadDataFromPort:(AMSerialPort *)inPort
 {
 	if ([[operationQueue operations] count]) {
 		return;
 	}	
 	MNXDownloadOperation *o = [[[MNXDownloadOperation alloc] init] autorelease];
+	o.port = inPort;
 	o.delegate = self;
 	[operationQueue addOperation:o];
 }
@@ -65,6 +66,14 @@
 - (void)downloadOperationCanceled:(MNXDownloadOperation *)inOperation
 {
 	[(id)delegate performSelectorOnMainThread:@selector(downloadManagerDidStartParsingData:) withObject:self waitUntilDone:NO];
+}
+- (void)_didFailedWithMessage:(NSString *)message
+{
+	[delegate downloadManager:self didFailedWithMessage:message];
+}
+- (void)downloadOperation:(MNXDownloadOperation *)inOperation didFailedWithMessage:(NSString *)message
+{
+	[self performSelectorOnMainThread:@selector(_didFailedWithMessage:) withObject:message waitUntilDone:NO];
 }
 
 #pragma mark -

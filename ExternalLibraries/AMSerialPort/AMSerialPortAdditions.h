@@ -71,7 +71,6 @@
 
 - (BOOL)writeBytes:(const void *)bytes length:(NSUInteger)length error:(NSError **)error;
 
-
 - (void)readDataInBackground;
 //
 // Will send serialPortReadData: to delegate

@@ -24,16 +24,6 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 	[pointsTableView setDelegate:self];
 }
 
-
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification 
-{
-	dataManager = [[MNXDataManager alloc] init];
-	dataManager.delegate = self;
-	[self updatePorts];
-}
-
-#pragma mark -
-
 - (void)updatePorts
 {
 	NSArray *ports = [[AMSerialPortList sharedPortList] serialPorts];
@@ -47,9 +37,23 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 	[portListArrayController setContent:[NSMutableArray arrayWithArray:a]];	
 }
 
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification 
+{
+	dataManager = [[MNXDataManager alloc] init];
+	dataManager.delegate = self;
+	[self updatePorts];
+}
+
+#pragma mark -
+
 - (IBAction)download:(id)sender
 {
-	[dataManager downloadDataFromDevice];
+	if (![[portListArrayController selectedObjects] count]) {
+		return;
+	}
+	
+	AMSerialPort *port = [[portListArrayController selectedObjects] lastObject];
+	[dataManager downloadDataFromPort:port];
 }
 
 #pragma mark -
@@ -111,17 +115,48 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 
 #pragma mark -
 
+- (void)alertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+	[progressIndicator stopAnimation:self];
+	[NSApp endSheet:sheetWindow];
+	[sheetWindow orderOut:self];	
+}
+
+- (void)downloadManager:(MNXDataManager *)inManager didFailedWithMessage:(NSString *)message
+{
+	NSAlert *alert = [NSAlert alertWithMessageText:message defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:@""];
+	[alert beginSheetModalForWindow:sheetWindow modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+}
 - (void)downloadManagerDidStartDownloadingData:(MNXDataManager *)inManager
 {
+	NSLog(@"%s", __PRETTY_FUNCTION__);
+	[NSApp beginSheet:sheetWindow modalForWindow:window modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[sheetWindow orderFront:self];
+	[messageLabel setStringValue:@"Downloading data..."];
+	[progressIndicator setUsesThreadedAnimation:YES];
+	[progressIndicator setIndeterminate:YES];
+	[progressIndicator startAnimation:self];
+
 }
 - (void)downloadManager:(MNXDataManager *)inManager didDownloadData:(CGFloat)inProgress
 {
+	NSLog(@"%s %f", __PRETTY_FUNCTION__, inProgress);
+	[progressIndicator setIndeterminate:NO];
+	[progressIndicator setMaxValue:1.0];
+	[progressIndicator setMinValue:0.0];
+	[progressIndicator setDoubleValue:(double)inProgress];
+	
 }
 - (void)downloadManagerDidFinishDownloadingData:(MNXDataManager *)inManager
 {
+	NSLog(@"%s", __PRETTY_FUNCTION__);
+	[progressIndicator stopAnimation:self];
+	[NSApp endSheet:sheetWindow];
+	[sheetWindow orderOut:self];
 }
 - (void)downloadManagerDidStartParsingData:(MNXDataManager *)inManager
 {
+	NSLog(@"%s", __PRETTY_FUNCTION__);
 }
 - (void)downloadManager:(MNXDataManager *)inManager didFinishParsingData:(NSArray *)inTracks
 {
