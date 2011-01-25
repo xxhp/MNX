@@ -5,6 +5,7 @@
 - (void)dealloc
 {
 	[operationQueue release];
+	[dataParser release];
 	[tracks release];
 	[super dealloc];
 }
@@ -17,6 +18,8 @@
 		operationQueue = [[NSOperationQueue alloc] init];
 		[operationQueue setName:@"Download Operation"];
 		[operationQueue setMaxConcurrentOperationCount:1];
+		dataParser = [[MNXDataParser alloc] init];
+		dataParser.delegate = self;
 	}
 	return self;
 }
@@ -53,22 +56,10 @@
 {
 	[self performSelectorOnMainThread:@selector(_didDownloadData:) withObject:[NSNumber numberWithFloat:inProgress] waitUntilDone:NO];
 }
-- (void)downloadOperationDidFinishDownloadingData:(MNXDownloadOperation *)inOperation
+- (void)downloadOperation:(MNXDownloadOperation *)inOperation didFinishDownloadingData:(NSData *)inData logSize:(NSUInteger)logSize
 {
 	[(id)delegate performSelectorOnMainThread:@selector(downloadManagerDidFinishDownloadingData:) withObject:self waitUntilDone:NO];
-}
-- (void)downloadOperationDidStartParsingData:(MNXDownloadOperation *)inOperation
-{
-	[(id)delegate performSelectorOnMainThread:@selector(downloadManagerDidStartParsingData:) withObject:self waitUntilDone:NO];
-}
-- (void)_didFinishParsingData:(NSArray *)inTracks
-{
-	[delegate downloadManager:self didFinishParsingData:inTracks];
-}
-- (void)downloadOperation:(MNXDownloadOperation *)inOperation didFinishParsingData:(NSArray *)inTracks
-{
-	[tracks setArray:inTracks];
-	[self performSelectorOnMainThread:@selector(_didFinishParsingData:) withObject:inTracks waitUntilDone:NO];
+	[dataParser parseData:inData logSize:logSize];
 }
 - (void)downloadOperationCancelled:(MNXDownloadOperation *)inOperation
 {
@@ -81,6 +72,25 @@
 - (void)downloadOperation:(MNXDownloadOperation *)inOperation didFailedWithMessage:(NSString *)message
 {
 	[self performSelectorOnMainThread:@selector(_didFailedWithMessage:) withObject:message waitUntilDone:NO];
+}
+
+#pragma mark -
+
+- (void)dataParserDidStartParsingData:(MNXDataParser *)inParser
+{
+	[(id)delegate performSelectorOnMainThread:@selector(downloadManagerDidStartParsingData:) withObject:self waitUntilDone:NO];
+}
+- (void)_didFinishParsingData:(NSArray *)inTracks
+{
+	[delegate downloadManager:self didFinishParsingData:inTracks];
+}
+- (void)dataParser:(MNXDataParser *)inParser didFinishParsingData:(NSArray *)inTracks
+{
+	[tracks setArray:inTracks];
+	[self performSelectorOnMainThread:@selector(_didFinishParsingData:) withObject:inTracks waitUntilDone:NO];
+}
+- (void)dataParserCancelled:(MNXDataParser *)inParser
+{
 }
 
 #pragma mark -

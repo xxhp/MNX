@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "MNXDownloadOperation.h"
+#import "MNXDataParser.h"
 #import "MNXPoint.h"
 #import "MNXTrack.h"
 #import "AMSerialPort.h"
@@ -18,11 +19,12 @@
 
 @end
 
-@interface MNXDataManager : NSObject <MNXDownloadOperationDelegate>
+@interface MNXDataManager : NSObject <MNXDownloadOperationDelegate, MNXDataParserDelegate>
 {
 	id <MNXDataManagerDelegate> delegate;
 	NSMutableArray *tracks;
 	NSOperationQueue *operationQueue;
+	MNXDataParser *dataParser;
 }
 
 - (void)downloadDataFromPort:(AMSerialPort *)inPort;
