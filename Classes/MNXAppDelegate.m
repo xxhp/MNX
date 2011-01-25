@@ -106,7 +106,9 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	[savePanel setAllowsOtherFileTypes:NO];
 	[savePanel setPrompt:@"Export"];
 	[savePanel setNameFieldLabel:@"Export As:"];
-	[savePanel setNameFieldStringValue:[aTrack title]];
+	NSString *filename = [[aTrack title] stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
+	filename = [filename stringByReplacingOccurrencesOfString:@":" withString:@"-"];
+	[savePanel setNameFieldStringValue:filename];	
 	[savePanel beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
 		if (result == NSOKButton) {
 			NSURL *URL = [savePanel URL];
@@ -129,7 +131,9 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	[savePanel setAllowsOtherFileTypes:NO];
 	[savePanel setPrompt:@"Export"];
 	[savePanel setNameFieldLabel:@"Export As:"];
-	[savePanel setNameFieldStringValue:[aTrack title]];
+	NSString *filename = [[aTrack title] stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
+	filename = [filename stringByReplacingOccurrencesOfString:@":" withString:@"-"];
+	[savePanel setNameFieldStringValue:filename];
 	[savePanel beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
 		if (result == NSOKButton) {
 			NSURL *URL = [savePanel URL];
