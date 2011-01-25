@@ -271,8 +271,6 @@ CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 					  (right + (left - right) / 2.0),
 					  addLineString];
 	
-	NSLog(HTML);
-	
 	return HTML;
 }
 
