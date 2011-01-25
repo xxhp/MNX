@@ -13,7 +13,7 @@
 - (void)downloadManagerDidFinishDownloadingData:(MNXDataManager *)inManager;
 - (void)downloadManagerDidStartParsingData:(MNXDataManager *)inManager;
 - (void)downloadManager:(MNXDataManager *)inManager didFinishParsingData:(NSArray *)inTracks;
-- (void)downloadManagerCanceled:(MNXDataManager *)inManager;
+- (void)downloadManagerCancelled:(MNXDataManager *)inManager;
 - (void)downloadManager:(MNXDataManager *)inManager didFailedWithMessage:(NSString *)message;
 
 @end
@@ -26,6 +26,7 @@
 }
 
 - (void)downloadDataFromPort:(AMSerialPort *)inPort;
+- (void)cancelDownload;
 
 @property (assign, nonatomic) id <MNXDataManagerDelegate> delegate;
 @property (readonly) NSArray *tracks;

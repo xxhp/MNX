@@ -250,11 +250,9 @@ static NSUInteger intFromBoolArray(NSArray *array)
 	NSString *NAK = [NSString stringWithCharacters:&kDwonloadChunkFirst length:1];
 	NSString *CAN = [NSString stringWithCharacters:&kDownloadChunkNext length:1];
 	[port writeString:NAK usingEncoding:NSUTF8StringEncoding error:NULL];	
-	while ([data length] < logSize) {
+	while ([data length] < logSize && ![self isCancelled]) {
 		NSError *e = nil;
-		NSData *d = [port readAndStopAfterBytes:NO bytes:132 stopAtChar:NO stopChar:0 error:&e];
-		NSLog(@"d:%@ %d", [d description], [d length]);
-		
+		NSData *d = [port readBytes:132 error:&e];
 		NSInteger *p = malloc([d length] - 4);
 		[d getBytes:p range:NSMakeRange(3, [d length] - 4)];
 		NSData *a = [NSData dataWithBytes:p length:[d length] - 4];
@@ -263,6 +261,11 @@ static NSUInteger intFromBoolArray(NSArray *array)
 		NSLog(@"data :%d", [data length]);
 		[port writeString:CAN usingEncoding:NSUTF8StringEncoding error:&e];
 	}
+	if ([self isCancelled]) {
+		[delegate downloadOperationCancelled:self];
+		return nil;
+	}
+	
 	[delegate downloadOperationDidFinishDownloadingData:self];
 	*outLogSize = logSize;
 	return data;
@@ -270,21 +273,30 @@ static NSUInteger intFromBoolArray(NSArray *array)
 
 - (void)main
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSInteger logSize = 0;
 	NSString *errorMessage = nil;
 	NSData *data = [self downloadDataWithError:&errorMessage logSize:&logSize];
 	if ([data length]) {
 		[self parseData:data logSize:logSize];
 	}
-	else {
+	else if (errorMessage) {
 		[delegate downloadOperation:self didFailedWithMessage:errorMessage];
 		NSLog(@"errorMessage:%@", errorMessage);
 	}
+	[pool drain];
 	
 //	NSString *path = [[NSBundle mainBundle] pathForResource:@"data" ofType:@"dat"];
 //	NSData *d = [NSData dataWithContentsOfFile:path];
 //	[self parseData:d logSize:354608];
 	
+}
+
+- (void)cancel
+{
+	[super cancel];
+	NSLog(@"cancel");
+	NSLog(@"canceld:%d", [self isCancelled]);
 }
 
 @synthesize delegate;

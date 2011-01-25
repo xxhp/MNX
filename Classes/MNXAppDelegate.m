@@ -55,6 +55,10 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 	AMSerialPort *port = [[portListArrayController selectedObjects] lastObject];
 	[dataManager downloadDataFromPort:port];
 }
+- (IBAction)cancelDownload:(id)sender
+{
+	[dataManager cancelDownload];
+}
 
 #pragma mark -
 
@@ -132,7 +136,7 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 	NSLog(@"%s", __PRETTY_FUNCTION__);
 	[NSApp beginSheet:sheetWindow modalForWindow:window modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 	[sheetWindow orderFront:self];
-	[messageLabel setStringValue:@"Downloading data..."];
+	[messageLabel setStringValue:@"Start downloading data..."];
 	[progressIndicator setUsesThreadedAnimation:YES];
 	[progressIndicator setIndeterminate:YES];
 	[progressIndicator startAnimation:self];
@@ -141,6 +145,7 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 - (void)downloadManager:(MNXDataManager *)inManager didDownloadData:(CGFloat)inProgress
 {
 	NSLog(@"%s %f", __PRETTY_FUNCTION__, inProgress);
+	[messageLabel setStringValue:[NSString stringWithFormat:@"Downloading data, %d%% completed.", (NSInteger)(inProgress * 100)]];
 	[progressIndicator setIndeterminate:NO];
 	[progressIndicator setMaxValue:1.0];
 	[progressIndicator setMinValue:0.0];
@@ -163,8 +168,13 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 	[tracksTableView reloadData];
 	[pointsTableView reloadData];
 }
-- (void)downloadManagerCanceled:(MNXDataManager *)inManager
+- (void)downloadManagerCancelled:(MNXDataManager *)inManager
 {
+	if ([window attachedSheet]) {
+		[progressIndicator stopAnimation:self];
+		[NSApp endSheet:sheetWindow];
+		[sheetWindow orderOut:self];		
+	}
 }
 
 #pragma mark -

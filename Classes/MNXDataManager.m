@@ -31,6 +31,13 @@
 	o.delegate = self;
 	[operationQueue addOperation:o];
 }
+- (void)cancelDownload
+{
+	if ([[operationQueue operations] count]) {
+		NSOperation *o = [[operationQueue operations] lastObject];
+		[o cancel];
+	}
+}
 
 #pragma mark -
 
@@ -63,9 +70,9 @@
 	[tracks setArray:inTracks];
 	[self performSelectorOnMainThread:@selector(_didFinishParsingData:) withObject:inTracks waitUntilDone:NO];
 }
-- (void)downloadOperationCanceled:(MNXDownloadOperation *)inOperation
+- (void)downloadOperationCancelled:(MNXDownloadOperation *)inOperation
 {
-	[(id)delegate performSelectorOnMainThread:@selector(downloadManagerDidStartParsingData:) withObject:self waitUntilDone:NO];
+	[(id)delegate performSelectorOnMainThread:@selector(downloadManagerCancelled:) withObject:self waitUntilDone:NO];
 }
 - (void)_didFailedWithMessage:(NSString *)message
 {

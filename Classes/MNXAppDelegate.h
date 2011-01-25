@@ -6,6 +6,7 @@
 
 @interface MNXAppDelegate : NSObject
 	<NSApplicationDelegate,
+	NSToolbarDelegate,
 	MNXDataManagerDelegate,
 	NSTableViewDataSource,
 	NSTableViewDelegate> 
@@ -27,6 +28,7 @@
 }
 
 - (IBAction)download:(id)sender;
+- (IBAction)cancelDownload:(id)sener;
 
 @property (retain, nonatomic) MNXTrack *currentTrack;
 

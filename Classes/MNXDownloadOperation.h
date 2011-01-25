@@ -10,7 +10,7 @@
 - (void)downloadOperationDidFinishDownloadingData:(MNXDownloadOperation *)inOperation;
 - (void)downloadOperationDidStartParsingData:(MNXDownloadOperation *)inOperation;
 - (void)downloadOperation:(MNXDownloadOperation *)inOperation didFinishParsingData:(NSArray *)inTracks;
-- (void)downloadOperationCanceled:(MNXDownloadOperation *)inOperation;
+- (void)downloadOperationCancelled:(MNXDownloadOperation *)inOperation;
 - (void)downloadOperation:(MNXDownloadOperation *)inOperation didFailedWithMessage:(NSString *)message;
 
 @end
