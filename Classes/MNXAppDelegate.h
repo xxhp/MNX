@@ -13,6 +13,8 @@
 {
 	MNXDataManager *dataManager;
 	MNXTrack *currentTrack;
+	
+	NSDateFormatter *dateFormatter;
     
 	NSWindow *window;
 	NSTableView *tracksTableView;
@@ -25,10 +27,15 @@
 	
 	NSArrayController *portListArrayController;
 	NSPopUpButton *portPopUpButton;
+	
+	NSMenuItem *deviceListMenuItem;
 }
 
 - (IBAction)download:(id)sender;
 - (IBAction)cancelDownload:(id)sener;
+- (IBAction)selectDevice:(id)sender;
+- (IBAction)exportGPX:(id)sender;
+- (IBAction)showWindow:(id)sender;
 
 @property (retain, nonatomic) MNXTrack *currentTrack;
 
@@ -43,6 +50,6 @@
 
 @property (assign) IBOutlet NSArrayController *portListArrayController;
 @property (assign) IBOutlet NSPopUpButton *portPopUpButton;
-
+@property (assign) IBOutlet NSMenuItem *deviceListMenuItem;
 
 @end

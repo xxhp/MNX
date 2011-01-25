@@ -8,6 +8,7 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 - (void)dealloc
 {
 	[currentTrack release];
+	[dateFormatter release];
 	[dataManager release];
 	[super dealloc];
 }
@@ -16,12 +17,17 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 {
 	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"toolbar"] autorelease];
 	[toolbar setDelegate:self];
-	[window setToolbar:toolbar];	
+	[window setToolbar:toolbar];
+	[window setExcludedFromWindowsMenu:YES];
 	
 	[tracksTableView setDataSource:self];
 	[tracksTableView setDelegate:self];
 	[pointsTableView setDataSource:self];
 	[pointsTableView setDelegate:self];
+	
+	dateFormatter = [[NSDateFormatter alloc] init];
+	[dateFormatter setDateStyle:NSDateFormatterShortStyle];
+	[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
 }
 
 - (void)updatePorts
@@ -32,9 +38,19 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 		if ([[p type] isEqualToString:[NSString stringWithUTF8String:kIOSerialBSDModemType]]) {
 			[a addObject:p];
 		}
-	}
-	
+	}	
 	[portListArrayController setContent:[NSMutableArray arrayWithArray:a]];	
+		
+	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@"Devices"] autorelease];
+	NSUInteger tag = 0;
+	for (AMSerialPort *p in a) {
+		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:[p name] action:@selector(selectDevice:) keyEquivalent:@""];
+		[menuItem setTarget:self];
+		[menuItem setTag:tag++];
+		[menu addItem:menuItem];
+	}
+	[deviceListMenuItem setSubmenu:menu];
+	
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification 
@@ -42,6 +58,9 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 	dataManager = [[MNXDataManager alloc] init];
 	dataManager.delegate = self;
 	[self updatePorts];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAddPorts:) name:AMSerialPortListDidAddPortsNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRemovePorts:) name:AMSerialPortListDidRemovePortsNotification object:nil];
 }
 
 #pragma mark -
@@ -58,6 +77,46 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 - (IBAction)cancelDownload:(id)sender
 {
 	[dataManager cancelDownload];
+}
+- (IBAction)selectDevice:(id)sender
+{
+	[portListArrayController setSelectionIndex:[sender tag]];
+}
+- (IBAction)exportGPX:(id)sender
+{
+	if ([tracksTableView selectedRow] < 0) {
+		return;
+	}
+	if (![dataManager.tracks count]) {
+		return;
+	}	
+	
+	NSSavePanel *savePanel = [NSSavePanel savePanel];
+	[savePanel setAllowedFileTypes:[NSArray arrayWithObject:@"gpx"]];
+	[savePanel setAllowsOtherFileTypes:NO];
+	[savePanel beginWithCompletionHandler:^(NSInteger result) {
+		if (result == NSOKButton) {
+			NSURL *URL = [savePanel URL];
+			MNXTrack *aTrack = [dataManager.tracks objectAtIndex:[tracksTableView selectedRow]];
+			[[aTrack GPXData] writeToURL:URL atomically:YES];
+		}
+	}];
+}
+- (IBAction)showWindow:(id)sender
+{
+	[window makeKeyAndOrderFront:self];
+}
+
+#pragma mark -
+
+- (void)didAddPorts:(NSNotification *)theNotification
+{
+	[self updatePorts];
+}
+
+- (void)didRemovePorts:(NSNotification *)theNotification
+{
+	[self updatePorts];
 }
 
 #pragma mark -
@@ -81,7 +140,7 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 		NSString *ci = [inTableColumn identifier];
 		MNXPoint *point = [currentTrack.points objectAtIndex:inRow];
 		if ([ci isEqualToString:@"date"]) {
-			return point.date;
+			return [dateFormatter stringFromDate:point.date];
 		}
 		if ([ci isEqualToString:@"longitude"]) {
 			return [NSNumber numberWithFloat:point.longitude];
@@ -155,18 +214,21 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 - (void)downloadManagerDidFinishDownloadingData:(MNXDataManager *)inManager
 {
 	NSLog(@"%s", __PRETTY_FUNCTION__);
-	[progressIndicator stopAnimation:self];
-	[NSApp endSheet:sheetWindow];
-	[sheetWindow orderOut:self];
 }
 - (void)downloadManagerDidStartParsingData:(MNXDataManager *)inManager
 {
 	NSLog(@"%s", __PRETTY_FUNCTION__);
+	[messageLabel setStringValue:@"Start parsing data..."];
+	[progressIndicator setUsesThreadedAnimation:YES];
+	[progressIndicator setIndeterminate:YES];	
 }
 - (void)downloadManager:(MNXDataManager *)inManager didFinishParsingData:(NSArray *)inTracks
 {
 	[tracksTableView reloadData];
 	[pointsTableView reloadData];
+	[progressIndicator stopAnimation:self];
+	[NSApp endSheet:sheetWindow];
+	[sheetWindow orderOut:self];	
 }
 - (void)downloadManagerCancelled:(MNXDataManager *)inManager
 {
@@ -214,6 +276,61 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 	return [NSArray arrayWithObjects:kPortPopUpButtonItem, kDownloadItem, nil];
 }
 
+#pragma mark -
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+	if ([menuItem action] == @selector(showWindow:)) {
+		if ([window isMiniaturized]) {
+			[menuItem setState:NSMixedState];
+		}
+		else if ([window isVisible]) {
+			[menuItem setState:NSOnState];
+		}
+		else {
+			[menuItem setState:NSOffState];
+		}
+		return YES;
+	}
+	if ([menuItem action] == @selector(selectDevice:)) {
+		if ([menuItem tag] == [portListArrayController selectionIndex]) {
+			[menuItem setState:NSOnState];
+		}
+		else {
+			[menuItem setState:NSOffState];
+		}		
+	}
+	if ([menuItem action] == @selector(download:)) {
+		if (![[portListArrayController selectedObjects] count]) {
+			return NO;
+		}
+	}
+	if ([window attachedSheet]) {
+		return NO;
+	}
+	if ([menuItem action] == @selector(exportGPX:)) {
+		if ([tracksTableView selectedRow] < 0) {
+			return;
+		}
+		if (![dataManager.tracks count]) {
+			return;
+		}		
+	}
+	return YES;
+}
+
+- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
+{
+	if ([theItem action] == @selector(download:)) {
+		if (![[portListArrayController selectedObjects] count]) {
+			return NO;
+		}
+	}
+	if ([window attachedSheet]) {
+		return NO;
+	}	
+	return YES;
+}
 
 #pragma mark -
 
@@ -222,5 +339,6 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 @synthesize sheetWindow, messageLabel, progressIndicator;
 @synthesize portListArrayController;
 @synthesize portPopUpButton;
+@synthesize deviceListMenuItem;
 
 @end
