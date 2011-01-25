@@ -27,6 +27,8 @@
 		D4520BED12EE277000FF0DA2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4520BEC12EE277000FF0DA2 /* IOKit.framework */; };
 		D45211D612EEF57E00FF0DA2 /* MNXDataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = D45211D512EEF57E00FF0DA2 /* MNXDataParser.m */; };
 		D452124712EF03FA00FF0DA2 /* download.png in Resources */ = {isa = PBXBuildFile; fileRef = D452124612EF03FA00FF0DA2 /* download.png */; };
+		D452126912EF061C00FF0DA2 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = D452126812EF061C00FF0DA2 /* pin.png */; };
+		D45212A212EF097900FF0DA2 /* googleearth.png in Resources */ = {isa = PBXBuildFile; fileRef = D45212A112EF097900FF0DA2 /* googleearth.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +72,8 @@
 		D45211D412EEF57E00FF0DA2 /* MNXDataParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXDataParser.h; sourceTree = "<group>"; };
 		D45211D512EEF57E00FF0DA2 /* MNXDataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXDataParser.m; sourceTree = "<group>"; };
 		D452124612EF03FA00FF0DA2 /* download.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = download.png; sourceTree = "<group>"; };
+		D452126812EF061C00FF0DA2 /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin.png; sourceTree = "<group>"; };
+		D45212A112EF097900FF0DA2 /* googleearth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = googleearth.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -224,6 +228,8 @@
 		D452124512EF03F900FF0DA2 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				D45212A112EF097900FF0DA2 /* googleearth.png */,
+				D452126812EF061C00FF0DA2 /* pin.png */,
 				D452124612EF03FA00FF0DA2 /* download.png */,
 			);
 			path = Images;
@@ -283,6 +289,8 @@
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				D452075C12EDC7F000FF0DA2 /* data.dat in Resources */,
 				D452124712EF03FA00FF0DA2 /* download.png in Resources */,
+				D452126912EF061C00FF0DA2 /* pin.png in Resources */,
+				D45212A212EF097900FF0DA2 /* googleearth.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

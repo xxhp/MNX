@@ -2,6 +2,7 @@
 
 static NSString *const kPortPopUpButtonItem = @"kPortPopUpButtonItem";
 static NSString *const kDownloadItem = @"kDownloadItem";
+static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 
 @implementation MNXAppDelegate
 
@@ -15,8 +16,10 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 
 - (void)awakeFromNib
 {
+	[window center];
 	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"toolbar"] autorelease];
 	[toolbar setDelegate:self];
+	[toolbar setAllowsUserCustomization:YES];
 	[window setToolbar:toolbar];
 	[window setExcludedFromWindowsMenu:YES];
 	
@@ -102,6 +105,9 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 		}
 	}];
 }
+- (IBAction)googleEarth:(id)sender
+{
+}
 - (IBAction)showWindow:(id)sender
 {
 	[window makeKeyAndOrderFront:self];
@@ -131,11 +137,20 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 	}
 	return 0;
 }
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
+{
+	if (aTableView == tracksTableView) {
+	}
+	else if (aTableView == pointsTableView) {
+		[aCell setFont:[NSFont systemFontOfSize:11.0]];
+	}
+}
 - (id)tableView:(NSTableView *)inTableView objectValueForTableColumn:(NSTableColumn *)inTableColumn row:(NSInteger)inRow
 {
 	if (inTableView == tracksTableView) {
 		MNXTrack *track = [dataManager.tracks objectAtIndex:inRow];
-		return [track title];
+		NSString *title = [track title];
+		return title;
 	}
 	else if (inTableView == pointsTableView) {
 		NSString *ci = [inTableColumn identifier];
@@ -255,6 +270,15 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 		[item setMinSize:NSMakeSize(120.0, 32.0)];
 		return item;
 	}
+	if ([itemIdentifier isEqualToString:kGoogleEarthItem]) {
+		NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:kGoogleEarthItem] autorelease];
+		[item setImage:[NSImage imageNamed:@"googleearth"]];
+		[item setLabel:@"Google Earth"];
+		[item setToolTip:@"Open in Google Earth"];
+		[item setTarget:self];
+		[item setAction:@selector(googleEarth:)];
+		return item;
+	}	
 	if ([itemIdentifier isEqualToString:kDownloadItem]) {
 		NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:kDownloadItem] autorelease];
 		[item setImage:[NSImage imageNamed:@"download"]];
@@ -270,12 +294,21 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
-	return [NSArray arrayWithObjects:kPortPopUpButtonItem, kDownloadItem, nil];
+	return [NSArray arrayWithObjects:kPortPopUpButtonItem, 
+			kDownloadItem,
+			NSToolbarSeparatorItemIdentifier,
+			NSToolbarFlexibleSpaceItemIdentifier,
+			kGoogleEarthItem, nil];
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
 {
-	return [NSArray arrayWithObjects:kPortPopUpButtonItem, kDownloadItem, nil];
+	return [NSArray arrayWithObjects:kPortPopUpButtonItem,
+			kDownloadItem,
+			kGoogleEarthItem, 
+			NSToolbarSeparatorItemIdentifier,
+			NSToolbarSpaceItemIdentifier,
+			NSToolbarFlexibleSpaceItemIdentifier, nil];
 }
 
 #pragma mark -
@@ -312,10 +345,10 @@ static NSString *const kDownloadItem = @"kDownloadItem";
 	}
 	if ([menuItem action] == @selector(exportGPX:)) {
 		if ([tracksTableView selectedRow] < 0) {
-			return;
+			return NO;
 		}
 		if (![dataManager.tracks count]) {
-			return;
+			return NO;
 		}		
 	}
 	return YES;
