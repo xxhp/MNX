@@ -17,6 +17,7 @@ static CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 	CGFloat theta = lon1 - lon2;
 	CGFloat dist = sin(degreeToRadian(lat1)) * sin(degreeToRadian(lat2)) + cos(degreeToRadian(lat1)) * cos(degreeToRadian(lat2)) * cos(degreeToRadian(theta));
 	dist = acos(dist) * 6373.0;
+//	NSLog(@"dist:%f", dist);
 	return dist;
 }
 						
@@ -291,7 +292,9 @@ static CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 		MNXPoint *currentPoint = [pointArray objectAtIndex:i];
 		MNXPoint *previousPoint = [pointArray objectAtIndex:i - 1];
 		CGFloat aDistance = distance(currentPoint.latitude, currentPoint.longitude, previousPoint.latitude, previousPoint.longitude);
-		newDistamce += aDistance;
+		if (aDistance > 0.0) {
+			newDistamce += aDistance;			
+		}		
 	}
 	MNXPoint *firstPoint = [pointArray objectAtIndex:0];
 	MNXPoint *lastPoint = [pointArray lastObject];

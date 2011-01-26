@@ -33,6 +33,7 @@
 		D452124712EF03FA00FF0DA2 /* download.png in Resources */ = {isa = PBXBuildFile; fileRef = D452124612EF03FA00FF0DA2 /* download.png */; };
 		D452126912EF061C00FF0DA2 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = D452126812EF061C00FF0DA2 /* pin.png */; };
 		D45212A212EF097900FF0DA2 /* googleearth.png in Resources */ = {isa = PBXBuildFile; fileRef = D45212A112EF097900FF0DA2 /* googleearth.png */; };
+		D4CB316B12F035150081D7B7 /* NSString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CB316A12F035150081D7B7 /* NSString+Extension.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -83,6 +84,8 @@
 		D452124612EF03FA00FF0DA2 /* download.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = download.png; sourceTree = "<group>"; };
 		D452126812EF061C00FF0DA2 /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin.png; sourceTree = "<group>"; };
 		D45212A112EF097900FF0DA2 /* googleearth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = googleearth.png; sourceTree = "<group>"; };
+		D4CB316912F035150081D7B7 /* NSString+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Extension.h"; sourceTree = "<group>"; };
+		D4CB316A12F035150081D7B7 /* NSString+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Extension.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +186,7 @@
 		D452073712EDC18500FF0DA2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				D4CB316612F035000081D7B7 /* Extensions */,
 				D444566312EF34DC00A181A9 /* View */,
 				D452073B12EDC18B00FF0DA2 /* Data Model */,
 				D452073812EDC18500FF0DA2 /* MNXAppDelegate.h */,
@@ -255,6 +259,15 @@
 				D452124612EF03FA00FF0DA2 /* download.png */,
 			);
 			path = Images;
+			sourceTree = "<group>";
+		};
+		D4CB316612F035000081D7B7 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D4CB316912F035150081D7B7 /* NSString+Extension.h */,
+				D4CB316A12F035150081D7B7 /* NSString+Extension.m */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -340,6 +353,7 @@
 				D4520BE712EE275800FF0DA2 /* AMStandardEnumerator.m in Sources */,
 				D45211D612EEF57E00FF0DA2 /* MNXDataParser.m in Sources */,
 				D444566812EF34EF00A181A9 /* MNXTrackCell.m in Sources */,
+				D4CB316B12F035150081D7B7 /* NSString+Extension.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

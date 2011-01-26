@@ -1,5 +1,6 @@
 #import "MNXAppDelegate.h"
 #import "MNXTrackCell.h"
+#import "NSString+Extension.h"
 
 static NSString *const kPortPopUpButtonItem = @"kPortPopUpButtonItem";
 static NSString *const kDownloadItem = @"kDownloadItem";
@@ -37,6 +38,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	dateFormatter = [[NSDateFormatter alloc] init];
 	[dateFormatter setDateStyle:NSDateFormatterShortStyle];
 	[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+	[trackInfoLabel setStringValue:@""];
 }
 
 - (void)updatePorts
@@ -257,6 +259,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 		if (selectedRow < 0) {
 			self.currentTrack = nil;
 			[pointsTableView reloadData];
+			[trackInfoLabel setStringValue:@""];
 			[[webView mainFrame] loadHTMLString:@"" baseURL:nil];
 		}
 		else {		
@@ -267,7 +270,14 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 			if ([self.currentTrack.points count]) {
 				[pointsTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
 				[pointsTableView scrollRowToVisible:0];
-			}			
+			}
+			CGFloat distance = aTrack.totalDistance;
+			NSTimeInterval duration = aTrack.duration;
+			NSTimeInterval pace = aTrack.averagePaceKM;
+			CGFloat speed = aTrack.averageSpeedKM;
+			NSString *info = [NSString stringWithFormat:@"%@ %.2f %@, %@ %@, %@ %@, %@ %.2f %@", @"Distance:", distance, @"KM", @"Duration:", NSStringFromNSTimeInterval(duration), @"Average Pace:", NSStringFromNSTimeInterval(pace), @"Average Speed:", speed, @"KM"];
+			[trackInfoLabel setStringValue:info];
+			
 		}
 	}
 }
@@ -469,5 +479,6 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 @synthesize portListArrayController;
 @synthesize portPopUpButton;
 @synthesize deviceListMenuItem;
+@synthesize trackInfoLabel;
 
 @end
