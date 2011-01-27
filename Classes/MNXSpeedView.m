@@ -35,6 +35,7 @@
 {
 	if ([self.currentTrack.points count] < 2) {
 		self.image = nil;
+		[self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:YES];
 	}	
 	
 	NSImage *anImage = [[NSImage alloc] initWithSize:NSMakeSize(500.0, 300.0)];
@@ -54,7 +55,7 @@
 		if (point == [self.currentTrack.points objectAtIndex:0]) {
 			CGFloat speed = (point.speedKM > 0.0) ? point.speedKM : 0.0;
 			NSMutableDictionary *p = [NSMutableDictionary dictionary];	
-			[p setObject:point forKey:@"point"];
+			[p setObject:[NSNumber numberWithFloat:point.distanceKM] forKey:@"distance"];
 			[p setObject:[NSNumber numberWithFloat:speed] forKey:@"speed"];
 			maxSpeed = speed;
 			[a addObject:p];
@@ -74,7 +75,7 @@
 				aSpeed = 0.0;
 			}
 			NSMutableDictionary *p = [NSMutableDictionary dictionary];	
-			[p setObject:point forKey:@"point"];
+			[p setObject:[NSNumber numberWithFloat:point.distanceKM] forKey:@"distance"];
 			[p setObject:[NSNumber numberWithFloat:speed] forKey:@"speed"];
 			if (speed > maxSpeed) {
 				maxSpeed = speed;
@@ -91,8 +92,7 @@
 	[path setLineJoinStyle:NSRoundLineJoinStyle];
 	
 	for (NSDictionary *p in a) {
-		MNXPoint *point = [p objectForKey:@"point"];
-		CGFloat x = frameWidth + (point.distanceKM / self.currentTrack.totalDistance) * drawingFrame.size.width;
+		CGFloat x = frameWidth + ([[p objectForKey:@"distance"] floatValue] / self.currentTrack.totalDistance) * drawingFrame.size.width;
 		CGFloat y = frameWidth + [[p objectForKey:@"speed"] floatValue] / maxSpeed * drawingFrame.size.height;
 		if (p == [a objectAtIndex:0]) {
 			[path moveToPoint:NSMakePoint(x, y)];
@@ -120,7 +120,6 @@
 	[anImage unlockFocus];
 	
 	self.image = [anImage autorelease];
-	
 }
 
 - (void)setCurrentTrack:(MNXTrack *)inTrack

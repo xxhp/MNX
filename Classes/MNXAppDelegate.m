@@ -304,16 +304,15 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 		NSInteger selectedRow = [inTableView selectedRow];
 		if (selectedRow < 0) {
 			self.currentTrack = nil;
-			speedView.currentTrack = nil;
 			[pointsTableView reloadData];
 			[paceTableView reloadData];
 			[trackInfoLabel setStringValue:@""];
 			[[webView mainFrame] loadHTMLString:@"" baseURL:nil];
+			speedView.currentTrack = nil;
 		}
 		else {		
 			MNXTrack *aTrack = [dataManager.tracks objectAtIndex:selectedRow];
 			self.currentTrack = aTrack;
-			speedView.currentTrack = aTrack;
 			[pointsTableView reloadData];
 			[paceTableView reloadData];
 			[[webView mainFrame] loadHTMLString:[self.currentTrack HTML] baseURL:nil];
@@ -327,7 +326,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 			CGFloat speed = aTrack.averageSpeedKM;
 			NSString *info = [NSString stringWithFormat:@"%@ %.2f %@, %@ %@, %@ %@, %@ %.2f %@", @"Distance:", distance, @"KM", @"Duration:", NSStringFromNSTimeInterval(duration), @"Average Pace:", NSStringFromNSTimeInterval(pace), @"Average Speed:", speed, @"KM"];
 			[trackInfoLabel setStringValue:info];
-			
+			speedView.currentTrack = aTrack;			
 		}
 	}
 }

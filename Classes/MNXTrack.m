@@ -406,7 +406,7 @@ static CGFloat distanceKM(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2
 
 - (NSArray *)points
 {
-	return [[pointArray copy] autorelease];
+	return pointArray;
 }
 - (NSArray *)splitKM
 {
