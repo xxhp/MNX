@@ -367,10 +367,10 @@ static CGFloat distanceKM(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2
 			[split setObject:currentPoint forKey:@"point"];
 			NSTimeInterval interval = [currentPoint.date timeIntervalSinceDate:pointAtLastSplit.date];
 			[split setObject:[NSNumber numberWithDouble:interval] forKey:@"pace"];
-			[split setObject:[NSNumber numberWithInt:(NSInteger)newDistamce] forKey:@"KM"];
+			[split setObject:[NSNumber numberWithInt:(NSInteger)newDistamce] forKey:@"distance"];
 			[splitKM addObject:split];
 		}
-		else if (i == [pointArray count] - 1) {
+		else if (i == [pointArray count] - 1 && ![splitKM count]) {
 			MNXPoint *pointAtLastSplit = [[splitKM lastObject] objectForKey:@"point"];
 			if (!pointAtLastSplit) {
 				pointAtLastSplit = [pointArray objectAtIndex:0];
@@ -379,7 +379,7 @@ static CGFloat distanceKM(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2
 			[split setObject:currentPoint forKey:@"point"];
 			NSTimeInterval interval = [currentPoint.date timeIntervalSinceDate:pointAtLastSplit.date];
 			[split setObject:[NSNumber numberWithDouble:interval] forKey:@"pace"];
-			[split setObject:[NSNumber numberWithFloat:(CGFloat)newDistamce] forKey:@"KM"];			
+			[split setObject:[NSNumber numberWithFloat:(CGFloat)newDistamce] forKey:@"distance"];			
 			[splitKM addObject:split];
 		}
 	}
@@ -410,7 +410,7 @@ static CGFloat distanceKM(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2
 }
 - (NSArray *)splitKM
 {
-	return [[splitKM copy] autorelease];
+	return splitKM;
 }
 
 

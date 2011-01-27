@@ -19,6 +19,7 @@
 	NSWindow *window;
 	NSTableView *tracksTableView;
 	NSTableView *pointsTableView;
+	NSTableView *paceTableView;
 	WebView *webView;
 	NSTextField *trackInfoLabel;
 	
@@ -46,6 +47,7 @@
 @property (assign) IBOutlet NSWindow *window;
 @property (assign) IBOutlet NSTableView *tracksTableView;
 @property (assign) IBOutlet NSTableView *pointsTableView;
+@property (assign) IBOutlet NSTableView *paceTableView;
 @property (assign) IBOutlet WebView *webView;
 @property (assign) IBOutlet NSTextField *trackInfoLabel;
 

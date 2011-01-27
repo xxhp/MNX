@@ -35,6 +35,9 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	[pointsTableView setDataSource:self];
 	[pointsTableView setDelegate:self];
 	
+	[paceTableView setDataSource:self];
+	[paceTableView setDelegate:self];
+	
 	dateFormatter = [[NSDateFormatter alloc] init];
 	[dateFormatter setDateStyle:NSDateFormatterShortStyle];
 	[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
@@ -238,6 +241,9 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	else if (inTableView == pointsTableView) {
 		return [currentTrack.points count];
 	}
+	else if (inTableView == paceTableView) {
+		return [currentTrack.splitKM count];
+	}	
 	return 0;
 }
 - (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
@@ -245,8 +251,12 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	if (aTableView == tracksTableView) {
 	}
 	else if (aTableView == pointsTableView) {
-		[aCell setFont:[NSFont systemFontOfSize:11.0]];
+		[aCell setFont:[NSFont systemFontOfSize:10.0]];
 	}
+	else if (aTableView == paceTableView) {
+		[aCell setFont:[NSFont systemFontOfSize:10.0]];
+	}
+	
 }
 - (id)tableView:(NSTableView *)inTableView objectValueForTableColumn:(NSTableColumn *)inTableColumn row:(NSInteger)inRow
 {
@@ -262,10 +272,10 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 			return [dateFormatter stringFromDate:point.date];
 		}
 		if ([ci isEqualToString:@"longitude"]) {
-			return [NSNumber numberWithFloat:point.longitude];
+			return [NSString stringWithFormat:@"%.4f", point.longitude];
 		}
 		if ([ci isEqualToString:@"latitude"]) {
-			return [NSNumber numberWithFloat:point.latitude];
+			return [NSString stringWithFormat:@"%.4f", point.latitude];
 		}
 		if ([ci isEqualToString:@"speed"]) {
 			return [NSNumber numberWithFloat:point.speed];
@@ -273,6 +283,17 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 		if ([ci isEqualToString:@"elevation"]) {
 			return [NSNumber numberWithFloat:point.elevation];
 		}
+	}
+	else if (inTableView == paceTableView) {
+		NSString *ci = [inTableColumn identifier];
+		NSDictionary *split = [currentTrack.splitKM objectAtIndex:inRow];
+		if ([ci isEqualToString:@"unit"]) {
+			return [split objectForKey:@"distance"];
+		}		
+		if ([ci isEqualToString:@"pace"]) {
+			return NSStringFromNSTimeInterval([[split objectForKey:@"pace"] doubleValue]);
+		}		
+		
 	}
 	return nil;
 }
@@ -284,6 +305,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 		if (selectedRow < 0) {
 			self.currentTrack = nil;
 			[pointsTableView reloadData];
+			[paceTableView reloadData];
 			[trackInfoLabel setStringValue:@""];
 			[[webView mainFrame] loadHTMLString:@"" baseURL:nil];
 		}
@@ -291,6 +313,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 			MNXTrack *aTrack = [dataManager.tracks objectAtIndex:selectedRow];
 			self.currentTrack = aTrack;
 			[pointsTableView reloadData];
+			[paceTableView reloadData];
 			[[webView mainFrame] loadHTMLString:[self.currentTrack HTML] baseURL:nil];
 			if ([self.currentTrack.points count]) {
 				[pointsTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
@@ -501,7 +524,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 #pragma mark Properties
 
 @synthesize currentTrack;
-@synthesize window, tracksTableView, pointsTableView, webView;
+@synthesize window, tracksTableView, pointsTableView, paceTableView, webView;
 @synthesize sheetWindow, messageLabel, progressIndicator;
 @synthesize portListArrayController;
 @synthesize portPopUpButton;
