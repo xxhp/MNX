@@ -3,23 +3,29 @@
 @interface MNXTrack : NSObject
 {
 	NSMutableArray *pointArray;
+	NSMutableArray *splitKM;
+	
 	CGFloat totalDistance;
 	NSTimeInterval duration;
 	CGFloat averagePaceKM;
 	CGFloat averageSpeedKM;
+	CGFloat maxSpeedKM;
 }
 
 - (NSString *)title;
 - (NSData *)GPXData;
 - (NSData *)KMLData;
+- (NSData *)TCXData;
 - (NSString *)HTML;
 
 @property (readonly, nonatomic) NSString *title;
 @property (retain, nonatomic) NSArray *points;
+@property (readonly, nonatomic) NSArray *splitKM;
 
-@property (assign, nonatomic) CGFloat totalDistance;
-@property (assign, nonatomic) NSTimeInterval duration;
-@property (assign, nonatomic) NSTimeInterval averagePaceKM;
-@property (assign, nonatomic) CGFloat averageSpeedKM;
+@property (readonly, nonatomic) CGFloat totalDistance;
+@property (readonly, nonatomic) NSTimeInterval duration;
+@property (readonly, nonatomic) NSTimeInterval averagePaceKM;
+@property (readonly, nonatomic) CGFloat averageSpeedKM;
+@property (readonly, nonatomic) CGFloat maxSpeedKM;
 
 @end

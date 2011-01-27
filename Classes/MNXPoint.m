@@ -30,4 +30,9 @@
 @synthesize speed;
 @synthesize elevation;
 
+@synthesize speedKM;
+@synthesize speedMile;
+@synthesize distanceKM;
+@synthesize distanceMile;
+
 @end

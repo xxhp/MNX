@@ -161,6 +161,31 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 		}		
 	}];	
 }
+- (IBAction)exportTCX:(id)sender
+{
+	if ([tracksTableView selectedRow] < 0) {
+		return;
+	}
+	if (![dataManager.tracks count]) {
+		return;
+	}	
+	MNXTrack *aTrack = [dataManager.tracks objectAtIndex:[tracksTableView selectedRow]];
+	
+	NSSavePanel *savePanel = [NSSavePanel savePanel];
+	[savePanel setAllowedFileTypes:[NSArray arrayWithObject:@"tcx"]];
+	[savePanel setAllowsOtherFileTypes:NO];
+	[savePanel setPrompt:@"Export"];
+	[savePanel setNameFieldLabel:@"Export As:"];
+	NSString *filename = [[aTrack title] stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
+	filename = [filename stringByReplacingOccurrencesOfString:@":" withString:@"-"];
+	[savePanel setNameFieldStringValue:filename];
+	[savePanel beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
+		if (result == NSOKButton) {
+			NSURL *URL = [savePanel URL];
+			[[aTrack TCXData] writeToURL:URL atomically:YES];
+		}
+	}];	
+}
 
 - (IBAction)googleEarth:(id)sender
 {
@@ -434,6 +459,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	}
 	if ([menuItem action] == @selector(exportGPX:) ||
 		[menuItem action] == @selector(exportKML:) ||
+		[menuItem action] == @selector(exportTCX:) ||
 		[menuItem action] == @selector(googleEarth:)
 		) {
 		if ([tracksTableView selectedRow] < 0) {
@@ -458,6 +484,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	}
 	if ([theItem action] == @selector(exportGPX:) ||
 		[theItem action] == @selector(exportKML:) ||
+		[theItem action] == @selector(exportTCX:) ||
 		[theItem action] == @selector(googleEarth:)
 		) {
 		if ([tracksTableView selectedRow] < 0) {

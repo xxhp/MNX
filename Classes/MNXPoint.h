@@ -7,6 +7,11 @@
 	NSDate *date;
 	CGFloat speed;
 	CGFloat elevation;
+
+	CGFloat speedKM;
+	CGFloat speedMile;
+	CGFloat distanceKM;
+	CGFloat distanceMile;
 }
 
 - (NSDictionary *)dictionary;
@@ -16,5 +21,11 @@
 @property (retain, nonatomic) NSDate *date;
 @property (assign, nonatomic) CGFloat speed;
 @property (assign, nonatomic) CGFloat elevation;
+
+@property (assign, nonatomic) CGFloat speedKM;
+@property (assign, nonatomic) CGFloat speedMile;
+@property (assign, nonatomic) CGFloat distanceKM;
+@property (assign, nonatomic) CGFloat distanceMile;
+
 
 @end

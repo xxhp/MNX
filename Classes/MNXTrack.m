@@ -12,12 +12,11 @@ static CGFloat radianToDegree(CGFloat radian)
 	return (CGFloat)(radian / M_PI * 180);
 }
 
-static CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
+static CGFloat distanceKM(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 {
 	CGFloat theta = lon1 - lon2;
 	CGFloat dist = sin(degreeToRadian(lat1)) * sin(degreeToRadian(lat2)) + cos(degreeToRadian(lat1)) * cos(degreeToRadian(lat2)) * cos(degreeToRadian(theta));
 	dist = acos(dist) * 6373.0;
-//	NSLog(@"dist:%f", dist);
 	return dist;
 }
 						
@@ -27,6 +26,7 @@ static CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 - (void)dealloc
 {
 	[pointArray release];
+	[splitKM release];
 	[super dealloc];
 }
 
@@ -35,6 +35,7 @@ static CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 	self = [super init];
 	if (self != nil) {
 		pointArray = [[NSMutableArray alloc] init];
+		splitKM = [[NSMutableArray alloc] init];
 	}
 	return self;
 }
@@ -166,7 +167,7 @@ static CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 	[lookAt addChild:[NSXMLNode elementWithName:@"altitude" stringValue:@"0"]];
 	[lookAt addChild:[NSXMLNode elementWithName:@"heading" stringValue:@"0"]];
 	[lookAt addChild:[NSXMLNode elementWithName:@"tilt" stringValue:@"0"]];
-	CGFloat dist = distance(top, left, bottom, right);
+	CGFloat dist = distanceKM(top, left, bottom, right);
 	NSInteger range = (NSUInteger)(dist * 1.5 * 1000);
 	[lookAt addChild:[NSXMLNode elementWithName:@"range" stringValue:[NSString stringWithFormat:@"%d", range]]];
 	[document addChild:lookAt];
@@ -190,6 +191,56 @@ static CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 	NSData *data = [xml XMLData];
 	return data;
 }
+- (NSData *)TCXData
+{
+	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en"] autorelease]];
+	[formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
+	[formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+	
+	NSXMLElement *root = (NSXMLElement *)[NSXMLNode elementWithName:@"TrainingCenterDatabase"];
+	[root addNamespace:[NSXMLNode namespaceWithName:@"" stringValue:@"http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2"]];
+	[root addNamespace:[NSXMLNode namespaceWithName:@"xsi" stringValue:@"http://www.w3.org/2001/XMLSchema-instance"]];
+	[root addAttribute:[NSXMLNode attributeWithName:@"xsi:schemaLocation" stringValue:@"http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2 http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd"]];
+	
+	NSXMLDocument *xml = [[[NSXMLDocument alloc] initWithRootElement:root] autorelease];
+	[xml setVersion:@"1.0"];
+	[xml setCharacterEncoding:@"UTF-8"];
+	NSXMLElement *activities = (NSXMLElement *)[NSXMLNode elementWithName:@"Activities"];
+	[root addChild:activities];
+
+	if ([self.points count]) {
+		NSXMLElement *activity = (NSXMLElement *)[NSXMLNode elementWithName:@"Activity"];
+		[activities addChild:activity];
+
+		NSString *activityID = [formatter stringFromDate:[(MNXPoint *)[self.points objectAtIndex:0] date]];
+		[activity addChild:[NSXMLNode elementWithName:@"Id" stringValue:activityID]];
+
+		NSXMLElement *lap = (NSXMLElement *)[NSXMLNode elementWithName:@"Lap"];
+		[lap addAttribute:[NSXMLNode attributeWithName:@"StartTime" stringValue:activityID]];
+		[lap addChild:[NSXMLNode elementWithName:@"TotalTimeSeconds" stringValue:[NSString stringWithFormat:@"%f", duration]]];
+		[lap addChild:[NSXMLNode elementWithName:@"DistanceMeters" stringValue:[NSString stringWithFormat:@"%f", totalDistance * 100.0]]];
+		NSXMLElement *track = (NSXMLElement *)[NSXMLNode elementWithName:@"Track"];		
+		for (MNXPoint *point in pointArray) {
+			NSXMLElement *trackPoint = (NSXMLElement *)[NSXMLNode elementWithName:@"Trackpoint"];
+			[trackPoint addChild:[NSXMLNode elementWithName:@"Time" stringValue:[formatter stringFromDate:point.date]]];
+			[trackPoint addChild:[NSXMLNode elementWithName:@"AltitudeMeters" stringValue:[NSString stringWithFormat:@"%f", point.elevation]]];
+			[trackPoint addChild:[NSXMLNode elementWithName:@"DistanceMeters" stringValue:[NSString stringWithFormat:@"%f", point.distanceKM * 100.0]]];
+			NSXMLElement *position = (NSXMLElement *)[NSXMLNode elementWithName:@"Position"];
+			[position addChild:[NSXMLNode elementWithName:@"LatitudeDegrees" stringValue:[NSString stringWithFormat:@"%f", point.latitude]]];
+			[position addChild:[NSXMLNode elementWithName:@"LongitudeDegrees" stringValue:[NSString stringWithFormat:@"%f", point.longitude]]];
+			[trackPoint addChild:position];
+			[track addChild:trackPoint];
+		}
+		[lap addChild:track];
+		
+		[activity addChild:lap];
+	}
+	 
+	NSData *data = [xml XMLData];
+	return data;
+}
+
 
 - (NSString *)HTML
 {
@@ -280,45 +331,86 @@ static CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 - (void)setPoints:(NSArray *)inPoints
 {
 	[pointArray setArray:inPoints];
+	[splitKM removeAllObjects];
+	
 	if ([pointArray count] < 1) {
 		totalDistance = 0.0;
 		duration = 0.0;
 		averagePaceKM = 0.0;
 		averageSpeedKM = 0.0;
+		maxSpeedKM = 0.0;
 		return;
 	}
+	
 	CGFloat newDistamce = 0.0;
+	CGFloat newMaxSpeedKM = 0.0;
+	
 	for (NSInteger i = 1; i < [pointArray count]; i++) {
 		MNXPoint *currentPoint = [pointArray objectAtIndex:i];
 		MNXPoint *previousPoint = [pointArray objectAtIndex:i - 1];
-		CGFloat aDistance = distance(currentPoint.latitude, currentPoint.longitude, previousPoint.latitude, previousPoint.longitude);
+		CGFloat aDistance = distanceKM(currentPoint.latitude, currentPoint.longitude, previousPoint.latitude, previousPoint.longitude);
 		if (aDistance > 0.0) {
 			newDistamce += aDistance;			
-		}		
+		}
+		currentPoint.distanceKM = newDistamce;
+		currentPoint.speedKM = aDistance / fabs([currentPoint.date timeIntervalSinceDate:previousPoint.date]) * 60.0 * 60.0;
+		if (currentPoint.speedKM > newMaxSpeedKM) {
+			newMaxSpeedKM = currentPoint.speedKM ;
+		}
+		
+		if ((NSInteger)newDistamce > [splitKM count]) {
+			MNXPoint *pointAtLastSplit = [[splitKM lastObject] objectForKey:@"point"];
+			if (!pointAtLastSplit) {
+				pointAtLastSplit = [pointArray objectAtIndex:0];
+			}
+			NSMutableDictionary *split =[NSMutableDictionary dictionary];
+			[split setObject:currentPoint forKey:@"point"];
+			NSTimeInterval interval = [currentPoint.date timeIntervalSinceDate:pointAtLastSplit.date];
+			[split setObject:[NSNumber numberWithDouble:interval] forKey:@"pace"];
+			[split setObject:[NSNumber numberWithInt:(NSInteger)newDistamce] forKey:@"KM"];
+			[splitKM addObject:split];
+		}
+		else if (i == [pointArray count] - 1) {
+			MNXPoint *pointAtLastSplit = [[splitKM lastObject] objectForKey:@"point"];
+			if (!pointAtLastSplit) {
+				pointAtLastSplit = [pointArray objectAtIndex:0];
+			}			
+			NSMutableDictionary *split =[NSMutableDictionary dictionary];
+			[split setObject:currentPoint forKey:@"point"];
+			NSTimeInterval interval = [currentPoint.date timeIntervalSinceDate:pointAtLastSplit.date];
+			[split setObject:[NSNumber numberWithDouble:interval] forKey:@"pace"];
+			[split setObject:[NSNumber numberWithFloat:(CGFloat)newDistamce] forKey:@"KM"];			
+			[splitKM addObject:split];
+		}
 	}
+	
 	MNXPoint *firstPoint = [pointArray objectAtIndex:0];
 	MNXPoint *lastPoint = [pointArray lastObject];
 	NSTimeInterval newDuration = [lastPoint.date timeIntervalSinceDate:firstPoint.date];
-	self.totalDistance = newDistamce;
-	self.duration = newDuration;
+	totalDistance = newDistamce;
+	duration = newDuration;
 	if (newDistamce > 0.0) {
-		self.averagePaceKM = newDuration / newDistamce;
+		averagePaceKM = newDuration / newDistamce;
 	}
 	else {
-		self.averagePaceKM = 0.0;
+		averagePaceKM = 0.0;
 	}
 	if (newDuration) {
-		self.averageSpeedKM = (newDistamce / newDuration) * 60.0 * 60.0;
+		averageSpeedKM = (newDistamce / newDuration) * 60.0 * 60.0;
 	}
 	else {
-		self.averageSpeedKM = 0.0;
+		averageSpeedKM = 0.0;
 	}
-//	NSLog(@"%f %f %f %f", totalDistance, duration, averagePaceKM, averageSpeedKM);
+	maxSpeedKM = newMaxSpeedKM;
 }
 
 - (NSArray *)points
 {
 	return [[pointArray copy] autorelease];
+}
+- (NSArray *)splitKM
+{
+	return [[splitKM copy] autorelease];
 }
 
 
@@ -326,5 +418,6 @@ static CGFloat distance(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
 @synthesize duration;
 @synthesize averagePaceKM;
 @synthesize averageSpeedKM;
+@synthesize maxSpeedKM;
 
 @end

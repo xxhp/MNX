@@ -37,6 +37,7 @@
 - (IBAction)selectDevice:(id)sender;
 - (IBAction)exportGPX:(id)sender;
 - (IBAction)exportKML:(id)sender;
+- (IBAction)exportTCX:(id)sender;
 - (IBAction)googleEarth:(id)sender;
 - (IBAction)showWindow:(id)sender;
 
