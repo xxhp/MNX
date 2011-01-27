@@ -34,6 +34,7 @@
 		D452126912EF061C00FF0DA2 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = D452126812EF061C00FF0DA2 /* pin.png */; };
 		D45212A212EF097900FF0DA2 /* googleearth.png in Resources */ = {isa = PBXBuildFile; fileRef = D45212A112EF097900FF0DA2 /* googleearth.png */; };
 		D4CB316B12F035150081D7B7 /* NSString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CB316A12F035150081D7B7 /* NSString+Extension.m */; };
+		D4CE6B7312F225EF0084683F /* MNXSpeedView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6B7212F225EF0084683F /* MNXSpeedView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -86,6 +87,8 @@
 		D45212A112EF097900FF0DA2 /* googleearth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = googleearth.png; sourceTree = "<group>"; };
 		D4CB316912F035150081D7B7 /* NSString+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Extension.h"; sourceTree = "<group>"; };
 		D4CB316A12F035150081D7B7 /* NSString+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Extension.m"; sourceTree = "<group>"; };
+		D4CE6B7112F225EF0084683F /* MNXSpeedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXSpeedView.h; sourceTree = "<group>"; };
+		D4CE6B7212F225EF0084683F /* MNXSpeedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXSpeedView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +182,8 @@
 			children = (
 				D444566612EF34EF00A181A9 /* MNXTrackCell.h */,
 				D444566712EF34EF00A181A9 /* MNXTrackCell.m */,
+				D4CE6B7112F225EF0084683F /* MNXSpeedView.h */,
+				D4CE6B7212F225EF0084683F /* MNXSpeedView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -354,6 +359,7 @@
 				D45211D612EEF57E00FF0DA2 /* MNXDataParser.m in Sources */,
 				D444566812EF34EF00A181A9 /* MNXTrackCell.m in Sources */,
 				D4CB316B12F035150081D7B7 /* NSString+Extension.m in Sources */,
+				D4CE6B7312F225EF0084683F /* MNXSpeedView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

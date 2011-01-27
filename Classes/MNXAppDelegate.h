@@ -3,6 +3,7 @@
 #import "MNXDataManager.h"
 #import "AMSerialPort.h"
 #import "AMSerialPortList.h"
+#import "MNXSpeedView.h"
 
 @interface MNXAppDelegate : NSObject
 	<NSApplicationDelegate,
@@ -20,6 +21,7 @@
 	NSTableView *tracksTableView;
 	NSTableView *pointsTableView;
 	NSTableView *paceTableView;
+	MNXSpeedView *speedView;
 	WebView *webView;
 	NSTextField *trackInfoLabel;
 	
@@ -48,6 +50,7 @@
 @property (assign) IBOutlet NSTableView *tracksTableView;
 @property (assign) IBOutlet NSTableView *pointsTableView;
 @property (assign) IBOutlet NSTableView *paceTableView;
+@property (assign) IBOutlet MNXSpeedView *speedView;
 @property (assign) IBOutlet WebView *webView;
 @property (assign) IBOutlet NSTextField *trackInfoLabel;
 
