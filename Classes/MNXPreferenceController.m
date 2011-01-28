@@ -65,7 +65,7 @@
 	NSTimeZone *currentTimeZone = [NSTimeZone systemTimeZone];
 	NSString *currentTimeZoneName = [currentTimeZone localizedName:NSTimeZoneNameStyleGeneric locale:[NSLocale currentLocale]];
 	
-	NSString *title = [NSString stringWithFormat:@"As System Time Zone on My Mac (%@)", currentTimeZoneName];
+	NSString *title = [NSString stringWithFormat:NSLocalizedString(@"As System Time Zone on My Mac (%@)", @""), currentTimeZoneName];
 	[aCell setTitle:title];
 
 	[self deselectAllTimeZone];
@@ -101,7 +101,7 @@
 }
 - (void)setNewTimeZoneSettingWithName:(NSString *)newTimeZoneName
 {
-	[[self undoManager] setActionName:@"Changing Time Zone Setting"];
+	[[self undoManager] setActionName:NSLocalizedString(@"Changing Time Zone Setting", @"Undo action")];
 	[[[self undoManager] prepareWithInvocationTarget:self] setNewTimeZoneSettingWithName:AppConfig().deviceTimeZoneName];	
 	AppConfig().deviceTimeZoneName = newTimeZoneName;
 	[self refresh];

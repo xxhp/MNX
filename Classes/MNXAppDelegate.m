@@ -70,7 +70,7 @@
 	}	
 	[portListArrayController setContent:[NSMutableArray arrayWithArray:a]];	
 		
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@"Devices"] autorelease];
+	NSMenu *menu = [[[NSMenu alloc] initWithTitle:NSLocalizedString(@"Devices", @"")] autorelease];
 	NSUInteger tag = 0;
 	for (AMSerialPort *p in a) {
 		NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:[p name] action:@selector(selectDevice:) keyEquivalent:@""] autorelease];
@@ -79,7 +79,7 @@
 		[menu addItem:menuItem];
 	}
 	if (![a count]) {
-		NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:@"No Device" action:NULL keyEquivalent:@""] autorelease];	
+		NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"No Device", @"") action:NULL keyEquivalent:@""] autorelease];	
 		[menu addItem:menuItem];
 	}
 	[deviceListMenuItem setSubmenu:menu];
@@ -104,7 +104,7 @@
 - (NSMenu *)applicationDockMenu:(NSApplication *)sender
 {
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@"Dock Menu"] autorelease];
-	NSMenuItem *mainItem = [[[NSMenuItem alloc] initWithTitle:@"MNX" action:@selector(showWindow:) keyEquivalent:@""] autorelease];
+	NSMenuItem *mainItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"MNX", @"") action:@selector(showWindow:) keyEquivalent:@""] autorelease];
 	[mainItem setTarget:self];
 	[menu addItem:mainItem];
 	return menu;
@@ -142,8 +142,8 @@
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
 	[savePanel setAllowedFileTypes:[NSArray arrayWithObject:@"gpx"]];
 	[savePanel setAllowsOtherFileTypes:NO];
-	[savePanel setPrompt:@"Export"];
-	[savePanel setNameFieldLabel:@"Export As:"];
+	[savePanel setPrompt:NSLocalizedString(@"Export", @"")];
+	[savePanel setNameFieldLabel:NSLocalizedString(@"Export As:", @"")];
 	NSString *filename = [[aTrack title] stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
 	filename = [filename stringByReplacingOccurrencesOfString:@":" withString:@"-"];
 	[savePanel setNameFieldStringValue:filename];	
@@ -167,8 +167,8 @@
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
 	[savePanel setAllowedFileTypes:[NSArray arrayWithObject:@"kml"]];
 	[savePanel setAllowsOtherFileTypes:NO];
-	[savePanel setPrompt:@"Export"];
-	[savePanel setNameFieldLabel:@"Export As:"];
+	[savePanel setPrompt:NSLocalizedString(@"Export", @"")];
+	[savePanel setNameFieldLabel:NSLocalizedString(@"Export As:", @"")];
 	NSString *filename = [[aTrack title] stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
 	filename = [filename stringByReplacingOccurrencesOfString:@":" withString:@"-"];
 	[savePanel setNameFieldStringValue:filename];
@@ -192,8 +192,8 @@
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
 	[savePanel setAllowedFileTypes:[NSArray arrayWithObject:@"tcx"]];
 	[savePanel setAllowsOtherFileTypes:NO];
-	[savePanel setPrompt:@"Export"];
-	[savePanel setNameFieldLabel:@"Export As:"];
+	[savePanel setPrompt:NSLocalizedString(@"Export", @"")];
+	[savePanel setNameFieldLabel:NSLocalizedString(@"Export As:", @"")];
 	NSString *filename = [[aTrack title] stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
 	filename = [filename stringByReplacingOccurrencesOfString:@":" withString:@"-"];
 	[savePanel setNameFieldStringValue:filename];
@@ -210,7 +210,7 @@
 	NSWorkspace *space = [NSWorkspace sharedWorkspace];
 	NSString *path = [space absolutePathForAppBundleWithIdentifier:@"com.Google.GoogleEarthPlus"];
 	if (!path) {
-		NSAlert *alert = [NSAlert alertWithMessageText:@"Google Earth is not installed." defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:@"Please install Google Earth."];
+		NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Google Earth is not installed.", @"") defaultButton:NSLocalizedString(@"OK", @"") alternateButton:nil otherButton:nil informativeTextWithFormat:NSLocalizedString(@"Please install Google Earth.", @"")];
 		[alert beginSheetModalForWindow:window modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 		return;
 	}
@@ -240,10 +240,10 @@
 {
 	NSTableColumn *aColumn = [paceTableView tableColumnWithIdentifier:@"unit"];
 	if ([NSLocale usingUSMeasurementUnit]) {
-		[[aColumn headerCell] setStringValue:@"Miles"];
+		[[aColumn headerCell] setStringValue:NSLocalizedString(@"Miles", @"")];
 	}
 	else {
-		[[aColumn headerCell] setStringValue:@"KM"];
+		[[aColumn headerCell] setStringValue:NSLocalizedString(@"KM", @"")];
 	}
 	
 	if (!self.currentTrack) {
@@ -299,7 +299,7 @@
 	NSLog(@"%s", __PRETTY_FUNCTION__);
 	[NSApp beginSheet:sheetWindow modalForWindow:window modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 	[sheetWindow orderFront:self];
-	[messageLabel setStringValue:@"Start downloading data..."];
+	[messageLabel setStringValue:NSLocalizedString(@"Start downloading data...", @"")];
 	[progressIndicator setUsesThreadedAnimation:YES];
 	[progressIndicator setIndeterminate:YES];
 	[progressIndicator startAnimation:self];
@@ -308,7 +308,7 @@
 - (void)downloadManager:(MNXDataManager *)inManager didDownloadData:(CGFloat)inProgress
 {
 	NSLog(@"%s %f", __PRETTY_FUNCTION__, inProgress);
-	[messageLabel setStringValue:[NSString stringWithFormat:@"Downloading data, %d%% completed.", (NSInteger)(inProgress * 100)]];
+	[messageLabel setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Downloading data, %d%% completed...", @""), (NSInteger)(inProgress * 100)]];
 	[progressIndicator setIndeterminate:NO];
 	[progressIndicator setMaxValue:1.0];
 	[progressIndicator setMinValue:0.0];
@@ -317,12 +317,10 @@
 }
 - (void)downloadManagerDidFinishDownloadingData:(MNXDataManager *)inManager
 {
-	NSLog(@"%s", __PRETTY_FUNCTION__);
 }
 - (void)downloadManagerDidStartParsingData:(MNXDataManager *)inManager
 {
-	NSLog(@"%s", __PRETTY_FUNCTION__);
-	[messageLabel setStringValue:@"Start parsing data..."];
+	[messageLabel setStringValue:NSLocalizedString(@"Start parsing data...", @"")];
 	[progressIndicator setUsesThreadedAnimation:YES];
 	[progressIndicator setIndeterminate:YES];	
 }
@@ -428,7 +426,6 @@
 }
 - (void)localeDidChange:(NSNotification *)n
 {
-	NSLog(@"Locale changed");
 	[self refresh];
 }
 

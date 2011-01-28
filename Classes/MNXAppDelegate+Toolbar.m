@@ -10,8 +10,9 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 {
 	if ([itemIdentifier isEqualToString:kPortPopUpButtonItem]) {
 		NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:kPortPopUpButtonItem] autorelease];
-		[item setLabel:@"Device"];
-		[item setToolTip:@"Device"];
+		[item setLabel:NSLocalizedString(@"Device", @"")];
+		[item setToolTip:NSLocalizedString(@"Select the desired device.", @"")];
+		[item setPaletteLabel:NSLocalizedString(@"Device", @"")];
 		[item setView:portPopUpButton];
 		[item setMaxSize:NSMakeSize(200.0, 32.0)];
 		[item setMinSize:NSMakeSize(120.0, 32.0)];
@@ -20,8 +21,9 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	if ([itemIdentifier isEqualToString:kGoogleEarthItem]) {
 		NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:kGoogleEarthItem] autorelease];
 		[item setImage:[NSImage imageNamed:@"googleearth"]];
-		[item setLabel:@"Google Earth"];
-		[item setToolTip:@"View in Google Earth"];
+		[item setLabel:NSLocalizedString(@"Google Earth", @"")];
+		[item setToolTip:NSLocalizedString(@"View in Google Earth.", @"")];
+		[item setPaletteLabel:NSLocalizedString(@"Google Earth", @"")];
 		[item setTarget:self];
 		[item setAction:@selector(googleEarth:)];
 		return item;
@@ -29,8 +31,9 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	if ([itemIdentifier isEqualToString:kDownloadItem]) {
 		NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:kDownloadItem] autorelease];
 		[item setImage:[NSImage imageNamed:@"download"]];
-		[item setLabel:@"Download"];
-		[item setToolTip:@"Download"];
+		[item setLabel:NSLocalizedString(@"Download", @"")];
+		[item setToolTip:NSLocalizedString(@"Download data from your GPS device.", @"")];
+		[item setPaletteLabel:NSLocalizedString(@"Download", @"")];
 		[item setTarget:self];
 		[item setAction:@selector(download:)];
 		return item;
