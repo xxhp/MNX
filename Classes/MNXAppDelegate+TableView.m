@@ -77,29 +77,18 @@
 		NSInteger selectedRow = [inTableView selectedRow];
 		if (selectedRow < 0) {
 			self.currentTrack = nil;
-			[pointsTableView reloadData];
-			[paceTableView reloadData];
-			[trackInfoLabel setStringValue:@""];
+			[self refresh];
 			[[webView mainFrame] loadHTMLString:@"" baseURL:nil];
-			speedView.currentTrack = nil;
 		}
 		else {		
 			MNXTrack *aTrack = [dataManager.tracks objectAtIndex:selectedRow];
 			self.currentTrack = aTrack;
-			[pointsTableView reloadData];
-			[paceTableView reloadData];
-			[[webView mainFrame] loadHTMLString:[self.currentTrack HTML] baseURL:nil];
+			[self refresh];
 			if ([self.currentTrack.points count]) {
 				[pointsTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
 				[pointsTableView scrollRowToVisible:0];
 			}
-			CGFloat distance = aTrack.totalDistance;
-			NSTimeInterval duration = aTrack.duration;
-			NSTimeInterval pace = aTrack.averagePaceKM;
-			CGFloat speed = aTrack.averageSpeedKM;
-			NSString *info = [NSString stringWithFormat:@"%@ %.2f %@, %@ %@, %@ %@, %@ %.2f %@", @"Distance:", distance, @"KM", @"Duration:", NSStringFromNSTimeInterval(duration), @"Average Pace:", NSStringFromNSTimeInterval(pace), @"Average Speed:", speed, @"KM"];
-			[trackInfoLabel setStringValue:info];
-			speedView.currentTrack = aTrack;			
+			[[webView mainFrame] loadHTMLString:[self.currentTrack HTML] baseURL:nil];
 		}
 	}
 }

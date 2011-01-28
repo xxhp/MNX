@@ -6,6 +6,8 @@
 
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
 	[currentTrack release];
 	[dateFormatter release];
 	[dataManager release];
@@ -40,6 +42,11 @@
 	[dateFormatter setDateStyle:NSDateFormatterShortStyle];
 	[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
 	[trackInfoLabel setStringValue:@""];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(systemTimeDidChange:) name:NSSystemClockDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(timeZoneDidChange:) name:NSSystemTimeZoneDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localeDidChange:) name:NSCurrentLocaleDidChangeNotification object:nil];	
+	
 }
 
 - (void)updatePorts
@@ -215,6 +222,28 @@
 	[window makeKeyAndOrderFront:self];
 }
 
+- (void)refresh
+{
+	if (!self.currentTrack) {
+		[pointsTableView reloadData];
+		[paceTableView reloadData];
+		[trackInfoLabel setStringValue:@""];
+		speedView.currentTrack = nil;
+	}
+	else {		
+		[pointsTableView reloadData];
+		[paceTableView reloadData];
+		CGFloat distance = self.currentTrack.totalDistance;
+		NSTimeInterval duration = self.currentTrack.duration;
+		NSTimeInterval pace = self.currentTrack.averagePaceKM;
+		CGFloat speed = self.currentTrack.averageSpeedKM;
+		NSString *info = [NSString stringWithFormat:@"%@ %.2f %@, %@ %@, %@ %@, %@ %.2f %@", @"Distance:", distance, @"KM", @"Duration:", NSStringFromNSTimeInterval(duration), @"Average Pace:", NSStringFromNSTimeInterval(pace), @"Average Speed:", speed, @"KM"];
+		[trackInfoLabel setStringValue:info];
+		speedView.currentTrack = self.currentTrack;	
+	}
+}
+
+
 #pragma mark -
 #pragma mark AMSerialPortListDidAddPortsNotification and AMSerialPortListDidRemovePortsNotification
 
@@ -362,6 +391,22 @@
 		}		
 	}
 	return YES;
+}
+
+#pragma mark -
+#pragma mark Notifications
+
+- (void)systemTimeDidChange:(NSNotification *)n
+{
+	[self refresh];
+}
+- (void)timeZoneDidChange:(NSNotification *)n
+{
+	[self refresh];
+}
+- (void)localeDidChange:(NSNotification *)n
+{
+	[self refresh];
 }
 
 #pragma mark -

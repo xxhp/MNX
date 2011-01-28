@@ -41,6 +41,8 @@
 - (IBAction)googleEarth:(id)sender;
 - (IBAction)showWindow:(id)sender;
 
+- (void)refresh;
+
 @property (retain, nonatomic) MNXTrack *currentTrack;
 
 @property (assign) IBOutlet NSWindow *window;
