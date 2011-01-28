@@ -197,6 +197,12 @@
 			
 		}
 	}
+	else {
+		CGRect labelFrame = CGRectMake(NSMaxX(drawingFrame) - frameWidth, NSMinY(drawingFrame) - 20.0, frameWidth, 13.0);
+		[style setAlignment:NSRightTextAlignment];
+		NSString *labelText = [NSString stringWithFormat:@"%.2f", self.currentTrack.totalDistance];
+		[labelText drawInRect:labelFrame withAttributes:attr];		
+	}
 	
 	NSBezierPath *path = [NSBezierPath bezierPath];
 	[path setLineJoinStyle:NSRoundLineJoinStyle];
