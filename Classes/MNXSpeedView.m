@@ -80,6 +80,9 @@
 	if ([self.currentTrack.points count] < 2) {
 		return;
 	}
+	if (!self.currentTrack.totalDistance) {
+		return;
+	}
 	
 	[style setAlignment:NSRightTextAlignment];
 	

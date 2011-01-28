@@ -7,10 +7,7 @@
 
 @interface MNXAppDelegate : NSObject
 	<NSApplicationDelegate,
-	NSToolbarDelegate,
-	MNXDataManagerDelegate,
-	NSTableViewDataSource,
-	NSTableViewDelegate> 
+	MNXDataManagerDelegate> 
 {
 	MNXDataManager *dataManager;
 	MNXTrack *currentTrack;
@@ -62,4 +59,10 @@
 @property (assign) IBOutlet NSPopUpButton *portPopUpButton;
 @property (assign) IBOutlet NSMenuItem *deviceListMenuItem;
 
+@end
+
+@interface MNXAppDelegate(TableView) <NSTableViewDataSource, NSTableViewDelegate>
+@end
+
+@interface MNXAppDelegate(Toolbar) <NSToolbarDelegate>
 @end

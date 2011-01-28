@@ -35,6 +35,8 @@
 		D45212A212EF097900FF0DA2 /* googleearth.png in Resources */ = {isa = PBXBuildFile; fileRef = D45212A112EF097900FF0DA2 /* googleearth.png */; };
 		D4CB316B12F035150081D7B7 /* NSString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CB316A12F035150081D7B7 /* NSString+Extension.m */; };
 		D4CE6B7312F225EF0084683F /* MNXSpeedView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6B7212F225EF0084683F /* MNXSpeedView.m */; };
+		D4CE6E5B12F2A0D60084683F /* MNXAppDelegate+TableView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6E5A12F2A0D60084683F /* MNXAppDelegate+TableView.m */; };
+		D4CE6E7E12F2A1AD0084683F /* MNXAppDelegate+Toolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6E7D12F2A1AD0084683F /* MNXAppDelegate+Toolbar.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -89,6 +91,8 @@
 		D4CB316A12F035150081D7B7 /* NSString+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Extension.m"; sourceTree = "<group>"; };
 		D4CE6B7112F225EF0084683F /* MNXSpeedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXSpeedView.h; sourceTree = "<group>"; };
 		D4CE6B7212F225EF0084683F /* MNXSpeedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXSpeedView.m; sourceTree = "<group>"; };
+		D4CE6E5A12F2A0D60084683F /* MNXAppDelegate+TableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MNXAppDelegate+TableView.m"; sourceTree = "<group>"; };
+		D4CE6E7D12F2A1AD0084683F /* MNXAppDelegate+Toolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MNXAppDelegate+Toolbar.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,11 +195,10 @@
 		D452073712EDC18500FF0DA2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				D4CE6E5512F2A0B00084683F /* App Delegate */,
 				D4CB316612F035000081D7B7 /* Extensions */,
 				D444566312EF34DC00A181A9 /* View */,
 				D452073B12EDC18B00FF0DA2 /* Data Model */,
-				D452073812EDC18500FF0DA2 /* MNXAppDelegate.h */,
-				D452073912EDC18500FF0DA2 /* MNXAppDelegate.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -273,6 +276,17 @@
 				D4CB316A12F035150081D7B7 /* NSString+Extension.m */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		D4CE6E5512F2A0B00084683F /* App Delegate */ = {
+			isa = PBXGroup;
+			children = (
+				D452073812EDC18500FF0DA2 /* MNXAppDelegate.h */,
+				D452073912EDC18500FF0DA2 /* MNXAppDelegate.m */,
+				D4CE6E5A12F2A0D60084683F /* MNXAppDelegate+TableView.m */,
+				D4CE6E7D12F2A1AD0084683F /* MNXAppDelegate+Toolbar.m */,
+			);
+			name = "App Delegate";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -360,6 +374,8 @@
 				D444566812EF34EF00A181A9 /* MNXTrackCell.m in Sources */,
 				D4CB316B12F035150081D7B7 /* NSString+Extension.m in Sources */,
 				D4CE6B7312F225EF0084683F /* MNXSpeedView.m in Sources */,
+				D4CE6E5B12F2A0D60084683F /* MNXAppDelegate+TableView.m in Sources */,
+				D4CE6E7E12F2A1AD0084683F /* MNXAppDelegate+Toolbar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
