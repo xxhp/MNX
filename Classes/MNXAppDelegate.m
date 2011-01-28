@@ -12,12 +12,16 @@
 	[currentTrack release];
 	[dateFormatter release];
 	[dataManager release];
+	[preferenceController release];
 	[super dealloc];
 }
 
 - (void)awakeFromNib
 {
 	[window center];
+	
+	preferenceController = [[MNXPreferenceController alloc] init];
+	
 	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"toolbar"] autorelease];
 	[toolbar setDelegate:self];
 	[toolbar setAllowsUserCustomization:YES];
@@ -226,6 +230,10 @@
 - (IBAction)showWindow:(id)sender
 {
 	[window makeKeyAndOrderFront:self];
+}
+- (IBAction)showPreference:(id)sender
+{
+	[preferenceController showWindow:sender];
 }
 
 - (void)refresh

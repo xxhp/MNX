@@ -4,6 +4,7 @@
 #import "AMSerialPort.h"
 #import "AMSerialPortList.h"
 #import "MNXSpeedView.h"
+#import "MNXPreferenceController.h"
 
 @interface MNXAppDelegate : NSObject
 	<NSApplicationDelegate,
@@ -33,6 +34,8 @@
 	NSPopUpButton *portPopUpButton;
 	
 	NSMenuItem *deviceListMenuItem;
+	
+	MNXPreferenceController *preferenceController;
 }
 
 - (IBAction)download:(id)sender;
@@ -43,6 +46,7 @@
 - (IBAction)exportTCX:(id)sender;
 - (IBAction)googleEarth:(id)sender;
 - (IBAction)showWindow:(id)sender;
+- (IBAction)showPreference:(id)sender;
 
 - (void)refresh;
 

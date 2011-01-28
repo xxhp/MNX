@@ -40,6 +40,9 @@
 		D4CE6EA312F2A6970084683F /* MNXAppDelegate+Web.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6EA212F2A6970084683F /* MNXAppDelegate+Web.m */; };
 		D4CE6F1E12F2B44D0084683F /* MNXAppDelegate+SplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6F1D12F2B44D0084683F /* MNXAppDelegate+SplitView.m */; };
 		D4CE6FDF12F2BE780084683F /* NSLocale+MNXExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6FDE12F2BE780084683F /* NSLocale+MNXExtension.m */; };
+		D4CE70A412F30F400084683F /* MNXAppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE70A312F30F400084683F /* MNXAppConfig.m */; };
+		D4CE70B112F3106A0084683F /* MNXPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE70B012F3106A0084683F /* MNXPreferenceController.m */; };
+		D4CE70B712F310940084683F /* MNXPreferenceController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D4CE70B612F310940084683F /* MNXPreferenceController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +103,11 @@
 		D4CE6F1D12F2B44D0084683F /* MNXAppDelegate+SplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MNXAppDelegate+SplitView.m"; sourceTree = "<group>"; };
 		D4CE6FDD12F2BE780084683F /* NSLocale+MNXExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSLocale+MNXExtension.h"; sourceTree = "<group>"; };
 		D4CE6FDE12F2BE780084683F /* NSLocale+MNXExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSLocale+MNXExtension.m"; sourceTree = "<group>"; };
+		D4CE70A212F30F400084683F /* MNXAppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXAppConfig.h; sourceTree = "<group>"; };
+		D4CE70A312F30F400084683F /* MNXAppConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXAppConfig.m; sourceTree = "<group>"; };
+		D4CE70AF12F3106A0084683F /* MNXPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXPreferenceController.h; sourceTree = "<group>"; };
+		D4CE70B012F3106A0084683F /* MNXPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXPreferenceController.m; sourceTree = "<group>"; };
+		D4CE70B412F3108F0084683F /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MNXPreferenceController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,6 +183,7 @@
 				8D1107310486CEB800E47090 /* MNX-Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
+				D4CE70B612F310940084683F /* MNXPreferenceController.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -202,6 +211,7 @@
 		D452073712EDC18500FF0DA2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				D4CE70AC12F3105A0084683F /* Controllers */,
 				D4CE6E5512F2A0B00084683F /* App Delegate */,
 				D4CB316612F035000081D7B7 /* Extensions */,
 				D444566312EF34DC00A181A9 /* View */,
@@ -223,6 +233,8 @@
 				D45211D512EEF57E00FF0DA2 /* MNXDataParser.m */,
 				D452074E12EDC50D00FF0DA2 /* MNXDataManager.h */,
 				D452074F12EDC50D00FF0DA2 /* MNXDataManager.m */,
+				D4CE70A212F30F400084683F /* MNXAppConfig.h */,
+				D4CE70A312F30F400084683F /* MNXAppConfig.m */,
 			);
 			name = "Data Model";
 			sourceTree = "<group>";
@@ -300,6 +312,15 @@
 			name = "App Delegate";
 			sourceTree = "<group>";
 		};
+		D4CE70AC12F3105A0084683F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				D4CE70AF12F3106A0084683F /* MNXPreferenceController.h */,
+				D4CE70B012F3106A0084683F /* MNXPreferenceController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -359,6 +380,7 @@
 				D42C5B0E12EF165C00B8BC51 /* MNX.icns in Resources */,
 				D444565512EF333E00A181A9 /* Credits.rtf in Resources */,
 				D444568112EF3A4600A181A9 /* pinHighlight.png in Resources */,
+				D4CE70B712F310940084683F /* MNXPreferenceController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -390,6 +412,8 @@
 				D4CE6EA312F2A6970084683F /* MNXAppDelegate+Web.m in Sources */,
 				D4CE6F1E12F2B44D0084683F /* MNXAppDelegate+SplitView.m in Sources */,
 				D4CE6FDF12F2BE780084683F /* NSLocale+MNXExtension.m in Sources */,
+				D4CE70A412F30F400084683F /* MNXAppConfig.m in Sources */,
+				D4CE70B112F3106A0084683F /* MNXPreferenceController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,6 +442,14 @@
 				D444565412EF333E00A181A9 /* English */,
 			);
 			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		D4CE70B612F310940084683F /* MNXPreferenceController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D4CE70B412F3108F0084683F /* English */,
+			);
+			name = MNXPreferenceController.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
