@@ -1,4 +1,5 @@
 #import "MNXAppDelegate.h"
+#import "NSLocale+MNXExtension.h"
 #import "NSString+Extension.h"
 
 @implementation MNXAppDelegate(TableView)
@@ -15,6 +16,9 @@
 		return [currentTrack.points count];
 	}
 	else if (inTableView == paceTableView) {
+		if ([NSLocale usingUSMeasurementUnit]) {
+			return [currentTrack.splitMile count];
+		}
 		return [currentTrack.splitKM count];
 	}	
 	return 0;
@@ -59,7 +63,14 @@
 	}
 	else if (inTableView == paceTableView) {
 		NSString *ci = [inTableColumn identifier];
-		NSDictionary *split = [currentTrack.splitKM objectAtIndex:inRow];
+		NSDictionary *split = nil;
+		if ([NSLocale usingUSMeasurementUnit]) {
+			split = [currentTrack.splitMile objectAtIndex:inRow];
+		}
+		else {
+			split= [currentTrack.splitKM objectAtIndex:inRow];
+		}
+	
 		if ([ci isEqualToString:@"unit"]) {
 			return [split objectForKey:@"distance"];
 		}		

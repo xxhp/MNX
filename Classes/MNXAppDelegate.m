@@ -1,6 +1,7 @@
 #import "MNXAppDelegate.h"
 #import "MNXTrackCell.h"
 #import "NSString+Extension.h"
+#import "NSLocale+MNXExtension.h"
 
 @implementation MNXAppDelegate
 
@@ -45,6 +46,8 @@
 	
 	[contentSplitView setDelegate:self];
 	[mainSplitView setDelegate:self];
+	
+	[self refresh];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(systemTimeDidChange:) name:NSSystemClockDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(timeZoneDidChange:) name:NSSystemTimeZoneDidChangeNotification object:nil];
@@ -227,6 +230,14 @@
 
 - (void)refresh
 {
+	NSTableColumn *aColumn = [paceTableView tableColumnWithIdentifier:@"unit"];
+	if ([NSLocale usingUSMeasurementUnit]) {
+		[[aColumn headerCell] setStringValue:@"Miles"];
+	}
+	else {
+		[[aColumn headerCell] setStringValue:@"KM"];
+	}
+	
 	if (!self.currentTrack) {
 		[pointsTableView reloadData];
 		[paceTableView reloadData];
@@ -236,7 +247,7 @@
 	else {		
 		[pointsTableView reloadData];
 		[paceTableView reloadData];
-		CGFloat distance = self.currentTrack.totalDistance;
+		CGFloat distance = self.currentTrack.totalDistanceKM;
 		NSTimeInterval duration = self.currentTrack.duration;
 		NSTimeInterval pace = self.currentTrack.averagePaceKM;
 		CGFloat speed = self.currentTrack.averageSpeedKM;
@@ -409,6 +420,7 @@
 }
 - (void)localeDidChange:(NSNotification *)n
 {
+	NSLog(@"Locale changed");
 	[self refresh];
 }
 

@@ -19,7 +19,16 @@ static CGFloat distanceKM(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2
 	dist = acos(dist) * 6373.0;
 	return dist;
 }
-						
+
+static CGFloat distanceMile(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2)
+{
+	CGFloat theta = lon1 - lon2;
+	CGFloat dist = sin(degreeToRadian(lat1)) * sin(degreeToRadian(lat2)) + cos(degreeToRadian(lat1)) * cos(degreeToRadian(lat2)) * cos(degreeToRadian(theta));
+	dist = acos(dist) * 3960.0;
+	return dist;
+}
+
+
 
 @implementation MNXTrack
 
@@ -27,6 +36,7 @@ static CGFloat distanceKM(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2
 {
 	[pointArray release];
 	[splitKM release];
+	[splitMile release];
 	[super dealloc];
 }
 
@@ -36,6 +46,7 @@ static CGFloat distanceKM(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2
 	if (self != nil) {
 		pointArray = [[NSMutableArray alloc] init];
 		splitKM = [[NSMutableArray alloc] init];
+		splitMile = [[NSMutableArray alloc] init];
 	}
 	return self;
 }
@@ -52,6 +63,9 @@ static CGFloat distanceKM(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2
 	MNXPoint *point = [pointArray objectAtIndex:0];
 	return [formatter stringFromDate:point.date];
 }
+
+#pragma mark -
+#pragma mark XML Data
 
 - (NSData *)GPXData
 {
@@ -219,7 +233,7 @@ static CGFloat distanceKM(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2
 		NSXMLElement *lap = (NSXMLElement *)[NSXMLNode elementWithName:@"Lap"];
 		[lap addAttribute:[NSXMLNode attributeWithName:@"StartTime" stringValue:activityID]];
 		[lap addChild:[NSXMLNode elementWithName:@"TotalTimeSeconds" stringValue:[NSString stringWithFormat:@"%f", duration]]];
-		[lap addChild:[NSXMLNode elementWithName:@"DistanceMeters" stringValue:[NSString stringWithFormat:@"%f", totalDistance * 100.0]]];
+		[lap addChild:[NSXMLNode elementWithName:@"DistanceMeters" stringValue:[NSString stringWithFormat:@"%f", totalDistanceKM * 100.0]]];
 		NSXMLElement *track = (NSXMLElement *)[NSXMLNode elementWithName:@"Track"];		
 		for (MNXPoint *point in pointArray) {
 			NSXMLElement *trackPoint = (NSXMLElement *)[NSXMLNode elementWithName:@"Trackpoint"];
@@ -327,38 +341,65 @@ static CGFloat distanceKM(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2
 	return HTML;
 }
 
+#pragma mark -
+#pragma mark Properties
 
 - (void)setPoints:(NSArray *)inPoints
 {
 	[pointArray setArray:inPoints];
 	[splitKM removeAllObjects];
+	[splitMile removeAllObjects];
+	
+	duration = 0.0;
+	totalDistanceKM = 0.0;
+	averagePaceKM = 0.0;
+	averageSpeedKM = 0.0;
+	maxSpeedKM = 0.0;
+	totalDistanceMile = 0.0;
+	averagePaceMile = 0.0;
+	averageSpeedMile = 0.0;
+	maxSpeedMile = 0.0;		
 	
 	if ([pointArray count] < 1) {
-		totalDistance = 0.0;
-		duration = 0.0;
-		averagePaceKM = 0.0;
-		averageSpeedKM = 0.0;
-		maxSpeedKM = 0.0;
 		return;
 	}
 	
-	CGFloat newDistamce = 0.0;
+	CGFloat newDistanceKM = 0.0;
 	CGFloat newMaxSpeedKM = 0.0;
+	CGFloat newDistanceMile = 0.0;
+	CGFloat newMaxSpeedMile = 0.0;
 	
 	for (NSInteger i = 1; i < [pointArray count]; i++) {
 		MNXPoint *currentPoint = [pointArray objectAtIndex:i];
 		MNXPoint *previousPoint = [pointArray objectAtIndex:i - 1];
-		CGFloat aDistance = distanceKM(currentPoint.latitude, currentPoint.longitude, previousPoint.latitude, previousPoint.longitude);
-		if (aDistance > 0.0) {
-			newDistamce += aDistance;			
-		}
-		currentPoint.distanceKM = newDistamce;
-		currentPoint.speedKM = aDistance / fabs([currentPoint.date timeIntervalSinceDate:previousPoint.date]) * 60.0 * 60.0;
-		if (currentPoint.speedKM > newMaxSpeedKM) {
-			newMaxSpeedKM = currentPoint.speedKM ;
-		}
+
+		/// KM
 		
-		if ((NSInteger)newDistamce > [splitKM count]) {
+		CGFloat aDistanceKM = distanceKM(currentPoint.latitude, currentPoint.longitude, previousPoint.latitude, previousPoint.longitude);
+		if (aDistanceKM > 0.0) {
+			newDistanceKM += aDistanceKM;			
+		}
+		currentPoint.distanceKM = newDistanceKM;
+		currentPoint.speedKM = aDistanceKM / fabs([currentPoint.date timeIntervalSinceDate:previousPoint.date]) * 60.0 * 60.0;
+		if (currentPoint.speedKM > newMaxSpeedKM) {
+			newMaxSpeedKM = currentPoint.speedKM;
+		}
+
+		/// Mile
+		
+		CGFloat aDistanceMile = distanceMile(currentPoint.latitude, currentPoint.longitude, previousPoint.latitude, previousPoint.longitude);
+		if (aDistanceMile > 0.0) {
+			newDistanceMile += aDistanceMile;			
+		}
+		currentPoint.distanceMile = newDistanceMile;
+		currentPoint.speedMile = aDistanceMile / fabs([currentPoint.date timeIntervalSinceDate:previousPoint.date]) * 60.0 * 60.0;
+		if (currentPoint.speedMile > newMaxSpeedMile) {
+			newMaxSpeedMile = currentPoint.speedMile;
+		}
+
+		/// KM
+		
+		if ((NSInteger)newDistanceKM > [splitKM count]) {
 			MNXPoint *pointAtLastSplit = [[splitKM lastObject] objectForKey:@"point"];
 			if (!pointAtLastSplit) {
 				pointAtLastSplit = [pointArray objectAtIndex:0];
@@ -367,7 +408,7 @@ static CGFloat distanceKM(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2
 			[split setObject:currentPoint forKey:@"point"];
 			NSTimeInterval interval = [currentPoint.date timeIntervalSinceDate:pointAtLastSplit.date];
 			[split setObject:[NSNumber numberWithDouble:interval] forKey:@"pace"];
-			[split setObject:[NSNumber numberWithInt:(NSInteger)newDistamce] forKey:@"distance"];
+			[split setObject:[NSNumber numberWithInt:(NSInteger)newDistanceKM] forKey:@"distance"];
 			[splitKM addObject:split];
 		}
 		else if (i == [pointArray count] - 1 && ![splitKM count]) {
@@ -379,45 +420,80 @@ static CGFloat distanceKM(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lon2
 			[split setObject:currentPoint forKey:@"point"];
 			NSTimeInterval interval = [currentPoint.date timeIntervalSinceDate:pointAtLastSplit.date];
 			[split setObject:[NSNumber numberWithDouble:interval] forKey:@"pace"];
-			[split setObject:[NSNumber numberWithFloat:(CGFloat)newDistamce] forKey:@"distance"];			
+			[split setObject:[NSNumber numberWithFloat:(CGFloat)newDistanceKM] forKey:@"distance"];			
 			[splitKM addObject:split];
+		}
+		
+		/// Mile
+		
+		if ((NSInteger)newDistanceMile > [splitMile count]) {
+			MNXPoint *pointAtLastSplit = [[splitMile lastObject] objectForKey:@"point"];
+			if (!pointAtLastSplit) {
+				pointAtLastSplit = [pointArray objectAtIndex:0];
+			}
+			NSMutableDictionary *split =[NSMutableDictionary dictionary];
+			[split setObject:currentPoint forKey:@"point"];
+			NSTimeInterval interval = [currentPoint.date timeIntervalSinceDate:pointAtLastSplit.date];
+			[split setObject:[NSNumber numberWithDouble:interval] forKey:@"pace"];
+			[split setObject:[NSNumber numberWithInt:(NSInteger)newDistanceMile] forKey:@"distance"];
+			[splitMile addObject:split];
+		}
+		else if (i == [pointArray count] - 1 && ![splitMile count]) {
+			MNXPoint *pointAtLastSplit = [[splitMile lastObject] objectForKey:@"point"];
+			if (!pointAtLastSplit) {
+				pointAtLastSplit = [pointArray objectAtIndex:0];
+			}			
+			NSMutableDictionary *split =[NSMutableDictionary dictionary];
+			[split setObject:currentPoint forKey:@"point"];
+			NSTimeInterval interval = [currentPoint.date timeIntervalSinceDate:pointAtLastSplit.date];
+			[split setObject:[NSNumber numberWithDouble:interval] forKey:@"pace"];
+			[split setObject:[NSNumber numberWithFloat:(CGFloat)newDistanceMile] forKey:@"distance"];			
+			[splitMile addObject:split];
 		}
 	}
 	
 	MNXPoint *firstPoint = [pointArray objectAtIndex:0];
 	MNXPoint *lastPoint = [pointArray lastObject];
+	
 	NSTimeInterval newDuration = [lastPoint.date timeIntervalSinceDate:firstPoint.date];
-	totalDistance = newDistamce;
 	duration = newDuration;
-	if (newDistamce > 0.0) {
-		averagePaceKM = newDuration / newDistamce;
+	
+	totalDistanceKM = newDistanceKM;
+	totalDistanceMile = newDistanceMile;
+
+	if (newDistanceKM > 0.0) {
+		averagePaceKM = newDuration / newDistanceKM;
 	}
-	else {
-		averagePaceKM = 0.0;
+
+	if (newDistanceMile > 0.0) {
+		averagePaceMile = newDuration / newDistanceMile;
 	}
+	
 	if (newDuration) {
-		averageSpeedKM = (newDistamce / newDuration) * 60.0 * 60.0;
-	}
-	else {
-		averageSpeedKM = 0.0;
+		averageSpeedKM = (newDistanceKM / newDuration) * 60.0 * 60.0;
+		averageSpeedMile = (newDistanceMile / newDuration) * 60.0 * 60.0;
 	}
 	maxSpeedKM = newMaxSpeedKM;
+	maxSpeedMile = newMaxSpeedMile;
 }
 
 - (NSArray *)points
 {
 	return pointArray;
 }
-- (NSArray *)splitKM
-{
-	return splitKM;
-}
 
-
-@synthesize totalDistance;
+@synthesize splitKM;
+@synthesize splitMile;
 @synthesize duration;
+
+@synthesize totalDistanceKM;
 @synthesize averagePaceKM;
 @synthesize averageSpeedKM;
 @synthesize maxSpeedKM;
+
+@synthesize totalDistanceMile;
+@synthesize averagePaceMile;
+@synthesize averageSpeedMile;
+@synthesize maxSpeedMile;
 
 @end

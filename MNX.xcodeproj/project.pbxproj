@@ -39,6 +39,7 @@
 		D4CE6E7E12F2A1AD0084683F /* MNXAppDelegate+Toolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6E7D12F2A1AD0084683F /* MNXAppDelegate+Toolbar.m */; };
 		D4CE6EA312F2A6970084683F /* MNXAppDelegate+Web.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6EA212F2A6970084683F /* MNXAppDelegate+Web.m */; };
 		D4CE6F1E12F2B44D0084683F /* MNXAppDelegate+SplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6F1D12F2B44D0084683F /* MNXAppDelegate+SplitView.m */; };
+		D4CE6FDF12F2BE780084683F /* NSLocale+MNXExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6FDE12F2BE780084683F /* NSLocale+MNXExtension.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -97,6 +98,8 @@
 		D4CE6E7D12F2A1AD0084683F /* MNXAppDelegate+Toolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MNXAppDelegate+Toolbar.m"; sourceTree = "<group>"; };
 		D4CE6EA212F2A6970084683F /* MNXAppDelegate+Web.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MNXAppDelegate+Web.m"; sourceTree = "<group>"; };
 		D4CE6F1D12F2B44D0084683F /* MNXAppDelegate+SplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MNXAppDelegate+SplitView.m"; sourceTree = "<group>"; };
+		D4CE6FDD12F2BE780084683F /* NSLocale+MNXExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSLocale+MNXExtension.h"; sourceTree = "<group>"; };
+		D4CE6FDE12F2BE780084683F /* NSLocale+MNXExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSLocale+MNXExtension.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -278,6 +281,8 @@
 			children = (
 				D4CB316912F035150081D7B7 /* NSString+Extension.h */,
 				D4CB316A12F035150081D7B7 /* NSString+Extension.m */,
+				D4CE6FDD12F2BE780084683F /* NSLocale+MNXExtension.h */,
+				D4CE6FDE12F2BE780084683F /* NSLocale+MNXExtension.m */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -384,6 +389,7 @@
 				D4CE6E7E12F2A1AD0084683F /* MNXAppDelegate+Toolbar.m in Sources */,
 				D4CE6EA312F2A6970084683F /* MNXAppDelegate+Web.m in Sources */,
 				D4CE6F1E12F2B44D0084683F /* MNXAppDelegate+SplitView.m in Sources */,
+				D4CE6FDF12F2BE780084683F /* NSLocale+MNXExtension.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
