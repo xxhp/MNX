@@ -15,7 +15,7 @@
 - (void)downloadManagerDidStartParsingData:(MNXDataManager *)inManager;
 - (void)downloadManager:(MNXDataManager *)inManager didFinishParsingData:(NSArray *)inTracks;
 - (void)downloadManagerCancelled:(MNXDataManager *)inManager;
-- (void)downloadManager:(MNXDataManager *)inManager didFailedWithMessage:(NSString *)message;
+- (void)downloadManager:(MNXDataManager *)inManager didFaileWithError:(NSError *)inError;
 
 @end
 

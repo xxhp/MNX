@@ -9,7 +9,7 @@
 - (void)downloadOperation:(MNXDownloadOperation *)inOperation didDownloadData:(CGFloat)inProgress;
 - (void)downloadOperation:(MNXDownloadOperation *)inOperation didFinishDownloadingData:(NSData *)inData logSize:(NSUInteger)logSize;
 - (void)downloadOperationCancelled:(MNXDownloadOperation *)inOperation;
-- (void)downloadOperation:(MNXDownloadOperation *)inOperation didFailedWithMessage:(NSString *)message;
+- (void)downloadOperation:(MNXDownloadOperation *)inOperation didFailWithError:(NSError *)inError;
 
 @end
 
@@ -20,9 +20,18 @@
 	AMSerialPort *port;
 }
 
-//- (void)parseData:(NSData *)inData logSize:(NSUInteger)logSize;
-
 @property (assign, nonatomic) id <MNXDownloadOperationDelegate> delegate;
 @property (retain, nonatomic) AMSerialPort *port;
 
 @end
+
+extern NSString *const MNXDownloadOperationErrorDomain;
+
+enum {
+	MNXDownloadOperationNoError = 0,
+	MNXDownloadOperationUnknowError = 1,
+	MNXDownloadOperationUnableToOpenDevice = 2,
+	MNXDownloadOperationDataTransferError = 3,
+	MNXDownloadOperationNoDataOnDevice = 4,
+	MNXDownloadOperationInitFailed = 5
+} MNXDownloadOperationErrorCode;

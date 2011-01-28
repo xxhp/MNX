@@ -81,13 +81,13 @@
 {
 	[(id)delegate performSelectorOnMainThread:@selector(downloadManagerCancelled:) withObject:self waitUntilDone:NO];
 }
-- (void)_didFailedWithMessage:(NSString *)message
+- (void)_didFailWithError:(NSError *)inError
 {
-	[delegate downloadManager:self didFailedWithMessage:message];
+	[delegate downloadManager:self didFaileWithError:inError];
 }
-- (void)downloadOperation:(MNXDownloadOperation *)inOperation didFailedWithMessage:(NSString *)message
+- (void)downloadOperation:(MNXDownloadOperation *)inOperation didFailWithError:(NSError *)inError;
 {
-	[self performSelectorOnMainThread:@selector(_didFailedWithMessage:) withObject:message waitUntilDone:NO];
+	[self performSelectorOnMainThread:@selector(_didFailWithError:) withObject:inError waitUntilDone:NO];	
 }
 
 #pragma mark -

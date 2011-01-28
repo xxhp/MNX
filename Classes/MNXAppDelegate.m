@@ -289,9 +289,9 @@
 	[sheetWindow orderOut:self];	
 }
 
-- (void)downloadManager:(MNXDataManager *)inManager didFailedWithMessage:(NSString *)message
+- (void)downloadManager:(MNXDataManager *)inManager didFaileWithError:(NSError *)inError;
 {
-	NSAlert *alert = [NSAlert alertWithMessageText:message defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:@""];
+	NSAlert *alert = [NSAlert alertWithError:inError];
 	[alert beginSheetModalForWindow:sheetWindow modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 }
 - (void)downloadManagerDidStartDownloadingData:(MNXDataManager *)inManager
