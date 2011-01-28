@@ -43,6 +43,9 @@
 	[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
 	[trackInfoLabel setStringValue:@""];
 	
+	[contentSplitView setDelegate:self];
+	[mainSplitView setDelegate:self];
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(systemTimeDidChange:) name:NSSystemClockDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(timeZoneDidChange:) name:NSSystemTimeZoneDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localeDidChange:) name:NSCurrentLocaleDidChangeNotification object:nil];	
@@ -413,6 +416,7 @@
 #pragma mark Properties
 
 @synthesize currentTrack;
+@synthesize mainSplitView, contentSplitView;
 @synthesize window, tracksTableView, pointsTableView, paceTableView, speedView, webView;
 @synthesize sheetWindow, messageLabel, progressIndicator;
 @synthesize portListArrayController;

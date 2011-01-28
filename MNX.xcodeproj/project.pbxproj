@@ -38,6 +38,7 @@
 		D4CE6E5B12F2A0D60084683F /* MNXAppDelegate+TableView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6E5A12F2A0D60084683F /* MNXAppDelegate+TableView.m */; };
 		D4CE6E7E12F2A1AD0084683F /* MNXAppDelegate+Toolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6E7D12F2A1AD0084683F /* MNXAppDelegate+Toolbar.m */; };
 		D4CE6EA312F2A6970084683F /* MNXAppDelegate+Web.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6EA212F2A6970084683F /* MNXAppDelegate+Web.m */; };
+		D4CE6F1E12F2B44D0084683F /* MNXAppDelegate+SplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6F1D12F2B44D0084683F /* MNXAppDelegate+SplitView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,6 +96,7 @@
 		D4CE6E5A12F2A0D60084683F /* MNXAppDelegate+TableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MNXAppDelegate+TableView.m"; sourceTree = "<group>"; };
 		D4CE6E7D12F2A1AD0084683F /* MNXAppDelegate+Toolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MNXAppDelegate+Toolbar.m"; sourceTree = "<group>"; };
 		D4CE6EA212F2A6970084683F /* MNXAppDelegate+Web.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MNXAppDelegate+Web.m"; sourceTree = "<group>"; };
+		D4CE6F1D12F2B44D0084683F /* MNXAppDelegate+SplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MNXAppDelegate+SplitView.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -288,6 +290,7 @@
 				D4CE6E5A12F2A0D60084683F /* MNXAppDelegate+TableView.m */,
 				D4CE6E7D12F2A1AD0084683F /* MNXAppDelegate+Toolbar.m */,
 				D4CE6EA212F2A6970084683F /* MNXAppDelegate+Web.m */,
+				D4CE6F1D12F2B44D0084683F /* MNXAppDelegate+SplitView.m */,
 			);
 			name = "App Delegate";
 			sourceTree = "<group>";
@@ -380,6 +383,7 @@
 				D4CE6E5B12F2A0D60084683F /* MNXAppDelegate+TableView.m in Sources */,
 				D4CE6E7E12F2A1AD0084683F /* MNXAppDelegate+Toolbar.m in Sources */,
 				D4CE6EA312F2A6970084683F /* MNXAppDelegate+Web.m in Sources */,
+				D4CE6F1E12F2B44D0084683F /* MNXAppDelegate+SplitView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

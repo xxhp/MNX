@@ -9,6 +9,9 @@
 	<NSApplicationDelegate,
 	MNXDataManagerDelegate> 
 {
+	NSSplitView *mainSplitView;
+	NSSplitView *contentSplitView;
+	
 	MNXDataManager *dataManager;
 	MNXTrack *currentTrack;
 	
@@ -45,6 +48,9 @@
 
 @property (retain, nonatomic) MNXTrack *currentTrack;
 
+@property (assign) IBOutlet NSSplitView *mainSplitView;
+@property (assign) IBOutlet NSSplitView *contentSplitView;
+
 @property (assign) IBOutlet NSWindow *window;
 @property (assign) IBOutlet NSTableView *tracksTableView;
 @property (assign) IBOutlet NSTableView *pointsTableView;
@@ -68,4 +74,6 @@
 @interface MNXAppDelegate(Toolbar) <NSToolbarDelegate>
 @end
 @interface MNXAppDelegate(Web)
+@end
+@interface MNXAppDelegate(SplitView) <NSSplitViewDelegate>
 @end
