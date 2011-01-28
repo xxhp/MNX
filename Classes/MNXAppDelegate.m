@@ -20,6 +20,8 @@
 	[toolbar setAllowsUserCustomization:YES];
 	[window setToolbar:toolbar];
 	[window setExcludedFromWindowsMenu:YES];
+	
+	[webView setUIDelegate:self];
 
 	MNXTrackCell *cell = [[[MNXTrackCell alloc] init] autorelease];
 	NSTableColumn *tracksColumn = [tracksTableView tableColumnWithIdentifier:@"tracks"];

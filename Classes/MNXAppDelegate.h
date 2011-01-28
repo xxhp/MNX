@@ -63,6 +63,7 @@
 
 @interface MNXAppDelegate(TableView) <NSTableViewDataSource, NSTableViewDelegate>
 @end
-
 @interface MNXAppDelegate(Toolbar) <NSToolbarDelegate>
+@end
+@interface MNXAppDelegate(Web)
 @end
