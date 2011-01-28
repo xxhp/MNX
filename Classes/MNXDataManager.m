@@ -49,8 +49,10 @@
 {
 	CFUUIDRef uuid = CFUUIDCreate(NULL);
 	CFStringRef uuidString = CFUUIDCreateString(NULL, uuid);
+	NSString *filename = [NSString stringWithString:(NSString *)uuidString];
+	CFRelease(uuidString);
 	if ([ext length]) {
-		uuidString = [uuidString stringByAppendingPathExtension:ext];
+		filename = [filename stringByAppendingPathExtension:ext];
 	}
 	NSString *tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:(NSString *)uuidString];
 	return tempPath;

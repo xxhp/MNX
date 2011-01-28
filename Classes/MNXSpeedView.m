@@ -44,7 +44,7 @@
 	NSMutableDictionary *attr = [NSMutableDictionary dictionary];
 	[attr setObject:[NSFont boldSystemFontOfSize:12.0] forKey:NSFontAttributeName];
 	[attr setObject:[NSColor blackColor] forKey:NSForegroundColorAttributeName];
-	NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+	NSMutableParagraphStyle *style = [[[NSMutableParagraphStyle alloc] init] autorelease];
 	[style setAlignment:NSRightTextAlignment];
 	[attr setObject:style forKey:NSParagraphStyleAttributeName];	
 	
