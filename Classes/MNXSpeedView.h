@@ -4,11 +4,9 @@
 
 @interface MNXSpeedView : NSView
 {
-	NSImage *image;
 	MNXTrack *currentTrack;
 }
 
-@property (retain, nonatomic) NSImage *image;
 @property (retain, nonatomic) MNXTrack *currentTrack;
 
 @end
