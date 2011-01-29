@@ -1,4 +1,5 @@
 #import "NSImage+MNXExtensions.h"
+#import "NSData+MBBase64.h"
 
 @implementation NSImage(MNXExtensions)
 
@@ -51,6 +52,84 @@
 	[transform invert];	
 	[image unlockFocus];
 	return [image autorelease];
+}
+
++ (NSImage *)imageWithText:(NSString *)inText additionalText:(NSString *)inAdditionalText color:(NSColor *)inColor
+{
+	CGFloat width = 20.0;
+	CGFloat height= 20.0;
+	
+	NSMutableDictionary *attr = [NSMutableDictionary dictionary];
+	[attr setObject:[NSFont boldSystemFontOfSize:11.0] forKey:NSFontAttributeName];
+	[attr setObject:[NSColor whiteColor] forKey:NSForegroundColorAttributeName];
+	NSMutableParagraphStyle *style = [[[NSMutableParagraphStyle alloc] init] autorelease];
+	[style setAlignment:NSCenterTextAlignment];
+	[attr setObject:style forKey:NSParagraphStyleAttributeName];
+
+	NSMutableDictionary *additionalAttr = [NSMutableDictionary dictionaryWithDictionary:attr];
+	[additionalAttr setObject:[NSFont systemFontOfSize:9.0] forKey:NSFontAttributeName];
+	
+	NSRect textBounds = [inText boundingRectWithSize:NSMakeSize(400.0, 400.0) options:NSStringDrawingTruncatesLastVisibleLine attributes:attr];
+	NSRect additionalBounds = NSZeroRect;
+
+	if (width < textBounds.size.width + 10.0) {
+		width = textBounds.size.width + 10.0;
+	}
+	if (height < textBounds.size.height + 20.0) {
+		height = textBounds.size.height + 20.0;
+	}
+	
+	if ([inAdditionalText length]) {
+		additionalBounds = [inText boundingRectWithSize:NSMakeSize(400.0, 400.0) options:NSStringDrawingTruncatesLastVisibleLine attributes:attr];
+		if (width < additionalBounds.size.height + 10.0) {
+			width = textBounds.size.width + 10.0;
+		}		
+		height = height + textBounds.size.height + 10.0;
+	}
+	
+	NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(width, height)];
+	
+	[image lockFocus];
+	[NSGraphicsContext saveGraphicsState];
+	[[NSGraphicsContext currentContext] setShouldAntialias:YES];
+	[inColor setFill];
+	[[NSColor blackColor] setStroke];
+	
+	NSBezierPath *path = [NSBezierPath bezierPath];
+	[path moveToPoint:NSMakePoint(0.0, 15.0)];
+	[path lineToPoint:NSMakePoint(width / 2.0 - 2.0, 15.0)];
+	[path lineToPoint:NSMakePoint(width / 2.0, 0.0)];
+	[path lineToPoint:NSMakePoint(width / 2.0 + 2.0, 15.0)];
+	[path lineToPoint:NSMakePoint(width, 15.0)];
+	[path lineToPoint:NSMakePoint(width, height)];
+	[path lineToPoint:NSMakePoint(0.0, height)];
+	[path closePath];
+	[path fill];
+	[path setLineWidth:2.0];
+	[path stroke];
+	
+	textBounds.origin.y = height - textBounds.size.height - 2.0;
+	textBounds.size.width = width;
+	
+	[inText drawInRect:textBounds withAttributes:attr];
+	
+	if ([inAdditionalText length]) {
+		additionalBounds.origin.y = NSMinY(textBounds) - additionalBounds.size.height;
+		additionalBounds.size.width = width;
+		[inAdditionalText drawInRect:additionalBounds withAttributes:additionalAttr];
+	}
+	[NSGraphicsContext restoreGraphicsState];
+	
+	[image unlockFocus];
+	
+	[image autorelease];
+	return image;
+}
+
++ (NSString *)base64ImageWithText:(NSString *)inText additionalText:(NSString *)inAdditionalText color:(NSColor *)inColor;
+{
+	NSImage *image = [NSImage imageWithText:inText additionalText:inAdditionalText color:inColor];
+	return [[image TIFFRepresentation] base64Encoding];
 }
 
 @end

@@ -49,6 +49,7 @@
 		D4D56BE012F4959D0041277D /* sidebarResizeWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = D4D56BDE12F4959D0041277D /* sidebarResizeWidget.png */; };
 		D4D56BE112F4959D0041277D /* sidebarStatusAreaBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = D4D56BDF12F4959D0041277D /* sidebarStatusAreaBackground.png */; };
 		D4D56BE812F496B50041277D /* MNXAdditionalSplitDeviderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4D56BE712F496B50041277D /* MNXAdditionalSplitDeviderView.m */; };
+		D4D56DBC12F4AF570041277D /* NSData+MBBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = D4D56DBB12F4AF570041277D /* NSData+MBBase64.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -123,6 +124,8 @@
 		D4D56BDF12F4959D0041277D /* sidebarStatusAreaBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sidebarStatusAreaBackground.png; sourceTree = "<group>"; };
 		D4D56BE612F496B50041277D /* MNXAdditionalSplitDeviderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXAdditionalSplitDeviderView.h; sourceTree = "<group>"; };
 		D4D56BE712F496B50041277D /* MNXAdditionalSplitDeviderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXAdditionalSplitDeviderView.m; sourceTree = "<group>"; };
+		D4D56DBA12F4AF570041277D /* NSData+MBBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+MBBase64.h"; sourceTree = "<group>"; };
+		D4D56DBB12F4AF570041277D /* NSData+MBBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+MBBase64.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -269,6 +272,7 @@
 		D4520A7012EE0FC500FF0DA2 /* ExternalLibraries */ = {
 			isa = PBXGroup;
 			children = (
+				D4D56DB912F4AF570041277D /* NSData+MBBase64 */,
 				D4520BD312EE275800FF0DA2 /* AMSerialPort */,
 			);
 			path = ExternalLibraries;
@@ -343,6 +347,15 @@
 				D4CE70B012F3106A0084683F /* MNXPreferenceController.m */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		D4D56DB912F4AF570041277D /* NSData+MBBase64 */ = {
+			isa = PBXGroup;
+			children = (
+				D4D56DBA12F4AF570041277D /* NSData+MBBase64.h */,
+				D4D56DBB12F4AF570041277D /* NSData+MBBase64.m */,
+			);
+			path = "NSData+MBBase64";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -444,6 +457,7 @@
 				D4D56A5D12F47FFA0041277D /* NSImage+MNXExtensions.m in Sources */,
 				D4D56AD812F486660041277D /* MNXWhiteBackgroundView.m in Sources */,
 				D4D56BE812F496B50041277D /* MNXAdditionalSplitDeviderView.m in Sources */,
+				D4D56DBC12F4AF570041277D /* NSData+MBBase64.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

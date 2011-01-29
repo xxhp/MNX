@@ -1,5 +1,7 @@
 #import "MNXTrack.h"
 #import "MNXPoint.h"
+#import "NSLocale+MNXExtension.h"
+#import "NSImage+MNXExtensions.h"
 #include <math.h>
 
 static CGFloat degreeToRadian(CGFloat degree)
@@ -316,7 +318,7 @@ static CGFloat distanceMile(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lo
 		right = point.longitude;
 	}	
 	for (MNXPoint *point in pointArray) {
-		[addLineString appendFormat:@"poly.getPath().push(new google.maps.LatLng(%f, %f));\n", point.latitude, point.longitude];
+		[addLineString appendFormat:@"\tpoly.getPath().push(new google.maps.LatLng(%f, %f));\n", point.latitude, point.longitude];
 		if (point.latitude > top) {
 			top = point.latitude;
 		}
@@ -328,11 +330,45 @@ static CGFloat distanceMile(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lo
 		}
 		if (point.longitude < left) {
 			left = point.longitude;
-		}		
+		}	
 	}
-	NSString *boundsString = [NSString stringWithFormat:@"var bounds = new google.maps.LatLngBounds(new google.maps.LatLng(%f, %f), new google.maps.LatLng(%f, %f));\n", top, left, bottom, right];
+	NSArray *splits = splitKM;
+	NSString *unit = NSLocalizedString(@"km", @"");
+	
+	if ([NSLocale usingUSMeasurementUnit]) {
+		splits = splitMile;
+		unit = NSLocalizedString(@"ml", @"");
+	}
+	
+	NSColor *aColor = nil;
+	if ([pointArray count]) {
+		aColor = [NSColor redColor];
+		MNXPoint *point = [pointArray objectAtIndex:0];
+		NSString *base64Image = [NSImage base64ImageWithText:NSLocalizedString(@"Start", @"")  additionalText:@"" color:aColor];
+		NSString *inlineString = [NSString stringWithFormat:@"data:image/tiff;base64,%@", base64Image];
+		[addLineString appendFormat:@"\tnew google.maps.Marker({position:new google.maps.LatLng(%f, %f), map: map, icon: '%@', animation: google.maps.Animation.DROP})\n", point.latitude, point.longitude, inlineString];		
+	}	
+	if ([pointArray count] > 1) {
+		aColor = [NSColor redColor];
+		MNXPoint *point = [pointArray lastObject];
+		NSString *base64Image = [NSImage base64ImageWithText:NSLocalizedString(@"End", @"")  additionalText:@"" color:aColor];
+		NSString *inlineString = [NSString stringWithFormat:@"data:image/tiff;base64,%@", base64Image];
+		[addLineString appendFormat:@"\tnew google.maps.Marker({position:new google.maps.LatLng(%f, %f), map: map, icon: '%@', animation: google.maps.Animation.DROP})\n", point.latitude, point.longitude, inlineString];		
+	}	
+	
+	aColor = [NSColor blueColor];
+	if ([splits count] > 1) {	
+		for (NSDictionary *d in splitMile) {
+			MNXPoint *point = [d objectForKey:@"point"];
+			NSString *base64Image = [NSImage base64ImageWithText:[NSString stringWithFormat:@"%d %@", [[d objectForKey:@"distance"] integerValue], unit]  additionalText:@"" color:aColor];
+			NSString *inlineString = [NSString stringWithFormat:@"data:image/tiff;base64,%@", base64Image];
+			[addLineString appendFormat:@"\tnew google.maps.Marker({position:new google.maps.LatLng(%f, %f), map: map, icon: '%@', animation: google.maps.Animation.DROP})\n", point.latitude, point.longitude, inlineString];
+		}
+	}
+	
+	NSString *boundsString = [NSString stringWithFormat:@"\tvar bounds = new google.maps.LatLngBounds(new google.maps.LatLng(%f, %f), new google.maps.LatLng(%f, %f));\n", top, left, bottom, right];
 	[addLineString appendString:boundsString];
-	[addLineString appendString:@"map.fitBounds(bounds);\n"];
+	[addLineString appendString:@"\tmap.fitBounds(bounds);\n"];
 	
 	NSString *HTML = [NSString stringWithFormat:template, (bottom + (top - bottom) / 2.0),
 					  (right + (left - right) / 2.0),
