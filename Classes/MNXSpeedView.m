@@ -52,12 +52,12 @@
 	[@"0" drawInRect:zeroFrame withAttributes:attr];
 	
 	CGRect speedUnitFrame = CGRectMake(0.0, NSMaxY(drawingFrame) + 20.0, frameWidth, 13.0);
-	[@"Km/H" drawInRect:speedUnitFrame withAttributes:attr];
+	[@"km/h" drawInRect:speedUnitFrame withAttributes:attr];
 	
 	[style setAlignment:NSLeftTextAlignment];
 	
 	CGRect distanceUnitFrame = CGRectMake(NSMaxX(drawingFrame) + 10.0, NSMinY(drawingFrame) - 5.0, frameWidth, 13.0);
-	[@"Km" drawInRect:distanceUnitFrame withAttributes:attr];	
+	[@"km" drawInRect:distanceUnitFrame withAttributes:attr];	
 	
 	if ([self.currentTrack.points count] < 2) {
 		return;
@@ -238,12 +238,12 @@
 	[@"0" drawInRect:zeroFrame withAttributes:attr];
 	
 	CGRect speedUnitFrame = CGRectMake(0.0, NSMaxY(drawingFrame) + 20.0, frameWidth, 13.0);
-	[@"M/H" drawInRect:speedUnitFrame withAttributes:attr];
+	[@"ml/h" drawInRect:speedUnitFrame withAttributes:attr];
 	
 	[style setAlignment:NSLeftTextAlignment];
 	
 	CGRect distanceUnitFrame = CGRectMake(NSMaxX(drawingFrame) + 10.0, NSMinY(drawingFrame) - 5.0, frameWidth, 13.0);
-	[@"M" drawInRect:distanceUnitFrame withAttributes:attr];	
+	[@"ml" drawInRect:distanceUnitFrame withAttributes:attr];	
 	
 	if ([self.currentTrack.points count] < 2) {
 		return;

@@ -24,15 +24,20 @@
 	NSTableView *paceTableView;
 	MNXSpeedView *speedView;
 	WebView *webView;
-	NSTextField *trackInfoLabel;
+	
+	NSImageView *infoImageView;
+//	NSTextField *trackInfoLabel;
+	NSTextField *trackTotalDistanceLabel;
+	NSTextField *trackDurationLabel;
+	NSTextField *trackPaceLabel;
+	NSTextField *trackSpeedLabel;
 	
 	NSWindow *sheetWindow;
 	NSTextField *messageLabel;
 	NSProgressIndicator *progressIndicator;
 	
 	NSArrayController *portListArrayController;
-	NSPopUpButton *portPopUpButton;
-	
+	NSPopUpButton *portPopUpButton;	
 	NSMenuItem *deviceListMenuItem;
 	
 	MNXPreferenceController *preferenceController;
@@ -61,7 +66,11 @@
 @property (assign) IBOutlet NSTableView *paceTableView;
 @property (assign) IBOutlet MNXSpeedView *speedView;
 @property (assign) IBOutlet WebView *webView;
-@property (assign) IBOutlet NSTextField *trackInfoLabel;
+@property (assign) IBOutlet NSImageView *infoImageView;
+@property (assign) IBOutlet NSTextField *trackTotalDistanceLabel;
+@property (assign) IBOutlet NSTextField *trackDurationLabel;
+@property (assign) IBOutlet NSTextField *trackPaceLabel;
+@property (assign) IBOutlet NSTextField *trackSpeedLabel;
 
 @property (assign) IBOutlet NSWindow *sheetWindow;
 @property (assign) IBOutlet NSTextField *messageLabel;

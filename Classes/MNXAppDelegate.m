@@ -2,6 +2,7 @@
 #import "MNXTrackCell.h"
 #import "NSString+Extension.h"
 #import "NSLocale+MNXExtension.h"
+#import "NSImage+MNXExtensions.h"
 
 @implementation MNXAppDelegate
 
@@ -18,8 +19,6 @@
 
 - (void)awakeFromNib
 {
-	[window center];
-	
 	preferenceController = [[MNXPreferenceController alloc] init];
 	
 	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"toolbar"] autorelease];
@@ -46,7 +45,6 @@
 	dateFormatter = [[NSDateFormatter alloc] init];
 	[dateFormatter setDateStyle:NSDateFormatterShortStyle];
 	[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-	[trackInfoLabel setStringValue:@""];
 	
 	[contentSplitView setDelegate:self];
 	[mainSplitView setDelegate:self];
@@ -249,19 +247,62 @@
 	if (!self.currentTrack) {
 		[pointsTableView reloadData];
 		[paceTableView reloadData];
-		[trackInfoLabel setStringValue:@""];
 		speedView.currentTrack = nil;
+		[infoImageView setImage:[NSImage calendarImageWithDate:nil]];
+		
+		[trackTotalDistanceLabel setStringValue:@"0"];
+		[trackDurationLabel setStringValue:@"--:--"];
+		[trackPaceLabel setStringValue:@"--:--"];
+		[trackSpeedLabel setStringValue:@"0"];		
+		
+		[window setTitle:NSLocalizedString(@"MNX", @"")];
 	}
 	else {		
 		[pointsTableView reloadData];
 		[paceTableView reloadData];
-		CGFloat distance = self.currentTrack.totalDistanceKM;
-		NSTimeInterval duration = self.currentTrack.duration;
-		NSTimeInterval pace = self.currentTrack.averagePaceKM;
-		CGFloat speed = self.currentTrack.averageSpeedKM;
-		NSString *info = [NSString stringWithFormat:@"%@ %.2f %@, %@ %@, %@ %@, %@ %.2f %@", @"Distance:", distance, @"KM", @"Duration:", NSStringFromNSTimeInterval(duration), @"Average Pace:", NSStringFromNSTimeInterval(pace), @"Average Speed:", speed, @"KM"];
-		[trackInfoLabel setStringValue:info];
-		speedView.currentTrack = self.currentTrack;	
+		
+		NSString *distance = @"";
+		if ([NSLocale usingUSMeasurementUnit]) {
+			distance = [NSString stringWithFormat:@"%.2f %@", self.currentTrack.totalDistanceMile, NSLocalizedString(@"ml", @"")];
+		}
+		else {
+			distance = [NSString stringWithFormat:@"%.2f %@", self.currentTrack.totalDistanceKM, NSLocalizedString(@"km", @"")];
+		}
+		[trackTotalDistanceLabel setStringValue:distance];
+		
+		[trackDurationLabel setStringValue:NSStringFromNSTimeInterval(self.currentTrack.duration)];
+
+		NSString *pace = @"";
+		if ([NSLocale usingUSMeasurementUnit]) {
+			pace = [NSString stringWithFormat:@"%@ %@", NSStringFromNSTimeInterval(self.currentTrack.averagePaceMile), NSLocalizedString(@"per mile", @"")];
+		}
+		else {
+			pace = [NSString stringWithFormat:@"%@ %@", NSStringFromNSTimeInterval(self.currentTrack.averagePaceKM), NSLocalizedString(@"per kilometre", @"")];
+		}
+		[trackPaceLabel setStringValue:pace];
+
+		NSString *speed = @"";
+		if ([NSLocale usingUSMeasurementUnit]) {
+			speed = [NSString stringWithFormat:@"%.2f %@", self.currentTrack.averageSpeedMile, @"ml/h"];
+		}
+		else {
+			speed = [NSString stringWithFormat:@"%.2f %@", self.currentTrack.averageSpeedKM, @"km/h"];
+		}		
+		
+		[trackSpeedLabel setStringValue:speed];		
+		
+		NSDate *date = nil;
+		if ([self.currentTrack.points count]) {
+			MNXPoint *aPoint = [self.currentTrack.points objectAtIndex:0];
+			date = [aPoint date];
+		}
+		
+		NSImage *image = [NSImage calendarImageWithDate:date];
+		[infoImageView setImage:image];
+		
+		speedView.currentTrack = self.currentTrack;
+		
+		[window setTitle:[NSString stringWithFormat:NSLocalizedString(@"%@ - MNX", @""), self.currentTrack.title]];
 	}
 }
 
@@ -439,6 +480,8 @@
 @synthesize portListArrayController;
 @synthesize portPopUpButton;
 @synthesize deviceListMenuItem;
-@synthesize trackInfoLabel;
+@synthesize infoImageView;
+@synthesize trackTotalDistanceLabel, trackDurationLabel, trackPaceLabel, trackSpeedLabel;
+//@synthesize trackInfoLabel;
 
 @end

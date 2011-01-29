@@ -43,6 +43,9 @@
 		D4CE70A412F30F400084683F /* MNXAppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE70A312F30F400084683F /* MNXAppConfig.m */; };
 		D4CE70B112F3106A0084683F /* MNXPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE70B012F3106A0084683F /* MNXPreferenceController.m */; };
 		D4CE70B712F310940084683F /* MNXPreferenceController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D4CE70B612F310940084683F /* MNXPreferenceController.xib */; };
+		D4D56A5D12F47FFA0041277D /* NSImage+MNXExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D4D56A5C12F47FFA0041277D /* NSImage+MNXExtensions.m */; };
+		D4D56A8212F4843F0041277D /* calendar.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D4D56A8112F4843F0041277D /* calendar.jpg */; };
+		D4D56AD812F486660041277D /* MNXWhiteBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4D56AD712F486660041277D /* MNXWhiteBackgroundView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -108,6 +111,11 @@
 		D4CE70AF12F3106A0084683F /* MNXPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXPreferenceController.h; sourceTree = "<group>"; };
 		D4CE70B012F3106A0084683F /* MNXPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXPreferenceController.m; sourceTree = "<group>"; };
 		D4CE70B412F3108F0084683F /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MNXPreferenceController.xib; sourceTree = "<group>"; };
+		D4D56A5B12F47FFA0041277D /* NSImage+MNXExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage+MNXExtensions.h"; sourceTree = "<group>"; };
+		D4D56A5C12F47FFA0041277D /* NSImage+MNXExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImage+MNXExtensions.m"; sourceTree = "<group>"; };
+		D4D56A8112F4843F0041277D /* calendar.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = calendar.jpg; sourceTree = "<group>"; };
+		D4D56AD612F486660041277D /* MNXWhiteBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXWhiteBackgroundView.h; sourceTree = "<group>"; };
+		D4D56AD712F486660041277D /* MNXWhiteBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXWhiteBackgroundView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,6 +212,8 @@
 				D444566712EF34EF00A181A9 /* MNXTrackCell.m */,
 				D4CE6B7112F225EF0084683F /* MNXSpeedView.h */,
 				D4CE6B7212F225EF0084683F /* MNXSpeedView.m */,
+				D4D56AD612F486660041277D /* MNXWhiteBackgroundView.h */,
+				D4D56AD712F486660041277D /* MNXWhiteBackgroundView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -279,6 +289,7 @@
 		D452124512EF03F900FF0DA2 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				D4D56A8112F4843F0041277D /* calendar.jpg */,
 				D42C5B0D12EF165C00B8BC51 /* MNX.icns */,
 				D45212A112EF097900FF0DA2 /* googleearth.png */,
 				D444568012EF3A4600A181A9 /* pinHighlight.png */,
@@ -295,6 +306,8 @@
 				D4CB316A12F035150081D7B7 /* NSString+Extension.m */,
 				D4CE6FDD12F2BE780084683F /* NSLocale+MNXExtension.h */,
 				D4CE6FDE12F2BE780084683F /* NSLocale+MNXExtension.m */,
+				D4D56A5B12F47FFA0041277D /* NSImage+MNXExtensions.h */,
+				D4D56A5C12F47FFA0041277D /* NSImage+MNXExtensions.m */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -381,6 +394,7 @@
 				D444565512EF333E00A181A9 /* Credits.rtf in Resources */,
 				D444568112EF3A4600A181A9 /* pinHighlight.png in Resources */,
 				D4CE70B712F310940084683F /* MNXPreferenceController.xib in Resources */,
+				D4D56A8212F4843F0041277D /* calendar.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -414,6 +428,8 @@
 				D4CE6FDF12F2BE780084683F /* NSLocale+MNXExtension.m in Sources */,
 				D4CE70A412F30F400084683F /* MNXAppConfig.m in Sources */,
 				D4CE70B112F3106A0084683F /* MNXPreferenceController.m in Sources */,
+				D4D56A5D12F47FFA0041277D /* NSImage+MNXExtensions.m in Sources */,
+				D4D56AD812F486660041277D /* MNXWhiteBackgroundView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
