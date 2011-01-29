@@ -132,7 +132,7 @@
 		averagePaceKM = newDuration / newDistanceKM;
 	}
 	if (newDistanceMile) {
-		averagePaceKM = newDuration / newDistanceMile;
+		averagePaceMile = newDuration / newDistanceMile;
 	}	
 	
 	totalDistanceKM = newDistanceKM;
