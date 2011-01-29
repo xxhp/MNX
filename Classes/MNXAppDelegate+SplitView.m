@@ -2,6 +2,16 @@
 
 @implementation MNXAppDelegate(SplitView)
 
+- (NSRect)splitView:(NSSplitView *)splitView additionalEffectiveRectOfDividerAtIndex:(NSInteger)dividerIndex
+{
+	if (splitView == mainSplitView && dividerIndex == 0) {
+		NSView *aView = [[splitView subviews] objectAtIndex:0];
+		NSRect aFrame = NSMakeRect(NSMaxX([aView frame]) - 15.0, NSMaxY([aView frame]) -23.0, 15.0, 23.0);
+		return aFrame;
+	}
+	return NSZeroRect;
+}
+
 - (BOOL)splitView:(NSSplitView *)splitView shouldCollapseSubview:(NSView *)subview forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex
 {
 	return NO;
@@ -42,7 +52,6 @@
 
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)dividerIndex
 {
-	NSLog(@"2 splitView:%@ %d", splitView, dividerIndex);	
 	if (splitView == mainSplitView) {
 		if (proposedMin < 150.0 && dividerIndex == 0) {
 			return 150.0;

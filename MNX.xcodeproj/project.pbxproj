@@ -46,6 +46,9 @@
 		D4D56A5D12F47FFA0041277D /* NSImage+MNXExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D4D56A5C12F47FFA0041277D /* NSImage+MNXExtensions.m */; };
 		D4D56A8212F4843F0041277D /* calendar.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D4D56A8112F4843F0041277D /* calendar.jpg */; };
 		D4D56AD812F486660041277D /* MNXWhiteBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4D56AD712F486660041277D /* MNXWhiteBackgroundView.m */; };
+		D4D56BE012F4959D0041277D /* sidebarResizeWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = D4D56BDE12F4959D0041277D /* sidebarResizeWidget.png */; };
+		D4D56BE112F4959D0041277D /* sidebarStatusAreaBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = D4D56BDF12F4959D0041277D /* sidebarStatusAreaBackground.png */; };
+		D4D56BE812F496B50041277D /* MNXAdditionalSplitDeviderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4D56BE712F496B50041277D /* MNXAdditionalSplitDeviderView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -116,6 +119,10 @@
 		D4D56A8112F4843F0041277D /* calendar.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = calendar.jpg; sourceTree = "<group>"; };
 		D4D56AD612F486660041277D /* MNXWhiteBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXWhiteBackgroundView.h; sourceTree = "<group>"; };
 		D4D56AD712F486660041277D /* MNXWhiteBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXWhiteBackgroundView.m; sourceTree = "<group>"; };
+		D4D56BDE12F4959D0041277D /* sidebarResizeWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sidebarResizeWidget.png; sourceTree = "<group>"; };
+		D4D56BDF12F4959D0041277D /* sidebarStatusAreaBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sidebarStatusAreaBackground.png; sourceTree = "<group>"; };
+		D4D56BE612F496B50041277D /* MNXAdditionalSplitDeviderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXAdditionalSplitDeviderView.h; sourceTree = "<group>"; };
+		D4D56BE712F496B50041277D /* MNXAdditionalSplitDeviderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXAdditionalSplitDeviderView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +221,8 @@
 				D4CE6B7212F225EF0084683F /* MNXSpeedView.m */,
 				D4D56AD612F486660041277D /* MNXWhiteBackgroundView.h */,
 				D4D56AD712F486660041277D /* MNXWhiteBackgroundView.m */,
+				D4D56BE612F496B50041277D /* MNXAdditionalSplitDeviderView.h */,
+				D4D56BE712F496B50041277D /* MNXAdditionalSplitDeviderView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -289,6 +298,8 @@
 		D452124512EF03F900FF0DA2 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				D4D56BDE12F4959D0041277D /* sidebarResizeWidget.png */,
+				D4D56BDF12F4959D0041277D /* sidebarStatusAreaBackground.png */,
 				D4D56A8112F4843F0041277D /* calendar.jpg */,
 				D42C5B0D12EF165C00B8BC51 /* MNX.icns */,
 				D45212A112EF097900FF0DA2 /* googleearth.png */,
@@ -395,6 +406,8 @@
 				D444568112EF3A4600A181A9 /* pinHighlight.png in Resources */,
 				D4CE70B712F310940084683F /* MNXPreferenceController.xib in Resources */,
 				D4D56A8212F4843F0041277D /* calendar.jpg in Resources */,
+				D4D56BE012F4959D0041277D /* sidebarResizeWidget.png in Resources */,
+				D4D56BE112F4959D0041277D /* sidebarStatusAreaBackground.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,6 +443,7 @@
 				D4CE70B112F3106A0084683F /* MNXPreferenceController.m in Sources */,
 				D4D56A5D12F47FFA0041277D /* NSImage+MNXExtensions.m in Sources */,
 				D4D56AD812F486660041277D /* MNXWhiteBackgroundView.m in Sources */,
+				D4D56BE812F496B50041277D /* MNXAdditionalSplitDeviderView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
