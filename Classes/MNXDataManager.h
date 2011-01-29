@@ -25,6 +25,14 @@
 	NSMutableArray *tracks;
 	NSOperationQueue *operationQueue;
 	MNXDataParser *dataParser;
+	
+	NSTimeInterval totalDuration;
+	CGFloat totalDistanceKM;
+	CGFloat totalDistanceMile;
+	NSTimeInterval averagePaceKM;
+	NSTimeInterval averagePaceMile;
+	CGFloat averageSpeedKM;
+	CGFloat averageSpeedMile;
 }
 
 - (void)downloadDataFromPort:(AMSerialPort *)inPort;
@@ -33,5 +41,14 @@
 
 @property (assign, nonatomic) id <MNXDataManagerDelegate> delegate;
 @property (readonly) NSArray *tracks;
+
+@property (readonly) NSTimeInterval totalDuration;
+@property (readonly) CGFloat totalDistanceKM;
+@property (readonly) CGFloat totalDistanceMile;
+@property (readonly) NSTimeInterval averagePaceKM;
+@property (readonly) NSTimeInterval averagePaceMile;
+@property (readonly) CGFloat averageSpeedKM;
+@property (readonly) CGFloat averageSpeedMile;
+
 
 @end

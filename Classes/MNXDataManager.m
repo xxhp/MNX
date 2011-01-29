@@ -100,9 +100,50 @@
 {
 	[delegate downloadManager:self didFinishParsingData:inTracks];
 }
+- (void)_updateInfo
+{
+	totalDuration = 0.0;
+	totalDistanceKM = 0.0;
+	totalDistanceMile = 0.0;
+	averagePaceKM = 0.0;
+	averagePaceMile = 0.0;
+	averageSpeedKM = 0.0;
+	averageSpeedMile= 0.0;
+	
+	if (![tracks count]) {
+		return;
+	}
+
+	CGFloat newDuration = 0.0;
+	CGFloat newDistanceKM = 0.0;
+	CGFloat newDistanceMile = 0.0;
+	
+	for (MNXTrack *track in tracks) {
+		newDuration += track.duration;
+		newDistanceKM += track.totalDistanceKM;
+		newDistanceMile += track.totalDistanceMile;
+	}
+	
+	if (newDuration > 0.0) {
+		averageSpeedKM = newDistanceKM / newDuration * 60.0 * 60.0;
+		averageSpeedMile = newDistanceMile / newDuration * 60.0 * 60.0;
+	}
+	if (newDistanceKM) {
+		averagePaceKM = newDuration / newDistanceKM;
+	}
+	if (newDistanceMile) {
+		averagePaceKM = newDuration / newDistanceMile;
+	}	
+	
+	totalDistanceKM = newDistanceKM;
+	totalDistanceMile = newDistanceMile;
+	totalDuration = newDuration;
+}
+
 - (void)dataParser:(MNXDataParser *)inParser didFinishParsingData:(NSArray *)inTracks
 {
 	[tracks setArray:inTracks];
+	[self _updateInfo];
 	[self performSelectorOnMainThread:@selector(_didFinishParsingData:) withObject:inTracks waitUntilDone:NO];
 }
 - (void)dataParserCancelled:(MNXDataParser *)inParser
@@ -117,5 +158,12 @@
 }
 
 @synthesize delegate;
+@synthesize totalDuration;
+@synthesize totalDistanceKM;
+@synthesize totalDistanceMile;
+@synthesize averagePaceKM;
+@synthesize averagePaceMile;
+@synthesize averageSpeedKM;
+@synthesize averageSpeedMile;
 
 @end

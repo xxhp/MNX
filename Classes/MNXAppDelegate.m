@@ -35,6 +35,7 @@
 	
 	[tracksTableView setDataSource:self];
 	[tracksTableView setDelegate:self];
+	[tracksTableView setRowHeight:20.0];
 	
 	[pointsTableView setDataSource:self];
 	[pointsTableView setDelegate:self];
@@ -48,6 +49,7 @@
 	
 	[contentSplitView setDelegate:self];
 	[mainSplitView setDelegate:self];
+	[sourceListSplitView setDelegate:self];
 	
 	[self refresh];
 	
@@ -237,11 +239,44 @@
 - (void)refresh
 {
 	NSTableColumn *aColumn = [paceTableView tableColumnWithIdentifier:@"unit"];
+
 	if ([NSLocale usingUSMeasurementUnit]) {
 		[[aColumn headerCell] setStringValue:NSLocalizedString(@"Miles", @"")];
 	}
 	else {
 		[[aColumn headerCell] setStringValue:NSLocalizedString(@"KM", @"")];
+	}
+	
+	if (1) {
+		NSString *distance = @"";
+		if ([NSLocale usingUSMeasurementUnit]) {
+			distance = [NSString stringWithFormat:@"%.2f %@", dataManager.totalDistanceMile, NSLocalizedString(@"ml", @"")];
+		}
+		else {
+			distance = [NSString stringWithFormat:@"%.2f %@", dataManager.totalDistanceKM, NSLocalizedString(@"km", @"")];
+		}
+		[totalDistanceLabel setStringValue:distance];
+		
+		[totalDurationLabel setStringValue:NSStringFromNSTimeInterval(dataManager.totalDuration)];
+		
+		NSString *pace = @"";
+		if ([NSLocale usingUSMeasurementUnit]) {
+			pace = [NSString stringWithFormat:@"%@ %@", NSStringFromNSTimeInterval(dataManager.averagePaceMile), NSLocalizedString(@"per mile", @"")];
+		}
+		else {
+			pace = [NSString stringWithFormat:@"%@ %@", NSStringFromNSTimeInterval(dataManager.averagePaceKM), NSLocalizedString(@"per kilometre", @"")];
+		}
+		[totalPaceLabel setStringValue:pace];
+		
+		NSString *speed = @"";
+		if ([NSLocale usingUSMeasurementUnit]) {
+			speed = [NSString stringWithFormat:@"%.2f %@", dataManager.averageSpeedMile, @"ml/h"];
+		}
+		else {
+			speed = [NSString stringWithFormat:@"%.2f %@", dataManager.averageSpeedKM, @"km/h"];
+		}		
+		
+		[totalSpeedLabel setStringValue:speed];	
 	}
 	
 	if (!self.currentTrack) {
@@ -474,7 +509,7 @@
 #pragma mark Properties
 
 @synthesize currentTrack;
-@synthesize mainSplitView, contentSplitView;
+@synthesize mainSplitView, contentSplitView, sourceListSplitView;
 @synthesize window, tracksTableView, pointsTableView, paceTableView, speedView, webView;
 @synthesize sheetWindow, messageLabel, progressIndicator;
 @synthesize portListArrayController;
@@ -482,6 +517,6 @@
 @synthesize deviceListMenuItem;
 @synthesize infoImageView;
 @synthesize trackTotalDistanceLabel, trackDurationLabel, trackPaceLabel, trackSpeedLabel;
-//@synthesize trackInfoLabel;
+@synthesize totalDistanceLabel, totalDurationLabel, totalPaceLabel, totalSpeedLabel;
 
 @end

@@ -28,24 +28,26 @@
 		if (subview == [[mainSplitView subviews] objectAtIndex:0]) {
 			return NO;
 		}
-						
 	}
+	if (splitView == sourceListSplitView) {
+		if (subview == [[sourceListSplitView subviews] objectAtIndex:1]) {
+			return NO;
+		}
+	}	
 	return YES;
 }
 
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)dividerIndex
 {
-	if (splitView == mainSplitView) {
-		if (proposedMax > 300.0 && dividerIndex == 0) {
-			return 300.0;
-		}
+	if (splitView == mainSplitView && dividerIndex == 0) {
+		return 300.0;
 	}	
 	else if (splitView == contentSplitView) {
-		if (proposedMax > ([splitView bounds].size.height / 3.0 * 2.0) && dividerIndex == 0) {
-			return ([splitView bounds].size.height / 3.0 * 2.0);
-		}
+		return ([splitView bounds].size.height / 3.0 * 2.0);
 	}
-	
+	else if (splitView == sourceListSplitView && dividerIndex == 0) {
+		return [splitView bounds].size.height - 125.0;
+	}
 	
 	return proposedMax;
 }
@@ -53,16 +55,14 @@
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)dividerIndex
 {
 	if (splitView == mainSplitView) {
-		if (proposedMin < 150.0 && dividerIndex == 0) {
-			return 150.0;
-		}
+		return 150.0;
 	}
 	else if (splitView == contentSplitView) {
-		if (proposedMin < ([splitView bounds].size.height / 3.0)  && dividerIndex == 0) {
-			return ([splitView bounds].size.height / 3.0);
-		}
+		return ([splitView bounds].size.height / 3.0);
 	}
-	
+	else if (splitView == sourceListSplitView && dividerIndex == 0) {
+		return [splitView bounds].size.height - 250.0;
+	}
 	
 	return proposedMin;
 }

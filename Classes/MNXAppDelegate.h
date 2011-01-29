@@ -12,6 +12,7 @@
 {
 	NSSplitView *mainSplitView;
 	NSSplitView *contentSplitView;
+	NSSplitView *sourceListSplitView;
 	
 	MNXDataManager *dataManager;
 	MNXTrack *currentTrack;
@@ -26,11 +27,16 @@
 	WebView *webView;
 	
 	NSImageView *infoImageView;
-//	NSTextField *trackInfoLabel;
 	NSTextField *trackTotalDistanceLabel;
 	NSTextField *trackDurationLabel;
 	NSTextField *trackPaceLabel;
 	NSTextField *trackSpeedLabel;
+	
+	NSTextField *totalDistanceLabel;
+	NSTextField *totalDurationLabel;
+	NSTextField *totalPaceLabel;
+	NSTextField *totalSpeedLabel;
+	
 	
 	NSWindow *sheetWindow;
 	NSTextField *messageLabel;
@@ -59,6 +65,7 @@
 
 @property (assign) IBOutlet NSSplitView *mainSplitView;
 @property (assign) IBOutlet NSSplitView *contentSplitView;
+@property (assign) IBOutlet NSSplitView *sourceListSplitView;
 
 @property (assign) IBOutlet NSWindow *window;
 @property (assign) IBOutlet NSTableView *tracksTableView;
@@ -71,6 +78,10 @@
 @property (assign) IBOutlet NSTextField *trackDurationLabel;
 @property (assign) IBOutlet NSTextField *trackPaceLabel;
 @property (assign) IBOutlet NSTextField *trackSpeedLabel;
+@property (assign) IBOutlet NSTextField *totalDistanceLabel;
+@property (assign) IBOutlet NSTextField *totalDurationLabel;
+@property (assign) IBOutlet NSTextField *totalPaceLabel;
+@property (assign) IBOutlet NSTextField *totalSpeedLabel;
 
 @property (assign) IBOutlet NSWindow *sheetWindow;
 @property (assign) IBOutlet NSTextField *messageLabel;
