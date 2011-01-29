@@ -503,6 +503,9 @@
 - (void)localeDidChange:(NSNotification *)n
 {
 	[self refresh];
+	if (self.currentTrack) {
+		[[webView mainFrame] loadHTMLString:[self.currentTrack HTML] baseURL:nil];
+	}
 }
 
 #pragma mark -

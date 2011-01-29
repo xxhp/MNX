@@ -94,7 +94,6 @@
 		else {		
 			MNXTrack *aTrack = [dataManager.tracks objectAtIndex:selectedRow];
 			self.currentTrack = aTrack;
-			NSLog([aTrack HTML]);
 			[self refresh];
 			if ([self.currentTrack.points count]) {
 				[pointsTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];

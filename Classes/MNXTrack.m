@@ -354,11 +354,11 @@ static CGFloat distanceMile(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lo
 		NSString *base64Image = [NSImage base64ImageWithText:NSLocalizedString(@"End", @"")  additionalText:@"" color:aColor];
 		NSString *inlineString = [NSString stringWithFormat:@"data:image/tiff;base64,%@", base64Image];
 		[addLineString appendFormat:@"\tnew google.maps.Marker({position:new google.maps.LatLng(%f, %f), map: map, icon: '%@', animation: google.maps.Animation.DROP})\n", point.latitude, point.longitude, inlineString];		
-	}	
+	}
 	
 	aColor = [NSColor blueColor];
 	if ([splits count] > 1) {	
-		for (NSDictionary *d in splitMile) {
+		for (NSDictionary *d in splits) {
 			MNXPoint *point = [d objectForKey:@"point"];
 			NSString *base64Image = [NSImage base64ImageWithText:[NSString stringWithFormat:@"%d %@", [[d objectForKey:@"distance"] integerValue], unit]  additionalText:@"" color:aColor];
 			NSString *inlineString = [NSString stringWithFormat:@"data:image/tiff;base64,%@", base64Image];
