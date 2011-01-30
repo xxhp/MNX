@@ -151,12 +151,14 @@
 
 - (IBAction)export:(id)sender
 {
-	if ([tracksTableView selectedRow] < 0) {
-		return;
+	if (![sender tag]) {
+		if ([tracksTableView selectedRow] < 0) {
+			return;
+		}
+		if (![dataManager.tracks count]) {
+			return;
+		}	
 	}
-	if (![dataManager.tracks count]) {
-		return;
-	}	
 	MNXTrack *aTrack = [dataManager.tracks objectAtIndex:[tracksTableView selectedRow]];
 	
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
@@ -165,31 +167,56 @@
 	[savePanel setAllowedFileTypes:[NSArray arrayWithObject:@"gpx"]];
 	[savePanel setAccessoryView:filetypeView];
 	[savePanel setAllowsOtherFileTypes:NO];
-	[savePanel setPrompt:NSLocalizedString(@"Export", @"")];
+	[savePanel setPrompt:NSLocalizedString(@"Export", @"")];	
 	[savePanel setNameFieldLabel:NSLocalizedString(@"Export As:", @"")];
-	NSString *filename = [[aTrack title] stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
-	filename = [filename stringByReplacingOccurrencesOfString:@":" withString:@"-"];
-	filename = [filename stringByAppendingPathExtension:@"gpx"];
-	[savePanel setNameFieldStringValue:filename];
+	
+	if (![sender tag]) {
+		[savePanel setTitle:NSLocalizedString(@"Export...", @"")];
+		NSString *filename = [[aTrack title] stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
+		filename = [filename stringByReplacingOccurrencesOfString:@":" withString:@"-"];
+		filename = [filename stringByAppendingPathExtension:@"gpx"];
+		[savePanel setNameFieldStringValue:filename];		
+	}
+	else {
+		[savePanel setTitle:NSLocalizedString(@"Export All...", @"")];
+		[savePanel setNameFieldStringValue:NSLocalizedString(@"MNX Activities", @"")];		
+	}
 	
 	__block BOOL success = NO;
-	__block NSError *error;
+	__block NSError *error = nil;
 	
 	[savePanel beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
 		if (result == NSOKButton) {
 			NSData *data = nil;
-			switch ([filetypePopUpButton selectedTag]) {
-				case 0:
-					data = [aTrack GPXData];
-					break;
-				case 1:
-					data = [aTrack KMLData];
-					break;
-				case 2:
-					data = [aTrack TCXData];
-					break;						
-				default:
-					break;
+			if (![sender tag]) {
+				switch ([filetypePopUpButton selectedTag]) {
+					case 0:
+						data = [aTrack GPXData];
+						break;
+					case 1:
+						data = [aTrack KMLData];
+						break;
+					case 2:
+						data = [aTrack TCXData];
+						break;
+					default:
+						break;
+				}
+			}
+			else {
+				switch ([filetypePopUpButton selectedTag]) {
+					case 0:
+						data = [dataManager GPXData];
+						break;
+					case 1:
+						data = [dataManager KMLData];
+						break;
+					case 2:
+						data = [dataManager TCXData];
+						break;
+					default:
+						break;
+				}				
 			}
 			
 			NSURL *URL = [savePanel URL];
@@ -219,6 +246,19 @@
 	NSString *filePath = [dataManager tempFilePathWithExtension:@"kml"];
 	[[aTrack KMLData] writeToURL:[NSURL fileURLWithPath:filePath] atomically:YES];
 	[space openFile:filePath withApplication:@"Google Earth"];
+}
+- (IBAction)viewHTML:(id)sender
+{
+	if ([tracksTableView selectedRow] < 0) {
+		return;
+	}
+	if (![dataManager.tracks count]) {
+		return;
+	}
+	MNXTrack *aTrack = [dataManager.tracks objectAtIndex:[tracksTableView selectedRow]];	
+	NSString *filePath = [dataManager tempFilePathWithExtension:@"html"];
+	[[aTrack HTML] writeToURL:[NSURL fileURLWithPath:filePath] atomically:YES];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:filePath]];
 }
 - (IBAction)showWindow:(id)sender
 {
@@ -457,8 +497,14 @@
 	if ([window attachedSheet]) {
 		return NO;
 	}
-	if ([menuItem action] == @selector(export:) ||
-		[menuItem action] == @selector(googleEarth:)
+	if ([menuItem action] == @selector(export:) && [menuItem tag]) {
+		if (![dataManager.tracks count]) {
+			return NO;
+		}
+	}		
+	if (([menuItem action] == @selector(export:) && ![menuItem tag]) ||
+		[menuItem action] == @selector(googleEarth:) ||
+		[menuItem action] == @selector(viewHTML:)
 		) {
 		if ([tracksTableView selectedRow] < 0) {
 			return NO;
@@ -480,8 +526,14 @@
 	if ([window attachedSheet]) {
 		return NO;
 	}
-	if ([theItem action] == @selector(export:) ||
-		[theItem action] == @selector(googleEarth:)
+	if ([theItem action] == @selector(export:) && [theItem tag]) {
+		if (![dataManager.tracks count]) {
+			return NO;
+		}
+	}	
+	if (([theItem action] == @selector(export:) && ![theItem tag]) ||
+		[theItem action] == @selector(googleEarth:) ||
+		[theItem action] == @selector(viewHTML:)
 		) {
 		if ([tracksTableView selectedRow] < 0) {
 			return NO;

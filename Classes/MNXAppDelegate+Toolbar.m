@@ -3,6 +3,7 @@
 static NSString *const kPortPopUpButtonItem = @"kPortPopUpButtonItem";
 static NSString *const kDownloadItem = @"kDownloadItem";
 static NSString *const kExportItem = @"kExportItem";
+static NSString *const kExportAllItem = @"kExportAllItem";
 static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 
 @implementation MNXAppDelegate(Toolbar)
@@ -25,10 +26,22 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 		[item setLabel:NSLocalizedString(@"Export", @"")];
 		[item setToolTip:NSLocalizedString(@"Export selected activity.", @"")];
 		[item setPaletteLabel:NSLocalizedString(@"Export", @"")];
+		[item setTag:0];
 		[item setTarget:self];
 		[item setAction:@selector(export:)];
 		return item;
 	}	
+	if ([itemIdentifier isEqualToString:kExportAllItem]) {
+		NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:kExportItem] autorelease];
+		[item setImage:[NSImage imageNamed:@"export"]];
+		[item setLabel:NSLocalizedString(@"Export All", @"")];
+		[item setToolTip:NSLocalizedString(@"Export all activities.", @"")];
+		[item setPaletteLabel:NSLocalizedString(@"Export All", @"")];
+		[item setTag:1];
+		[item setTarget:self];
+		[item setAction:@selector(export:)];
+		return item;
+	}		
 	if ([itemIdentifier isEqualToString:kGoogleEarthItem]) {
 		NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:kGoogleEarthItem] autorelease];
 		[item setImage:[NSImage imageNamed:@"googleearth"]];
@@ -60,6 +73,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 			NSToolbarSpaceItemIdentifier,
 			NSToolbarSpaceItemIdentifier,
 			kExportItem,
+			kExportAllItem,
 			NSToolbarSeparatorItemIdentifier,
 			kGoogleEarthItem,
 			NSToolbarFlexibleSpaceItemIdentifier,
@@ -71,6 +85,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 	return [NSArray arrayWithObjects:kPortPopUpButtonItem,
 			kDownloadItem,
 			kExportItem,
+			kExportAllItem,
 			kGoogleEarthItem, 
 			NSToolbarSeparatorItemIdentifier,
 			NSToolbarSpaceItemIdentifier,

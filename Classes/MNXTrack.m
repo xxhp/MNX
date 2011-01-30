@@ -105,8 +105,7 @@ static NSDateFormatter *sharedFormatter;
 	NSXMLElement *document = (NSXMLElement *)[NSXMLNode elementWithName:@"Document"];
 	[root addChild:document];
 	
-//	[document addChild:[NSXMLNode elementWithName:@"name" stringValue:[self title]]];
-	[document addChild:[NSXMLNode elementWithName:@"name" stringValue:@"Tracks"]];
+	[document addChild:[NSXMLNode elementWithName:@"name" stringValue:NSLocalizedString(@"MNX Activities", @"")]];
 	
 	NSXMLElement *style = (NSXMLElement *)[NSXMLNode elementWithName:@"Style"];
 	[style addAttribute:[NSXMLNode attributeWithName:@"id" stringValue:@"track_style"]];

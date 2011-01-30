@@ -56,6 +56,7 @@
 - (IBAction)selectDevice:(id)sender;
 - (IBAction)export:(id)sender;
 - (IBAction)googleEarth:(id)sender;
+- (IBAction)viewHTML:(id)sender;
 - (IBAction)showWindow:(id)sender;
 - (IBAction)showPreference:(id)sender;
 - (IBAction)changeExportFileType:(id)sender;

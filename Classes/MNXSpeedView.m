@@ -54,11 +54,6 @@
 	CGRect speedUnitFrame = CGRectMake(0.0, NSMaxY(drawingFrame) + 20.0, frameWidth, 13.0);
 	[@"km/h" drawInRect:speedUnitFrame withAttributes:attr];
 	
-	[style setAlignment:NSLeftTextAlignment];
-	
-	CGRect distanceUnitFrame = CGRectMake(NSMaxX(drawingFrame) + 10.0, NSMinY(drawingFrame) - 5.0, frameWidth, 13.0);
-	[@"km" drawInRect:distanceUnitFrame withAttributes:attr];	
-	
 	if ([self.currentTrack.points count] < 2) {
 		return;
 	}
@@ -150,19 +145,19 @@
 	}	
 	
 	for (NSUInteger i = 1; (CGFloat)(i * speedInterval) < maxSpeed ; i++) {
-		NSBezierPath *intervalLine = [NSBezierPath bezierPath];		
 		CGFloat y = (CGFloat)(i * speedInterval) / maxSpeed * drawingFrame.size.height + NSMinY(drawingFrame);
 		
 		CGRect labelFrame = CGRectMake(0.0, y - 5.0, frameWidth - 10.0, 13.0);
 		NSString *labelText = [NSString stringWithFormat:@"%d", (i * speedInterval)];
 		[labelText drawInRect:labelFrame withAttributes:attr];
-		
-		[intervalLine moveToPoint:NSMakePoint(NSMinX(drawingFrame),  y)];
-		[intervalLine lineToPoint:NSMakePoint(NSMaxX(drawingFrame), y)];
-		CGFloat dash[2] = {5.0, 2.0};
-		[intervalLine setLineDash:dash count:2 phase:0.0];
-		[[NSColor grayColor] setStroke];
-		[intervalLine stroke];
+
+//		NSBezierPath *intervalLine = [NSBezierPath bezierPath];		
+//		[intervalLine moveToPoint:NSMakePoint(NSMinX(drawingFrame),  y)];
+//		[intervalLine lineToPoint:NSMakePoint(NSMaxX(drawingFrame), y)];
+//		CGFloat dash[2] = {5.0, 2.0};
+//		[intervalLine setLineDash:dash count:2 phase:0.0];
+//		[[NSColor grayColor] setStroke];
+//		[intervalLine stroke];
 	}
 	
 	[style setAlignment:NSCenterTextAlignment];
@@ -177,7 +172,7 @@
 			[intervalLine stroke];
 			
 			CGRect labelFrame = CGRectMake(x - (frameWidth / 2.0), NSMinY(drawingFrame) - 20.0, frameWidth, 13.0);
-			NSString *labelText = [NSString stringWithFormat:@"%d", (i * distanceInterval)];
+			NSString *labelText = [NSString stringWithFormat:@"%d %@", (i * distanceInterval),  NSLocalizedString(@"km", @"")];
 			[labelText drawInRect:labelFrame withAttributes:attr];
 			
 		}
@@ -185,7 +180,7 @@
 	else {
 		CGRect labelFrame = CGRectMake(NSMaxX(drawingFrame) - frameWidth, NSMinY(drawingFrame) - 20.0, frameWidth, 13.0);
 		[style setAlignment:NSRightTextAlignment];
-		NSString *labelText = [NSString stringWithFormat:@"%.2f", self.currentTrack.totalDistanceKM];
+		NSString *labelText = [NSString stringWithFormat:@"%.2f %@", self.currentTrack.totalDistanceKM, NSLocalizedString(@"km", @"")];
 		[labelText drawInRect:labelFrame withAttributes:attr];		
 	}
 	
@@ -240,19 +235,12 @@
 	CGRect speedUnitFrame = CGRectMake(0.0, NSMaxY(drawingFrame) + 20.0, frameWidth, 13.0);
 	[@"ml/h" drawInRect:speedUnitFrame withAttributes:attr];
 	
-	[style setAlignment:NSLeftTextAlignment];
-	
-	CGRect distanceUnitFrame = CGRectMake(NSMaxX(drawingFrame) + 10.0, NSMinY(drawingFrame) - 5.0, frameWidth, 13.0);
-	[@"ml" drawInRect:distanceUnitFrame withAttributes:attr];	
-	
 	if ([self.currentTrack.points count] < 2) {
 		return;
 	}
 	if (!self.currentTrack.totalDistanceMile) {
 		return;
 	}
-	
-	[style setAlignment:NSRightTextAlignment];
 	
 	CGFloat maxSpeed = 0.0;	
 	NSInteger maxPointCount = 100.0;
@@ -336,19 +324,19 @@
 	}	
 	
 	for (NSUInteger i = 1; (CGFloat)(i * speedInterval) < maxSpeed ; i++) {
-		NSBezierPath *intervalLine = [NSBezierPath bezierPath];		
 		CGFloat y = (CGFloat)(i * speedInterval) / maxSpeed * drawingFrame.size.height + NSMinY(drawingFrame);
 		
 		CGRect labelFrame = CGRectMake(0.0, y - 5.0, frameWidth - 10.0, 13.0);
 		NSString *labelText = [NSString stringWithFormat:@"%d", (i * speedInterval)];
 		[labelText drawInRect:labelFrame withAttributes:attr];
-		
-		[intervalLine moveToPoint:NSMakePoint(NSMinX(drawingFrame),  y)];
-		[intervalLine lineToPoint:NSMakePoint(NSMaxX(drawingFrame), y)];
-		CGFloat dash[2] = {5.0, 2.0};
-		[intervalLine setLineDash:dash count:2 phase:0.0];
-		[[NSColor grayColor] setStroke];
-		[intervalLine stroke];
+
+//		NSBezierPath *intervalLine = [NSBezierPath bezierPath];
+//		[intervalLine moveToPoint:NSMakePoint(NSMinX(drawingFrame),  y)];
+//		[intervalLine lineToPoint:NSMakePoint(NSMaxX(drawingFrame), y)];
+//		CGFloat dash[2] = {5.0, 2.0};
+//		[intervalLine setLineDash:dash count:2 phase:0.0];
+//		[[NSColor grayColor] setStroke];
+//		[intervalLine stroke];
 	}
 	
 	[style setAlignment:NSCenterTextAlignment];
@@ -363,7 +351,7 @@
 			[intervalLine stroke];
 			
 			CGRect labelFrame = CGRectMake(x - (frameWidth / 2.0), NSMinY(drawingFrame) - 20.0, frameWidth, 13.0);
-			NSString *labelText = [NSString stringWithFormat:@"%d", (i * distanceInterval)];
+			NSString *labelText = [NSString stringWithFormat:@"%d %@", (i * distanceInterval),  NSLocalizedString(@"ml", @"")];
 			[labelText drawInRect:labelFrame withAttributes:attr];
 			
 		}
@@ -371,8 +359,8 @@
 	else {
 		CGRect labelFrame = CGRectMake(NSMaxX(drawingFrame) - frameWidth, NSMinY(drawingFrame) - 20.0, frameWidth, 13.0);
 		[style setAlignment:NSRightTextAlignment];
-		NSString *labelText = [NSString stringWithFormat:@"%.2f", self.currentTrack.totalDistanceMile];
-		[labelText drawInRect:labelFrame withAttributes:attr];		
+		NSString *labelText = [NSString stringWithFormat:@"%.2f %@", self.currentTrack.totalDistanceMile, NSLocalizedString(@"ml", @"")];
+		[labelText drawInRect:labelFrame withAttributes:attr];
 	}
 	
 	NSBezierPath *path = [NSBezierPath bezierPath];
