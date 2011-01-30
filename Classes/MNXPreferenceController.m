@@ -54,6 +54,7 @@
 {
 	[timeZoneOutlineView setDelegate:self];
 	[timeZoneOutlineView setDataSource:self];
+	[timeZoneOutlineView setOutlineTableColumn:[timeZoneOutlineView tableColumnWithIdentifier:@"name"]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(timeZoneDidChange:) name:NSSystemTimeZoneDidChangeNotification object:nil];
 	[self refresh];
 }
