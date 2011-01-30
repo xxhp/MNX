@@ -2,6 +2,7 @@
 
 static NSString *const kPortPopUpButtonItem = @"kPortPopUpButtonItem";
 static NSString *const kDownloadItem = @"kDownloadItem";
+static NSString *const kExportItem = @"kExportItem";
 static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 
 @implementation MNXAppDelegate(Toolbar)
@@ -18,6 +19,16 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 		[item setMinSize:NSMakeSize(120.0, 32.0)];
 		return item;
 	}
+	if ([itemIdentifier isEqualToString:kExportItem]) {
+		NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:kExportItem] autorelease];
+		[item setImage:[NSImage imageNamed:@"export"]];
+		[item setLabel:NSLocalizedString(@"Export", @"")];
+		[item setToolTip:NSLocalizedString(@"Export selected activity.", @"")];
+		[item setPaletteLabel:NSLocalizedString(@"Export", @"")];
+		[item setTarget:self];
+		[item setAction:@selector(export:)];
+		return item;
+	}	
 	if ([itemIdentifier isEqualToString:kGoogleEarthItem]) {
 		NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:kGoogleEarthItem] autorelease];
 		[item setImage:[NSImage imageNamed:@"googleearth"]];
@@ -46,8 +57,10 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 {
 	return [NSArray arrayWithObjects:kPortPopUpButtonItem, 
 			kDownloadItem,
-			NSToolbarSeparatorItemIdentifier,
 			NSToolbarSpaceItemIdentifier,
+			NSToolbarSpaceItemIdentifier,
+			kExportItem,
+			NSToolbarSeparatorItemIdentifier,
 			kGoogleEarthItem,
 			NSToolbarFlexibleSpaceItemIdentifier,
 			nil];
@@ -57,6 +70,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 {
 	return [NSArray arrayWithObjects:kPortPopUpButtonItem,
 			kDownloadItem,
+			kExportItem,
 			kGoogleEarthItem, 
 			NSToolbarSeparatorItemIdentifier,
 			NSToolbarSpaceItemIdentifier,

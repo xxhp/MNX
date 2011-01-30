@@ -16,6 +16,7 @@
 		D444566812EF34EF00A181A9 /* MNXTrackCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D444566712EF34EF00A181A9 /* MNXTrackCell.m */; };
 		D444568112EF3A4600A181A9 /* pinHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = D444568012EF3A4600A181A9 /* pinHighlight.png */; };
 		D44F4F5012F5CF3D00A5DBB1 /* MNX.help in Resources */ = {isa = PBXBuildFile; fileRef = D44F4F3412F5CF3D00A5DBB1 /* MNX.help */; };
+		D44F508312F607CB00A5DBB1 /* export.png in Resources */ = {isa = PBXBuildFile; fileRef = D44F508212F607CB00A5DBB1 /* export.png */; };
 		D452073A12EDC18500FF0DA2 /* MNXAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D452073912EDC18500FF0DA2 /* MNXAppDelegate.m */; };
 		D452074012EDC19600FF0DA2 /* MNXPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = D452073F12EDC19600FF0DA2 /* MNXPoint.m */; };
 		D452074612EDC3D000FF0DA2 /* MNXTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = D452074512EDC3D000FF0DA2 /* MNXTrack.m */; };
@@ -70,6 +71,7 @@
 		D444566712EF34EF00A181A9 /* MNXTrackCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXTrackCell.m; sourceTree = "<group>"; };
 		D444568012EF3A4600A181A9 /* pinHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinHighlight.png; sourceTree = "<group>"; };
 		D44F4F3412F5CF3D00A5DBB1 /* MNX.help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MNX.help; sourceTree = "<group>"; };
+		D44F508212F607CB00A5DBB1 /* export.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = export.png; sourceTree = "<group>"; };
 		D452073812EDC18500FF0DA2 /* MNXAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXAppDelegate.h; sourceTree = "<group>"; };
 		D452073912EDC18500FF0DA2 /* MNXAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXAppDelegate.m; sourceTree = "<group>"; };
 		D452073E12EDC19600FF0DA2 /* MNXPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXPoint.h; sourceTree = "<group>"; };
@@ -308,6 +310,7 @@
 				D4D56BDE12F4959D0041277D /* sidebarResizeWidget.png */,
 				D4D56BDF12F4959D0041277D /* sidebarStatusAreaBackground.png */,
 				D4D56A8112F4843F0041277D /* calendar.jpg */,
+				D44F508212F607CB00A5DBB1 /* export.png */,
 				D42C5B0D12EF165C00B8BC51 /* MNX.icns */,
 				D45212A112EF097900FF0DA2 /* googleearth.png */,
 				D444568012EF3A4600A181A9 /* pinHighlight.png */,
@@ -425,6 +428,7 @@
 				D4D56BE012F4959D0041277D /* sidebarResizeWidget.png in Resources */,
 				D4D56BE112F4959D0041277D /* sidebarStatusAreaBackground.png in Resources */,
 				D44F4F5012F5CF3D00A5DBB1 /* MNX.help in Resources */,
+				D44F508312F607CB00A5DBB1 /* export.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

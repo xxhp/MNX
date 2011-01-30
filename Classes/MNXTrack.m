@@ -30,9 +30,20 @@ static CGFloat distanceMile(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lo
 	return dist;
 }
 
-
+static NSDateFormatter *sharedFormatter;
 
 @implementation MNXTrack
+
++ (NSDateFormatter *)dateFormatter
+{
+	if (!sharedFormatter) {
+		sharedFormatter = [[NSDateFormatter alloc] init];
+		[sharedFormatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en"] autorelease]];
+		[sharedFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
+		[sharedFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];			
+	}
+	return sharedFormatter;
+}
 
 - (void)dealloc
 {
@@ -69,13 +80,8 @@ static CGFloat distanceMile(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lo
 #pragma mark -
 #pragma mark XML Data
 
-- (NSData *)GPXData
++ (NSXMLNode *)GPXRootNode:(out NSXMLNode **)outTrackContainer
 {
-	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
-	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en"] autorelease]];
-	[formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
-	[formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-	
 	NSXMLElement *root = (NSXMLElement *)[NSXMLNode elementWithName:@"gpx"];	
 	[root addNamespace:[NSXMLNode namespaceWithName:@"" stringValue:@"http://www.topografix.com/GPX/1/1"]];
 	[root addNamespace:[NSXMLNode namespaceWithName:@"xsi" stringValue:@"http://www.w3.org/2001/XMLSchema-instance"]];
@@ -85,12 +91,60 @@ static CGFloat distanceMile(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lo
 	[root addAttribute:[NSXMLNode attributeWithName:@"xsi:schemaLocation" stringValue:@"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd"]];
 	[root addAttribute:[NSXMLNode attributeWithName:@"version" stringValue:@"1.1"]];
 	[root addAttribute:[NSXMLNode attributeWithName:@"creator" stringValue:@"MNX"]];
+	*outTrackContainer = root;
+	return root;
+}
++ (NSXMLNode *)KMLRootNode:(out NSXMLNode **)outTrackContainer
+{
+	NSXMLElement *root = (NSXMLElement *)[NSXMLNode elementWithName:@"kml"];
+	[root addNamespace:[NSXMLNode namespaceWithName:@"" stringValue:@"http://www.opengis.net/kml/2.2"]];
+	[root addNamespace:[NSXMLNode namespaceWithName:@"gx" stringValue:@"http://www.google.com/kml/ext/2.2"]];
+	[root addNamespace:[NSXMLNode namespaceWithName:@"kml" stringValue:@"http://www.opengis.net/kml/2.2"]];
+	[root addNamespace:[NSXMLNode namespaceWithName:@"atom" stringValue:@"http://www.w3.org/2005/Atom"]];
 	
-	NSXMLDocument *xml = [[[NSXMLDocument alloc] initWithRootElement:root] autorelease];
-	[xml setVersion:@"1.0"];
-	[xml setCharacterEncoding:@"UTF-8"];
+	NSXMLElement *document = (NSXMLElement *)[NSXMLNode elementWithName:@"Document"];
+	[root addChild:document];
+	
+	[document addChild:[NSXMLNode elementWithName:@"name" stringValue:[self title]]];
+	
+	NSXMLElement *style = (NSXMLElement *)[NSXMLNode elementWithName:@"Style"];
+	[style addAttribute:[NSXMLNode attributeWithName:@"id" stringValue:@"track_style"]];
+	NSXMLElement *lineStyle = (NSXMLElement *)[NSXMLNode elementWithName:@"LineStyle"];	
+	[lineStyle addChild:[NSXMLNode elementWithName:@"color" stringValue:@"99ffac59"]];
+	[lineStyle addChild:[NSXMLNode elementWithName:@"width" stringValue:@"6"]];	 
+	NSXMLElement *polyStyle = (NSXMLElement *)[NSXMLNode elementWithName:@"PolyStyle"];	
+	[polyStyle addChild:[NSXMLNode elementWithName:@"color" stringValue:@"99ffac59"]];
+	[polyStyle addChild:[NSXMLNode elementWithName:@"width" stringValue:@"6"]];	 
+	
+	NSXMLElement *iconStyle = (NSXMLElement *)[NSXMLNode elementWithName:@"IconStyle"];	
+	NSXMLElement *icon = (NSXMLElement *)[NSXMLNode elementWithName:@"Icon"];
+	[icon addChild:[NSXMLNode elementWithName:@"href" stringValue:@"http://earth.google.com/images/kml-icons/track-directional/track-0.png"]];
+	[iconStyle addChild:icon];
+	
+	[style addChild:lineStyle];
+	[style addChild:polyStyle];
+	[style addChild:iconStyle];
+	[document addChild:style];
+	
+	*outTrackContainer = document;
+	return root;
+}
++ (NSXMLNode *)TCXRootNode:(out NSXMLNode **)outTrackContainer
+{
+	NSXMLElement *root = (NSXMLElement *)[NSXMLNode elementWithName:@"TrainingCenterDatabase"];
+	[root addNamespace:[NSXMLNode namespaceWithName:@"" stringValue:@"http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2"]];
+	[root addNamespace:[NSXMLNode namespaceWithName:@"xsi" stringValue:@"http://www.w3.org/2001/XMLSchema-instance"]];
+	[root addAttribute:[NSXMLNode attributeWithName:@"xsi:schemaLocation" stringValue:@"http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2 http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd"]];
+	NSXMLElement *activities = (NSXMLElement *)[NSXMLNode elementWithName:@"Activities"];
+	[root addChild:activities];
+	*outTrackContainer = activities;
+	return root;
+}
+
+- (NSXMLNode *)GPXNode
+{
+	NSDateFormatter *formatter = [MNXTrack dateFormatter];
 	NSXMLElement *trk = (NSXMLElement *)[NSXMLNode elementWithName:@"trk"];
-	[root addChild:trk];
 	NSXMLElement *name = (NSXMLElement *)[NSXMLNode elementWithName:@"name" stringValue:[self title]];
 	[trk addChild:name];
 	NSXMLElement *trkseg = (NSXMLElement *)[NSXMLNode elementWithName:@"trkseg"];
@@ -107,87 +161,11 @@ static CGFloat distanceMile(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lo
 		[trkseg addChild:trkpt];
 	}
 	[trk addChild:trkseg];
-	NSData *data = [xml XMLData];
-	return data;
+	return trk;
 }
-- (NSData *)KMLData
+- (NSXMLNode *)KMLNode
 {
-	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
-	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en"] autorelease]];
-	[formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
-	[formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-	
-	NSXMLElement *root = (NSXMLElement *)[NSXMLNode elementWithName:@"kml"];
-	[root addNamespace:[NSXMLNode namespaceWithName:@"" stringValue:@"http://www.opengis.net/kml/2.2"]];
-	[root addNamespace:[NSXMLNode namespaceWithName:@"gx" stringValue:@"http://www.google.com/kml/ext/2.2"]];
-	[root addNamespace:[NSXMLNode namespaceWithName:@"kml" stringValue:@"http://www.opengis.net/kml/2.2"]];
-	[root addNamespace:[NSXMLNode namespaceWithName:@"atom" stringValue:@"http://www.w3.org/2005/Atom"]];
-	
-	NSXMLDocument *xml = [[[NSXMLDocument alloc] initWithRootElement:root] autorelease];
-	[xml setVersion:@"1.0"];
-	[xml setCharacterEncoding:@"UTF-8"];
-	NSXMLElement *document = (NSXMLElement *)[NSXMLNode elementWithName:@"Document"];
-	[root addChild:document];
-
-	[document addChild:[NSXMLNode elementWithName:@"name" stringValue:[self title]]];
-	NSXMLElement *lookAt = (NSXMLElement *)[NSXMLNode elementWithName:@"LookAt"];
-	
-	if (![pointArray count]) {
-		NSData *data = [xml XMLData];
-		return data;
-	}
-		
-	MNXPoint *point = [pointArray objectAtIndex:0];
-	
-	CGFloat top = point.latitude;
-	CGFloat bottom = point.latitude;
-	CGFloat left = point.longitude;
-	CGFloat right = point.longitude;
-
-	for (MNXPoint *point in pointArray) {
-		if (point.latitude > top) {
-			top = point.latitude;
-		}
-		if (point.latitude < bottom) {
-			bottom = point.latitude;
-		}
-		if (point.longitude > right) {
-			right = point.longitude;
-		}
-		if (point.longitude < left) {
-			left = point.longitude;
-		}		
-	}
-	
-	NSXMLElement *style = (NSXMLElement *)[NSXMLNode elementWithName:@"Style"];
-	[style addAttribute:[NSXMLNode attributeWithName:@"id" stringValue:@"track_style"]];
-	NSXMLElement *lineStyle = (NSXMLElement *)[NSXMLNode elementWithName:@"LineStyle"];	
-	[lineStyle addChild:[NSXMLNode elementWithName:@"color" stringValue:@"99ffac59"]];
-	[lineStyle addChild:[NSXMLNode elementWithName:@"width" stringValue:@"6"]];	 
-	NSXMLElement *polyStyle = (NSXMLElement *)[NSXMLNode elementWithName:@"PolyStyle"];	
-	[polyStyle addChild:[NSXMLNode elementWithName:@"color" stringValue:@"99ffac59"]];
-	[polyStyle addChild:[NSXMLNode elementWithName:@"width" stringValue:@"6"]];	 
-
-	NSXMLElement *iconStyle = (NSXMLElement *)[NSXMLNode elementWithName:@"IconStyle"];	
-	NSXMLElement *icon = (NSXMLElement *)[NSXMLNode elementWithName:@"Icon"];
-	[icon addChild:[NSXMLNode elementWithName:@"href" stringValue:@"http://earth.google.com/images/kml-icons/track-directional/track-0.png"]];
-	[iconStyle addChild:icon];
-	
-	[style addChild:lineStyle];
-	[style addChild:polyStyle];
-	[style addChild:iconStyle];
-	[document addChild:style];
-	
-	[lookAt addChild:[NSXMLNode elementWithName:@"longitude" stringValue:[NSString stringWithFormat:@"%f", (right + (left - right) / 2.0)]]];
-	[lookAt addChild:[NSXMLNode elementWithName:@"latitude" stringValue:[NSString stringWithFormat:@"%f", (bottom + (top - bottom) / 2.0)]]];
-	[lookAt addChild:[NSXMLNode elementWithName:@"altitude" stringValue:@"0"]];
-	[lookAt addChild:[NSXMLNode elementWithName:@"heading" stringValue:@"0"]];
-	[lookAt addChild:[NSXMLNode elementWithName:@"tilt" stringValue:@"0"]];
-	CGFloat dist = distanceKM(top, left, bottom, right);
-	NSInteger range = (NSUInteger)(dist * 1.5 * 1000);
-	[lookAt addChild:[NSXMLNode elementWithName:@"range" stringValue:[NSString stringWithFormat:@"%d", range]]];
-	[document addChild:lookAt];
-	
+	NSDateFormatter *formatter = [MNXTrack dateFormatter];
 	NSXMLElement *placemark = (NSXMLElement *)[NSXMLNode elementWithName:@"Placemark"];
 	[placemark addChild:[NSXMLNode elementWithName:@"styleUrl" stringValue:@"#track_style"]];
 	[placemark addChild:[NSXMLNode elementWithName:@"name" stringValue:[self title]]];
@@ -202,36 +180,18 @@ static CGFloat distanceMile(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lo
 	}
 	
 	[placemark addChild:track];
-	[document addChild:placemark];
-	
-	NSData *data = [xml XMLData];
-	return data;
+	return placemark;
 }
-- (NSData *)TCXData
+- (NSXMLNode *)TCXNode
 {
-	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
-	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en"] autorelease]];
-	[formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
-	[formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+	NSDateFormatter *formatter = [MNXTrack dateFormatter];
 	
-	NSXMLElement *root = (NSXMLElement *)[NSXMLNode elementWithName:@"TrainingCenterDatabase"];
-	[root addNamespace:[NSXMLNode namespaceWithName:@"" stringValue:@"http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2"]];
-	[root addNamespace:[NSXMLNode namespaceWithName:@"xsi" stringValue:@"http://www.w3.org/2001/XMLSchema-instance"]];
-	[root addAttribute:[NSXMLNode attributeWithName:@"xsi:schemaLocation" stringValue:@"http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2 http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd"]];
-	
-	NSXMLDocument *xml = [[[NSXMLDocument alloc] initWithRootElement:root] autorelease];
-	[xml setVersion:@"1.0"];
-	[xml setCharacterEncoding:@"UTF-8"];
-	NSXMLElement *activities = (NSXMLElement *)[NSXMLNode elementWithName:@"Activities"];
-	[root addChild:activities];
-
 	if ([self.points count]) {
 		NSXMLElement *activity = (NSXMLElement *)[NSXMLNode elementWithName:@"Activity"];
-		[activities addChild:activity];
-
+		
 		NSString *activityID = [formatter stringFromDate:[(MNXPoint *)[self.points objectAtIndex:0] date]];
 		[activity addChild:[NSXMLNode elementWithName:@"Id" stringValue:activityID]];
-
+		
 		NSXMLElement *lap = (NSXMLElement *)[NSXMLNode elementWithName:@"Lap"];
 		[lap addAttribute:[NSXMLNode attributeWithName:@"StartTime" stringValue:activityID]];
 		[lap addChild:[NSXMLNode elementWithName:@"TotalTimeSeconds" stringValue:[NSString stringWithFormat:@"%f", duration]]];
@@ -249,10 +209,89 @@ static CGFloat distanceMile(CGFloat lat1, CGFloat lon1, CGFloat lat2, CGFloat lo
 			[track addChild:trackPoint];
 		}
 		[lap addChild:track];
-		
 		[activity addChild:lap];
 	}
-	 
+	return nil;
+}
+
+- (NSData *)GPXData
+{	
+	NSXMLElement *container = nil;
+	NSXMLElement *root = (NSXMLElement *)[MNXTrack GPXRootNode:&container];
+	NSXMLDocument *xml = [[[NSXMLDocument alloc] initWithRootElement:root] autorelease];
+	[xml setVersion:@"1.0"];
+	[xml setCharacterEncoding:@"UTF-8"];
+	NSXMLElement *trk = (NSXMLElement *)[self GPXNode];
+	[root addChild:trk];
+	NSData *data = [xml XMLData];
+	return data;
+}
+- (NSData *)KMLData
+{
+	NSXMLElement *document = nil;
+	NSXMLElement *root = (NSXMLElement *)[MNXTrack KMLRootNode:&document];
+	NSXMLDocument *xml = [[[NSXMLDocument alloc] initWithRootElement:root] autorelease];
+	[xml setVersion:@"1.0"];
+	[xml setCharacterEncoding:@"UTF-8"];
+	
+	
+	if (![pointArray count]) {
+		NSData *data = [xml XMLData];
+		return data;
+	}
+	
+	NSXMLElement *lookAt = (NSXMLElement *)[NSXMLNode elementWithName:@"LookAt"];
+	MNXPoint *point = [pointArray objectAtIndex:0];
+	
+	CGFloat top = point.latitude;
+	CGFloat bottom = point.latitude;
+	CGFloat left = point.longitude;
+	CGFloat right = point.longitude;
+	
+	for (MNXPoint *point in pointArray) {
+		if (point.latitude > top) {
+			top = point.latitude;
+		}
+		if (point.latitude < bottom) {
+			bottom = point.latitude;
+		}
+		if (point.longitude > right) {
+			right = point.longitude;
+		}
+		if (point.longitude < left) {
+			left = point.longitude;
+		}		
+	}
+	
+	[lookAt addChild:[NSXMLNode elementWithName:@"longitude" stringValue:[NSString stringWithFormat:@"%f", (right + (left - right) / 2.0)]]];
+	[lookAt addChild:[NSXMLNode elementWithName:@"latitude" stringValue:[NSString stringWithFormat:@"%f", (bottom + (top - bottom) / 2.0)]]];
+	[lookAt addChild:[NSXMLNode elementWithName:@"altitude" stringValue:@"0"]];
+	[lookAt addChild:[NSXMLNode elementWithName:@"heading" stringValue:@"0"]];
+	[lookAt addChild:[NSXMLNode elementWithName:@"tilt" stringValue:@"0"]];
+	CGFloat dist = distanceKM(top, left, bottom, right);
+	NSInteger range = (NSUInteger)(dist * 1.5 * 1000);
+	[lookAt addChild:[NSXMLNode elementWithName:@"range" stringValue:[NSString stringWithFormat:@"%d", range]]];
+	[document addChild:lookAt];
+	
+	[document addChild:[self KMLNode]];
+	
+	NSData *data = [xml XMLData];
+	return data;
+}
+- (NSData *)TCXData
+{
+	NSXMLElement *activities = nil;
+	NSXMLElement *root = (NSXMLElement *)[MNXTrack TCXRootNode:&activities];
+	
+	NSXMLDocument *xml = [[[NSXMLDocument alloc] initWithRootElement:root] autorelease];
+	[xml setVersion:@"1.0"];
+	[xml setCharacterEncoding:@"UTF-8"];
+	
+	NSXMLNode *activity = [self TCXNode];
+	if (activity) {
+		[activities addChild:activity];
+	}
+
 	NSData *data = [xml XMLData];
 	return data;
 }

@@ -19,10 +19,18 @@
 	CGFloat maxSpeedMile;	
 }
 
++ (NSDateFormatter *)dateFormatter;
+
 - (NSString *)title;
 - (NSData *)GPXData;
 - (NSData *)KMLData;
 - (NSData *)TCXData;
++ (NSXMLNode *)GPXRootNode:(out NSXMLNode **)outTrackContainer;
++ (NSXMLNode *)KMLRootNode:(out NSXMLNode **)outTrackContainer;
++ (NSXMLNode *)TCXRootNode:(out NSXMLNode **)outTrackContainer;
+- (NSXMLNode *)GPXNode;
+- (NSXMLNode *)KMLNode;
+- (NSXMLNode *)TCXNode;
 - (NSString *)HTML;
 
 @property (readonly, nonatomic) NSString *title;

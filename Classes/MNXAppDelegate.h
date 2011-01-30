@@ -37,7 +37,6 @@
 	NSTextField *totalPaceLabel;
 	NSTextField *totalSpeedLabel;
 	
-	
 	NSWindow *sheetWindow;
 	NSTextField *messageLabel;
 	NSProgressIndicator *progressIndicator;
@@ -47,17 +46,19 @@
 	NSMenuItem *deviceListMenuItem;
 	
 	MNXPreferenceController *preferenceController;
+	
+	NSView *filetypeView;
+	NSPopUpButton *filetypePopUpButton;
 }
 
 - (IBAction)download:(id)sender;
 - (IBAction)cancelDownload:(id)sener;
 - (IBAction)selectDevice:(id)sender;
-- (IBAction)exportGPX:(id)sender;
-- (IBAction)exportKML:(id)sender;
-- (IBAction)exportTCX:(id)sender;
+- (IBAction)export:(id)sender;
 - (IBAction)googleEarth:(id)sender;
 - (IBAction)showWindow:(id)sender;
 - (IBAction)showPreference:(id)sender;
+- (IBAction)changeExportFileType:(id)sender;
 
 - (void)refresh;
 
@@ -90,6 +91,9 @@
 @property (assign) IBOutlet NSArrayController *portListArrayController;
 @property (assign) IBOutlet NSPopUpButton *portPopUpButton;
 @property (assign) IBOutlet NSMenuItem *deviceListMenuItem;
+
+@property (assign) IBOutlet NSView *filetypeView;
+@property (assign) IBOutlet NSPopUpButton *filetypePopUpButton;
 
 @end
 

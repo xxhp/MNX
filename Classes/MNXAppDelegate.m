@@ -129,7 +129,27 @@
 {
 	[portListArrayController setSelectionIndex:[sender tag]];
 }
-- (IBAction)exportGPX:(id)sender
+
+- (NSString *)allowedFileExtensionWithTag:(NSInteger)tag
+{
+	switch (tag) {
+		case 0:
+			return @"gpx";
+			break;
+		case 1:
+			return @"kml";
+			break;
+		case 2:
+			return @"tcx";
+			break;						
+		default:
+			break;
+	}	
+	return @"gpx";
+}
+
+
+- (IBAction)export:(id)sender
 {
 	if ([tracksTableView selectedRow] < 0) {
 		return;
@@ -140,68 +160,41 @@
 	MNXTrack *aTrack = [dataManager.tracks objectAtIndex:[tracksTableView selectedRow]];
 	
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
+	[filetypePopUpButton selectItemWithTag:0];
+	[savePanel setDelegate:(id)self];
 	[savePanel setAllowedFileTypes:[NSArray arrayWithObject:@"gpx"]];
+	[savePanel setAccessoryView:filetypeView];
 	[savePanel setAllowsOtherFileTypes:NO];
 	[savePanel setPrompt:NSLocalizedString(@"Export", @"")];
 	[savePanel setNameFieldLabel:NSLocalizedString(@"Export As:", @"")];
 	NSString *filename = [[aTrack title] stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
 	filename = [filename stringByReplacingOccurrencesOfString:@":" withString:@"-"];
-	[savePanel setNameFieldStringValue:filename];	
-	[savePanel beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
-		if (result == NSOKButton) {
-			NSURL *URL = [savePanel URL];
-			[[aTrack GPXData] writeToURL:URL atomically:YES];
-		}		
-	}];
-}
-- (IBAction)exportKML:(id)sender
-{
-	if ([tracksTableView selectedRow] < 0) {
-		return;
-	}
-	if (![dataManager.tracks count]) {
-		return;
-	}	
-	MNXTrack *aTrack = [dataManager.tracks objectAtIndex:[tracksTableView selectedRow]];
-	
-	NSSavePanel *savePanel = [NSSavePanel savePanel];
-	[savePanel setAllowedFileTypes:[NSArray arrayWithObject:@"kml"]];
-	[savePanel setAllowsOtherFileTypes:NO];
-	[savePanel setPrompt:NSLocalizedString(@"Export", @"")];
-	[savePanel setNameFieldLabel:NSLocalizedString(@"Export As:", @"")];
-	NSString *filename = [[aTrack title] stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
-	filename = [filename stringByReplacingOccurrencesOfString:@":" withString:@"-"];
+	filename = [filename stringByAppendingPathExtension:@"gpx"];
 	[savePanel setNameFieldStringValue:filename];
-	[savePanel beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
-		if (result == NSOKButton) {
-			NSURL *URL = [savePanel URL];
-			[[aTrack KMLData] writeToURL:URL atomically:YES];
-		}		
-	}];	
-}
-- (IBAction)exportTCX:(id)sender
-{
-	if ([tracksTableView selectedRow] < 0) {
-		return;
-	}
-	if (![dataManager.tracks count]) {
-		return;
-	}	
-	MNXTrack *aTrack = [dataManager.tracks objectAtIndex:[tracksTableView selectedRow]];
 	
-	NSSavePanel *savePanel = [NSSavePanel savePanel];
-	[savePanel setAllowedFileTypes:[NSArray arrayWithObject:@"tcx"]];
-	[savePanel setAllowsOtherFileTypes:NO];
-	[savePanel setPrompt:NSLocalizedString(@"Export", @"")];
-	[savePanel setNameFieldLabel:NSLocalizedString(@"Export As:", @"")];
-	NSString *filename = [[aTrack title] stringByReplacingOccurrencesOfString:@"/" withString:@"-"];
-	filename = [filename stringByReplacingOccurrencesOfString:@":" withString:@"-"];
-	[savePanel setNameFieldStringValue:filename];
+	__block BOOL success = NO;
+	__block NSError *error;
+	
 	[savePanel beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
 		if (result == NSOKButton) {
+			NSData *data = nil;
+			switch ([filetypePopUpButton selectedTag]) {
+				case 0:
+					data = [aTrack GPXData];
+					break;
+				case 1:
+					data = [aTrack KMLData];
+					break;
+				case 2:
+					data = [aTrack TCXData];
+					break;						
+				default:
+					break;
+			}
+			
 			NSURL *URL = [savePanel URL];
-			[[aTrack TCXData] writeToURL:URL atomically:YES];
-		}
+			success = [data writeToURL:URL options:NSDataWritingAtomic error:&error];
+		}		
 	}];	
 }
 
@@ -234,6 +227,18 @@
 - (IBAction)showPreference:(id)sender
 {
 	[preferenceController showWindow:sender];
+}
+- (IBAction)changeExportFileType:(id)sender
+{
+	NSSavePanel *savePanel = (NSSavePanel *)[(NSView *)sender window];
+	NSString *allowedExtension = [self allowedFileExtensionWithTag:[filetypePopUpButton selectedTag]];
+	[savePanel setAllowedFileTypes:[NSArray arrayWithObject:allowedExtension]];
+	NSString *filename = [savePanel nameFieldStringValue];
+	NSString *currentExtension = [filename pathExtension];
+	if (![currentExtension isEqualToString:allowedExtension]) {
+		filename = [[filename stringByDeletingPathExtension] stringByAppendingPathExtension:allowedExtension];
+	}
+	[savePanel setNameFieldStringValue:filename];
 }
 
 - (void)refresh
@@ -421,6 +426,9 @@
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
+	if ([menuItem action] == @selector(changeExportFileType:)) {
+		return YES;
+	}	
 	if ([menuItem action] == @selector(showWindow:)) {
 		if ([window isMiniaturized]) {
 			[menuItem setState:NSMixedState];
@@ -449,9 +457,7 @@
 	if ([window attachedSheet]) {
 		return NO;
 	}
-	if ([menuItem action] == @selector(exportGPX:) ||
-		[menuItem action] == @selector(exportKML:) ||
-		[menuItem action] == @selector(exportTCX:) ||
+	if ([menuItem action] == @selector(export:) ||
 		[menuItem action] == @selector(googleEarth:)
 		) {
 		if ([tracksTableView selectedRow] < 0) {
@@ -474,9 +480,7 @@
 	if ([window attachedSheet]) {
 		return NO;
 	}
-	if ([theItem action] == @selector(exportGPX:) ||
-		[theItem action] == @selector(exportKML:) ||
-		[theItem action] == @selector(exportTCX:) ||
+	if ([theItem action] == @selector(export:) ||
 		[theItem action] == @selector(googleEarth:)
 		) {
 		if ([tracksTableView selectedRow] < 0) {
@@ -521,5 +525,7 @@
 @synthesize infoImageView;
 @synthesize trackTotalDistanceLabel, trackDurationLabel, trackPaceLabel, trackSpeedLabel;
 @synthesize totalDistanceLabel, totalDurationLabel, totalPaceLabel, totalSpeedLabel;
+@synthesize filetypeView, filetypePopUpButton;
 
 @end
+
