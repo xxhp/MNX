@@ -201,6 +201,8 @@
 		}
 	}
 	
+	[[NSGraphicsContext currentContext] saveGraphicsState];
+	[[NSBezierPath bezierPathWithRect:[self drawingFrame]] setClip];
 	
 	NSColor *lineColor = [NSColor colorWithCalibratedHue:0.5 saturation:1.0 brightness:0.5 alpha:1.0];
 	NSColor *backgroundColor = [NSColor colorWithCalibratedHue:0.5 saturation:1.0 brightness:0.5 alpha:0.6];
@@ -215,6 +217,8 @@
 	[lineColor setStroke];
 	[path setLineWidth:5.0];
 	[path stroke];
+	
+	[[NSGraphicsContext currentContext] restoreGraphicsState];
 }
 
 - (void)drawWithUSUnit
@@ -380,6 +384,8 @@
 		}
 	}
 	
+	[[NSGraphicsContext currentContext] saveGraphicsState];
+	[[NSBezierPath bezierPathWithRect:[self drawingFrame]] setClip];
 	
 	NSColor *lineColor = [NSColor colorWithCalibratedHue:0.5 saturation:1.0 brightness:0.5 alpha:1.0];
 	NSColor *backgroundColor = [NSColor colorWithCalibratedHue:0.5 saturation:1.0 brightness:0.5 alpha:0.6];
@@ -394,6 +400,8 @@
 	[lineColor setStroke];
 	[path setLineWidth:5.0];
 	[path stroke];
+
+	[[NSGraphicsContext currentContext] restoreGraphicsState];
 }
 
 - (void)drawRect:(NSRect)dirtyRect
@@ -416,6 +424,7 @@
 	[border moveToPoint:NSMakePoint(NSMinX(drawingFrame), NSMaxY(drawingFrame))];
 	[border lineToPoint:NSMakePoint(NSMinX(drawingFrame), NSMinY(drawingFrame))];
 	[border lineToPoint:NSMakePoint(NSMaxX(drawingFrame), NSMinY(drawingFrame))];
+	[border lineToPoint:NSMakePoint(NSMaxX(drawingFrame), NSMaxY(drawingFrame))];
 	[[NSColor grayColor] setStroke];
 	[border stroke];
 	
