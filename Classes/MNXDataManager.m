@@ -102,7 +102,7 @@
 	if ([ext length]) {
 		filename = [filename stringByAppendingPathExtension:ext];
 	}
-	NSString *tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:(NSString *)uuidString];
+	NSString *tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:filename];
 	return tempPath;
 }
 - (NSString *)savedDataPath
@@ -157,7 +157,47 @@
 	[self _updateInfo];
 	[self performSelectorOnMainThread:@selector(_didFinishParsingData:) withObject:tracks waitUntilDone:NO];	
 }
-
+- (NSData *)GPXData
+{
+	NSXMLElement *container = nil;
+	NSXMLElement *root = (NSXMLElement *)[MNXTrack GPXRootNode:&container];
+	NSXMLDocument *xml = [[[NSXMLDocument alloc] initWithRootElement:root] autorelease];
+	[xml setVersion:@"1.0"];
+	[xml setCharacterEncoding:@"UTF-8"];
+	for (MNXTrack *aTrack in tracks) {
+		[root addChild:[aTrack GPXNode]];
+	}
+	NSData *data = [xml XMLData];
+	return data;	
+}
+- (NSData *)KMLData
+{
+	NSXMLElement *document = nil;
+	NSXMLElement *root = (NSXMLElement *)[MNXTrack KMLRootNode:&document];
+	NSXMLDocument *xml = [[[NSXMLDocument alloc] initWithRootElement:root] autorelease];
+	[xml setVersion:@"1.0"];
+	[xml setCharacterEncoding:@"UTF-8"];
+	for (MNXTrack *aTrack in tracks) {
+		[document addChild:[aTrack KMLNode]];
+	}	
+	NSData *data = [xml XMLData];
+	return data;
+}
+- (NSData *)TCXData
+{
+	NSXMLElement *activities = nil;
+	NSXMLElement *root = (NSXMLElement *)[MNXTrack TCXRootNode:&activities];
+	
+	NSXMLDocument *xml = [[[NSXMLDocument alloc] initWithRootElement:root] autorelease];
+	[xml setVersion:@"1.0"];
+	[xml setCharacterEncoding:@"UTF-8"];	
+	
+	for (MNXTrack *aTrack in tracks) {
+		[activities addChild:[aTrack TCXNode]];
+	}
+	NSData *data = [xml XMLData];
+	return data;
+}
 
 #pragma mark -
 

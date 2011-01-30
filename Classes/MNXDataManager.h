@@ -41,6 +41,9 @@
 - (NSString *)savedDataPath;
 - (void)saveData;
 - (void)loadSavedData;
+- (NSData *)GPXData;
+- (NSData *)KMLData;
+- (NSData *)TCXData;
 
 @property (assign, nonatomic) id <MNXDataManagerDelegate> delegate;
 @property (readonly) NSArray *tracks;
