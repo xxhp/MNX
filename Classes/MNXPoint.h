@@ -14,6 +14,7 @@
 	CGFloat distanceMile;
 }
 
++ (MNXPoint *)pointWithDictionary:(NSDictionary *)inDictionary;
 - (NSDictionary *)dictionary;
 
 @property (assign, nonatomic) CGFloat longitude;

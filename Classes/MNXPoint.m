@@ -2,6 +2,18 @@
 
 @implementation MNXPoint
 
++ (MNXPoint *)pointWithDictionary:(NSDictionary *)inDictionary
+{
+	MNXPoint *aPoint = [[MNXPoint alloc] init];
+	aPoint.longitude = [[inDictionary valueForKey:@"longitude"] floatValue];
+	aPoint.latitude = [[inDictionary valueForKey:@"latitude"] floatValue];
+	aPoint.date = [inDictionary valueForKey:@"date"];
+	aPoint.speed = [[inDictionary valueForKey:@"speed"] floatValue];
+	aPoint.elevation = [[inDictionary valueForKey:@"elevation"] floatValue];
+	[aPoint autorelease];
+	return aPoint;
+}
+
 - (void)dealloc
 {
 	[date release];

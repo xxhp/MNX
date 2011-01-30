@@ -1,5 +1,52 @@
 #import "MNXDataManager.h"
 
+@interface MNXDataManager (Private)
+- (void)_updateInfo;
+@end
+
+@implementation MNXDataManager (Private)
+
+- (void)_updateInfo
+{
+	totalDuration = 0.0;
+	totalDistanceKM = 0.0;
+	totalDistanceMile = 0.0;
+	averagePaceKM = 0.0;
+	averagePaceMile = 0.0;
+	averageSpeedKM = 0.0;
+	averageSpeedMile= 0.0;
+	
+	if (![tracks count]) {
+		return;
+	}
+	
+	CGFloat newDuration = 0.0;
+	CGFloat newDistanceKM = 0.0;
+	CGFloat newDistanceMile = 0.0;
+	
+	for (MNXTrack *track in tracks) {
+		newDuration += track.duration;
+		newDistanceKM += track.totalDistanceKM;
+		newDistanceMile += track.totalDistanceMile;
+	}
+	
+	if (newDuration > 0.0) {
+		averageSpeedKM = newDistanceKM / newDuration * 60.0 * 60.0;
+		averageSpeedMile = newDistanceMile / newDuration * 60.0 * 60.0;
+	}
+	if (newDistanceKM) {
+		averagePaceKM = newDuration / newDistanceKM;
+	}
+	if (newDistanceMile) {
+		averagePaceMile = newDuration / newDistanceMile;
+	}	
+	
+	totalDistanceKM = newDistanceKM;
+	totalDistanceMile = newDistanceMile;
+	totalDuration = newDuration;
+}
+@end
+
 @implementation MNXDataManager
 
 - (void)dealloc
@@ -20,10 +67,11 @@
 		[operationQueue setMaxConcurrentOperationCount:1];
 		dataParser = [[MNXDataParser alloc] init];
 		dataParser.delegate = self;
+		[self loadSavedData];
 		
-		NSString *path = [[NSBundle mainBundle] pathForResource:@"data" ofType:@"dat"];
-		NSData *data = [NSData dataWithContentsOfFile:path];
-		[dataParser parseData:data logSize:354608];
+//		NSString *path = [[NSBundle mainBundle] pathForResource:@"data" ofType:@"dat"];
+//		NSData *data = [NSData dataWithContentsOfFile:path];
+//		[dataParser parseData:data logSize:354608];
 	}
 	return self;
 }
@@ -57,6 +105,59 @@
 	NSString *tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:(NSString *)uuidString];
 	return tempPath;
 }
+- (NSString *)savedDataPath
+{
+	NSArray *supportDirs = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+	if (![supportDirs count]) {
+		return nil;
+	}
+	NSString *path = [[supportDirs objectAtIndex:0] stringByAppendingPathComponent:@"MNX"];
+	BOOL isDir = NO;
+	if (![[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) {
+		if (!isDir) {
+			[[NSFileManager defaultManager] removeItemAtURL:[NSURL fileURLWithPath:path] error:nil];
+		}
+		NSError *e = nil;
+		[[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&e];
+	}
+	path = [path stringByAppendingPathComponent:@"SavedActivities.plist"];
+	return path;
+}
+- (void)saveData
+{
+	NSMutableArray *array = [NSMutableArray array];
+	for (MNXTrack *aTrack in tracks) {
+		NSMutableArray *a = [NSMutableArray array];
+		for (MNXPoint *aPoint in aTrack.points) {
+			[a addObject:[aPoint dictionary]];
+		}
+		[array addObject:a];
+	}
+	[array writeToURL:[NSURL fileURLWithPath:[self savedDataPath]] atomically:YES];
+}
+- (void)loadSavedData
+{
+	NSArray *array = [NSArray arrayWithContentsOfURL:[NSURL fileURLWithPath:[self savedDataPath]]];
+	NSMutableArray *newTracks = [NSMutableArray array];
+	
+	for (NSArray *a in array) {
+		if (![a isKindOfClass:[NSArray class]]) {
+			continue;
+		}
+		NSMutableArray *newPoints = [NSMutableArray array];
+		for (NSDictionary *d in a) {
+			MNXPoint *aPoint = [MNXPoint pointWithDictionary:d];
+			[newPoints addObject:aPoint];
+		}
+		MNXTrack *aTrack = [[[MNXTrack alloc] init] autorelease];
+		aTrack.points = newPoints;
+		[newTracks addObject:aTrack];
+	}
+	[tracks setArray:newTracks];
+	[self _updateInfo];
+	[self performSelectorOnMainThread:@selector(_didFinishParsingData:) withObject:tracks waitUntilDone:NO];	
+}
+
 
 #pragma mark -
 
@@ -100,51 +201,12 @@
 {
 	[delegate downloadManager:self didFinishParsingData:inTracks];
 }
-- (void)_updateInfo
-{
-	totalDuration = 0.0;
-	totalDistanceKM = 0.0;
-	totalDistanceMile = 0.0;
-	averagePaceKM = 0.0;
-	averagePaceMile = 0.0;
-	averageSpeedKM = 0.0;
-	averageSpeedMile= 0.0;
-	
-	if (![tracks count]) {
-		return;
-	}
-
-	CGFloat newDuration = 0.0;
-	CGFloat newDistanceKM = 0.0;
-	CGFloat newDistanceMile = 0.0;
-	
-	for (MNXTrack *track in tracks) {
-		newDuration += track.duration;
-		newDistanceKM += track.totalDistanceKM;
-		newDistanceMile += track.totalDistanceMile;
-	}
-	
-	if (newDuration > 0.0) {
-		averageSpeedKM = newDistanceKM / newDuration * 60.0 * 60.0;
-		averageSpeedMile = newDistanceMile / newDuration * 60.0 * 60.0;
-	}
-	if (newDistanceKM) {
-		averagePaceKM = newDuration / newDistanceKM;
-	}
-	if (newDistanceMile) {
-		averagePaceMile = newDuration / newDistanceMile;
-	}	
-	
-	totalDistanceKM = newDistanceKM;
-	totalDistanceMile = newDistanceMile;
-	totalDuration = newDuration;
-}
-
 - (void)dataParser:(MNXDataParser *)inParser didFinishParsingData:(NSArray *)inTracks
 {
 	[tracks setArray:inTracks];
+	[self saveData];
 	[self _updateInfo];
-	[self performSelectorOnMainThread:@selector(_didFinishParsingData:) withObject:inTracks waitUntilDone:NO];
+	[self performSelectorOnMainThread:@selector(_didFinishParsingData:) withObject:tracks waitUntilDone:NO];
 }
 - (void)dataParserCancelled:(MNXDataParser *)inParser
 {

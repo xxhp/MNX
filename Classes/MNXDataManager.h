@@ -38,6 +38,9 @@
 - (void)downloadDataFromPort:(AMSerialPort *)inPort;
 - (void)cancelDownload;
 - (NSString *)tempFilePathWithExtension:(NSString *)ext;
+- (NSString *)savedDataPath;
+- (void)saveData;
+- (void)loadSavedData;
 
 @property (assign, nonatomic) id <MNXDataManagerDelegate> delegate;
 @property (readonly) NSArray *tracks;
