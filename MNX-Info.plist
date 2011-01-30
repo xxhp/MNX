@@ -28,5 +28,9 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>CFBundleHelpBookFolder</key>
+	<string>MNX.help</string>
+	<key>CFBundleHelpBookName</key>
+	<string>net.zonble.MNX.help</string>
 </dict>
 </plist>

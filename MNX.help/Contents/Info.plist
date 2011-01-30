@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en-US</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.lithoglyph.LadyBugz.help</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>LadyBugzHelp</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1</string>
+	<key>CFBundleSignature</key>
+	<string>LTGF</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>HPDBookAccessPath</key>
+	<string>MNX.html</string>
+	<key>HPDBookIconPath</key>
+	<string>shrd/MNX.png</string>
+	<key>HPDBookIndexPath</key>
+	<string>MNX.helpindex</string>
+	<key>HPDBookKBProduct</key>
+	<string>mnx1</string>
+	<key>HPDBookRemoteURL</key>
+	<string></string>
+	<key>HPDBookTitle</key>
+	<string>MNX Help</string>
+	<key>HPDBookType</key>
+	<string>3</string>
+</dict>
+</plist>
