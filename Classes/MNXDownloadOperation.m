@@ -7,6 +7,7 @@ NSString *const MNXDownloadOperationErrorDomain = @"MNXDownloadOperationErrorDom
 
 static NSString *const kInitDownloadMainnavMG950DCommand=@"$1\r\n";
 static NSString *const kInitDownloadQstartBTQ2000Command=@"$9\r\n";
+static NSString *const kPurgeLogCommand = @"$2\r\n";
 static NSString *const kCheckStatusCommand = @"$3\r\n";
 
 static unichar kDwonloadChunkFirst = 0x15; //NAK
@@ -15,7 +16,7 @@ static unichar kDownloadAbort = 0x18; // CAN
 //static unichar kInitStandard[2] = {0x0f, 0x06};
 
 static NSString *const kOK = @"$OK!";
-static NSString *const kFinish = @"$FINISH\r\n";
+static NSString *const kFinish = @"$FINISH";
 static NSString *const kAborted = @"\x06\x06\x06\x06";
 
 @implementation MNXDownloadOperation
@@ -36,10 +37,10 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 	return d;
 }
 
-- (NSData *)downloadDataWithError:(out NSInteger *)outErrorCode logSize:(out NSInteger *)outLogSize;
-{
-	[delegate downloadOperationDidStartDownloadingData:self];
+#pragma mark -
 
+- (NSInteger)checkLogSizeWithError:(out NSInteger *)outErrorCode
+{
 	[port setSpeed:115200];
 	[port setDataBits:8];
 	[port setParity:kAMSerialParityNone];
@@ -52,7 +53,7 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 	}
 	if (![port open]) {
 		*outErrorCode = MNXDownloadOperationUnableToOpenDevice;
-		return nil;
+		return 0;
 	}
 	
 	if ([port isOpen]) {
@@ -60,7 +61,7 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 		NSString *r = [[[NSString alloc] initWithData:d encoding:NSASCIIStringEncoding] autorelease];
 		if (![r hasPrefix:kOK]) {
 			*outErrorCode = MNXDownloadOperationUnableToOpenDevice;
-			return nil;
+			return 0;
 		}
 		Byte p[4];
 		[d getBytes:&p range:NSMakeRange([d length] - 4, 4)];
@@ -68,10 +69,18 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 	}
 	else {
 		*outErrorCode = MNXDownloadOperationUnableToOpenDevice;
-		return nil;
 	}
 	if (logSize <= 8192) {
 		*outErrorCode = MNXDownloadOperationNoDataOnDevice;
+	}
+	return logSize;
+}
+
+- (NSData *)downloadDataWithError:(out NSInteger *)outErrorCode logSize:(out NSInteger *)outLogSize
+{
+	[delegate downloadOperationDidStartDownloadingData:self];
+	NSInteger logSize = [self checkLogSizeWithError:outErrorCode];
+	if (*outErrorCode != MNXDownloadOperationNoError) {
 		return nil;
 	}
 
@@ -114,7 +123,6 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 	if ([self isCancelled]) {
 		[port writeString:CAN usingEncoding:NSUTF8StringEncoding error:&e];
 //		[port writeString:initStandard usingEncoding:NSUTF8StringEncoding error:&e];
-		[delegate downloadOperationCancelled:self];
 		return nil;
 	}
 
@@ -123,15 +131,51 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 	return data;
 }
 
+#pragma mark -
+
+- (void)purgeDataWithError:(out NSInteger *)outErrorCode logSize:(out NSInteger *)outLogSize
+{
+	[delegate downloadOperationDidStartPurgingData:self];
+	[self checkLogSizeWithError:outErrorCode];
+	if (*outErrorCode != MNXDownloadOperationNoError) {
+		return;
+	}
+	
+	NSData *d = [self _communicate:kPurgeLogCommand];
+	NSString *r = nil;
+	while (![r hasPrefix:kFinish] && ![self isCancelled]) {
+		sleep(1);
+		r = [[[NSString alloc] initWithData:d encoding:NSASCIIStringEncoding] autorelease];
+		if (![r hasPrefix:kOK]) {
+			*outErrorCode = MNXDownloadOperationFailToPurgeData;
+			break;
+		}
+	}
+}
+
+#pragma mark -
+
 - (void)main
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
 	NSInteger logSize = 0;
-	NSInteger errorCode = 0;
-	NSData *data = [self downloadDataWithError:&errorCode logSize:&logSize];
-	if ([data length]) {
-		[delegate downloadOperation:self didFinishDownloadingData:data logSize:logSize];
+	NSInteger errorCode = MNXDownloadOperationNoError;
+	if (action == MNXDownloadOperationActionDownload) {
+		NSData *data = [self downloadDataWithError:&errorCode logSize:&logSize];
+		if ([data length]) {
+			[delegate downloadOperation:self didFinishDownloadingData:data logSize:logSize];
+		}
 	}
+	else {
+		[self purgeDataWithError:&errorCode logSize:&logSize];
+		if (errorCode == MNXDownloadOperationNoError) {
+			[delegate downloadOperationDidFinishPurgingData:self];
+		}
+	}
+	if ([self isCancelled]) {
+		[delegate downloadOperationCancelled:self];
+	}	
 	else if (errorCode) {
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 		NSString *message = nil;
@@ -169,7 +213,8 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 		
 		NSError *error = [NSError errorWithDomain:MNXDownloadOperationErrorDomain code:errorCode userInfo:userInfo];
 		[delegate downloadOperation:self didFailWithError:error];
-	}	
+	}
+	
 	[pool drain];	
 }
 
@@ -180,5 +225,6 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 
 @synthesize delegate;
 @synthesize port;
+@synthesize action;
 
 @end

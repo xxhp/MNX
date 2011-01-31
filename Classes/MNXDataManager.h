@@ -15,6 +15,8 @@
 - (void)dataManagerDidStartParsingData:(MNXDataManager *)inManager;
 - (void)dataManager:(MNXDataManager *)inManager didFinishParsingData:(NSArray *)inTracks;
 - (void)dataManagerCancelled:(MNXDataManager *)inManager;
+- (void)dataManagerDidStartPurgineData:(MNXDataManager *)inManager;
+- (void)dataManagerDidFinishPurgineData:(MNXDataManager *)inManager;
 - (void)dataManager:(MNXDataManager *)inManager didFaileWithError:(NSError *)inError;
 - (void)dataManagerUpdated:(MNXDataManager *)inManager;
 @end
@@ -39,6 +41,9 @@
 
 - (void)downloadDataFromPort:(AMSerialPort *)inPort;
 - (void)cancelDownload;
+
+- (void)purgeDataWithPort:(AMSerialPort *)inPort;
+
 - (NSString *)tempFilePathWithExtension:(NSString *)ext;
 - (NSString *)savedDataPath;
 - (void)saveData;

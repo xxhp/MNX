@@ -84,6 +84,7 @@
 		return;
 	}	
 	MNXDownloadOperation *o = [[[MNXDownloadOperation alloc] init] autorelease];
+	o.action = MNXDownloadOperationActionDownload;
 	o.port = inPort;
 	o.delegate = self;
 	[operationQueue addOperation:o];
@@ -94,6 +95,17 @@
 		NSOperation *o = [[operationQueue operations] lastObject];
 		[o cancel];
 	}
+}
+- (void)purgeDataWithPort:(AMSerialPort *)inPort
+{
+	if ([[operationQueue operations] count]) {
+		return;
+	}	
+	MNXDownloadOperation *o = [[[MNXDownloadOperation alloc] init] autorelease];
+	o.action = MNXDownloadOperationActionPurge;
+	o.port = inPort;
+	o.delegate = self;
+	[operationQueue addOperation:o];	
 }
 - (NSString *)tempFilePathWithExtension:(NSString *)ext
 {
@@ -270,6 +282,14 @@
 {
 	[(id)delegate performSelectorOnMainThread:@selector(dataManagerDidFinishDownloadingData:) withObject:self waitUntilDone:NO];
 	[dataParser parseData:inData logSize:logSize];
+}
+- (void)downloadOperationDidStartPurgingData:(MNXDownloadOperation *)inOperation
+{
+	[(id)delegate performSelectorOnMainThread:@selector(dataManagerDidStartPurgineData:) withObject:self waitUntilDone:NO];
+}
+- (void)downloadOperationDidFinishPurgingData:(MNXDownloadOperation *)inOperation
+{
+	[(id)delegate performSelectorOnMainThread:@selector(dataManagerDidFinishPurgineData:) withObject:self waitUntilDone:NO];
 }
 - (void)downloadOperationCancelled:(MNXDownloadOperation *)inOperation
 {

@@ -130,6 +130,15 @@
 {
 	[dataManager cancelDownload];
 }
+- (IBAction)purgeData:(id)sender
+{
+	if (![[portListArrayController selectedObjects] count]) {
+		return;
+	}
+	
+	AMSerialPort *port = [[portListArrayController selectedObjects] lastObject];	
+	[dataManager purgeDataWithPort:port];
+}
 - (IBAction)selectDevice:(id)sender
 {
 	[portListArrayController setSelectionIndex:[sender tag]];
@@ -451,23 +460,26 @@
 }
 - (void)dataManager:(MNXDataManager *)inManager didFaileWithError:(NSError *)inError;
 {
+	NSWindow *aWindow = window;
+	if ([sheetWindow isVisible]) {
+		aWindow = sheetWindow;
+	}
 	NSAlert *alert = [NSAlert alertWithError:inError];
-	[alert beginSheetModalForWindow:sheetWindow modalDelegate:self didEndSelector:@selector(downloadErrorAlertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+	[alert beginSheetModalForWindow:aWindow modalDelegate:self didEndSelector:@selector(downloadErrorAlertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 }
 - (void)dataManagerDidStartDownloadingData:(MNXDataManager *)inManager
 {
-	NSLog(@"%s", __PRETTY_FUNCTION__);
+	[cancelButton setHidden:NO];
+	
 	[NSApp beginSheet:sheetWindow modalForWindow:window modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 	[sheetWindow orderFront:self];
 	[messageLabel setStringValue:NSLocalizedString(@"Start downloading data...", @"")];
 	[progressIndicator setUsesThreadedAnimation:YES];
 	[progressIndicator setIndeterminate:YES];
 	[progressIndicator startAnimation:self];
-
 }
 - (void)dataManager:(MNXDataManager *)inManager didDownloadData:(CGFloat)inProgress
 {
-	NSLog(@"%s %f", __PRETTY_FUNCTION__, inProgress);
 	[messageLabel setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Downloading data, %d%% completed...", @""), (NSInteger)(inProgress * 100)]];
 	[progressIndicator setIndeterminate:NO];
 	[progressIndicator setMaxValue:1.0];
@@ -512,6 +524,24 @@
 	[tracksTableView reloadData];
 	[self refresh];
 }
+- (void)dataManagerDidStartPurgineData:(MNXDataManager *)inManager
+{
+	[NSApp beginSheet:sheetWindow modalForWindow:window modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[sheetWindow orderFront:self];
+	[messageLabel setStringValue:NSLocalizedString(@"Purging data...", @"")];
+	[progressIndicator setUsesThreadedAnimation:YES];
+	[progressIndicator setIndeterminate:YES];
+	[progressIndicator startAnimation:self];
+	[cancelButton setHidden:YES];
+}
+- (void)dataManagerDidFinishPurgineData:(MNXDataManager *)inManager
+{
+	[progressIndicator stopAnimation:self];
+	
+	[NSApp endSheet:sheetWindow];
+	[sheetWindow orderOut:self];	
+}
+
 
 #pragma mark -
 
@@ -536,6 +566,12 @@
 	if ([menuItem action] == @selector(changeExportFileType:)) {
 		return YES;
 	}	
+	if ([menuItem action] == @selector(openHomepage:)) {
+		return YES;
+	}	
+	if ([menuItem action] == @selector(feedback:)) {
+		return YES;
+	}	
 	if ([menuItem action] == @selector(showWindow:)) {
 		if ([window isMiniaturized]) {
 			[menuItem setState:NSMixedState];
@@ -556,7 +592,8 @@
 			[menuItem setState:NSOffState];
 		}		
 	}
-	if ([menuItem action] == @selector(download:)) {
+	if ([menuItem action] == @selector(download:) ||
+		[menuItem action] == @selector(purgeData:)) {
 		if (![[portListArrayController selectedObjects] count]) {
 			return NO;
 		}
@@ -586,7 +623,8 @@
 
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
 {
-	if ([theItem action] == @selector(download:)) {
+	if ([theItem action] == @selector(download:) ||
+		[theItem action] == @selector(purgeData:)) {
 		if (![[portListArrayController selectedObjects] count]) {
 			return NO;
 		}
@@ -646,6 +684,7 @@
 @synthesize infoImageView;
 @synthesize trackTotalDistanceLabel, trackDurationLabel, trackPaceLabel, trackSpeedLabel;
 @synthesize totalDistanceLabel, totalDurationLabel, totalPaceLabel, totalSpeedLabel;
+@synthesize cancelButton;
 @synthesize filetypeView, filetypePopUpButton;
 
 @end

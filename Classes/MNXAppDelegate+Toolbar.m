@@ -2,6 +2,7 @@
 
 static NSString *const kPortPopUpButtonItem = @"kPortPopUpButtonItem";
 static NSString *const kDownloadItem = @"kDownloadItem";
+static NSString *const kPurgeDataItem = @"kPurgeDataItem";
 static NSString *const kExportItem = @"kExportItem";
 static NSString *const kExportAllItem = @"kExportAllItem";
 static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
@@ -62,6 +63,17 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 		[item setAction:@selector(download:)];
 		return item;
 	}
+	if ([itemIdentifier isEqualToString:kPurgeDataItem]) {
+		NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:kPurgeDataItem] autorelease];
+		[item setImage:[NSImage imageNamed:@"trash"]];
+		[item setLabel:NSLocalizedString(@"Purge Data", @"")];
+		[item setToolTip:NSLocalizedString(@"Purge data on your GPS device.", @"")];
+		[item setPaletteLabel:NSLocalizedString(@"Purge Data", @"")];
+		[item setTarget:self];
+		[item setAction:@selector(purgeData:)];
+		return item;
+	}
+	
 	
 	return nil;
 }
@@ -70,6 +82,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 {
 	return [NSArray arrayWithObjects:kPortPopUpButtonItem, 
 			kDownloadItem,
+			kPurgeDataItem,
 			NSToolbarSpaceItemIdentifier,
 			NSToolbarSpaceItemIdentifier,
 			kExportItem,
@@ -84,6 +97,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 {
 	return [NSArray arrayWithObjects:kPortPopUpButtonItem,
 			kDownloadItem,
+			kPurgeDataItem,
 			kExportItem,
 			kExportAllItem,
 			kGoogleEarthItem, 

@@ -38,6 +38,7 @@
 		D4814F3A12F6F0230099729F /* MNXSelectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4814F3912F6F0230099729F /* MNXSelectionController.m */; };
 		D4814F4212F6F0EA0099729F /* MNXSelectionController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D4814F4112F6F0EA0099729F /* MNXSelectionController.xib */; };
 		D481505412F726F20099729F /* MNXSourceListTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = D481505312F726F20099729F /* MNXSourceListTableView.m */; };
+		D481525612F758680099729F /* trash.png in Resources */ = {isa = PBXBuildFile; fileRef = D481525512F758680099729F /* trash.png */; };
 		D4CB316B12F035150081D7B7 /* NSString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CB316A12F035150081D7B7 /* NSString+Extension.m */; };
 		D4CE6B7312F225EF0084683F /* MNXSpeedView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6B7212F225EF0084683F /* MNXSpeedView.m */; };
 		D4CE6E5B12F2A0D60084683F /* MNXAppDelegate+TableView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6E5A12F2A0D60084683F /* MNXAppDelegate+TableView.m */; };
@@ -112,6 +113,7 @@
 		D4814F3F12F6F0E50099729F /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MNXSelectionController.xib; sourceTree = "<group>"; };
 		D481505212F726F20099729F /* MNXSourceListTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXSourceListTableView.h; sourceTree = "<group>"; };
 		D481505312F726F20099729F /* MNXSourceListTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXSourceListTableView.m; sourceTree = "<group>"; };
+		D481525512F758680099729F /* trash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trash.png; sourceTree = "<group>"; };
 		D4CB316912F035150081D7B7 /* NSString+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Extension.h"; sourceTree = "<group>"; };
 		D4CB316A12F035150081D7B7 /* NSString+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Extension.m"; sourceTree = "<group>"; };
 		D4CE6B7112F225EF0084683F /* MNXSpeedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXSpeedView.h; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 		D452124512EF03F900FF0DA2 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				D481525512F758680099729F /* trash.png */,
 				D4D56BDE12F4959D0041277D /* sidebarResizeWidget.png */,
 				D4D56BDF12F4959D0041277D /* sidebarStatusAreaBackground.png */,
 				D4D56A8112F4843F0041277D /* calendar.jpg */,
@@ -443,6 +446,7 @@
 				D44F4F5012F5CF3D00A5DBB1 /* MNX.help in Resources */,
 				D44F508312F607CB00A5DBB1 /* export.png in Resources */,
 				D4814F4212F6F0EA0099729F /* MNXSelectionController.xib in Resources */,
+				D481525612F758680099729F /* trash.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

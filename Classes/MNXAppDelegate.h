@@ -38,6 +38,8 @@
 	NSTextField *totalPaceLabel;
 	NSTextField *totalSpeedLabel;
 	
+	NSButton *cancelButton;
+	
 	NSWindow *sheetWindow;
 	NSTextField *messageLabel;
 	NSProgressIndicator *progressIndicator;
@@ -54,7 +56,8 @@
 }
 
 - (IBAction)download:(id)sender;
-- (IBAction)cancelDownload:(id)sener;
+- (IBAction)cancelDownload:(id)sender;
+- (IBAction)purgeData:(id)sender;
 - (IBAction)selectDevice:(id)sender;
 - (IBAction)deleteTrack:(id)sender;
 - (IBAction)export:(id)sender;
@@ -67,6 +70,9 @@
 - (IBAction)feedback:(id)sender;
 
 - (void)refresh;
+
+#pragma mark -
+#pragma mark Properties
 
 @property (retain, nonatomic) MNXTrack *currentTrack;
 
@@ -89,6 +95,7 @@
 @property (assign) IBOutlet NSTextField *totalDurationLabel;
 @property (assign) IBOutlet NSTextField *totalPaceLabel;
 @property (assign) IBOutlet NSTextField *totalSpeedLabel;
+@property (assign) IBOutlet NSButton *cancelButton;
 
 @property (assign) IBOutlet NSWindow *sheetWindow;
 @property (assign) IBOutlet NSTextField *messageLabel;
@@ -102,6 +109,8 @@
 @property (assign) IBOutlet NSPopUpButton *filetypePopUpButton;
 
 @end
+
+#pragma mark -
 
 @interface MNXAppDelegate(TableView) <NSTableViewDataSource, NSTableViewDelegate>
 @end
