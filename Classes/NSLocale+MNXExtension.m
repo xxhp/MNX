@@ -6,7 +6,6 @@
 {
 	NSLocale *currentLocale = [NSLocale currentLocale];
 	NSString *measureUnit = [currentLocale objectForKey:NSLocaleMeasurementSystem];
-//	NSLog(@"measureUnit:%@", measureUnit);
 	if ([measureUnit isEqualToString:@"U.S."]) {
 		return YES;
 	}
