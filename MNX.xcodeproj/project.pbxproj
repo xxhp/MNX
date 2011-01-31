@@ -35,6 +35,8 @@
 		D452124712EF03FA00FF0DA2 /* download.png in Resources */ = {isa = PBXBuildFile; fileRef = D452124612EF03FA00FF0DA2 /* download.png */; };
 		D452126912EF061C00FF0DA2 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = D452126812EF061C00FF0DA2 /* pin.png */; };
 		D45212A212EF097900FF0DA2 /* googleearth.png in Resources */ = {isa = PBXBuildFile; fileRef = D45212A112EF097900FF0DA2 /* googleearth.png */; };
+		D4814F3A12F6F0230099729F /* MNXSelectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = D4814F3912F6F0230099729F /* MNXSelectionController.m */; };
+		D4814F4212F6F0EA0099729F /* MNXSelectionController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D4814F4112F6F0EA0099729F /* MNXSelectionController.xib */; };
 		D4CB316B12F035150081D7B7 /* NSString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CB316A12F035150081D7B7 /* NSString+Extension.m */; };
 		D4CE6B7312F225EF0084683F /* MNXSpeedView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6B7212F225EF0084683F /* MNXSpeedView.m */; };
 		D4CE6E5B12F2A0D60084683F /* MNXAppDelegate+TableView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6E5A12F2A0D60084683F /* MNXAppDelegate+TableView.m */; };
@@ -104,6 +106,9 @@
 		D452124612EF03FA00FF0DA2 /* download.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = download.png; sourceTree = "<group>"; };
 		D452126812EF061C00FF0DA2 /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin.png; sourceTree = "<group>"; };
 		D45212A112EF097900FF0DA2 /* googleearth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = googleearth.png; sourceTree = "<group>"; };
+		D4814F3812F6F0230099729F /* MNXSelectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXSelectionController.h; sourceTree = "<group>"; };
+		D4814F3912F6F0230099729F /* MNXSelectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXSelectionController.m; sourceTree = "<group>"; };
+		D4814F3F12F6F0E50099729F /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MNXSelectionController.xib; sourceTree = "<group>"; };
 		D4CB316912F035150081D7B7 /* NSString+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Extension.h"; sourceTree = "<group>"; };
 		D4CB316A12F035150081D7B7 /* NSString+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Extension.m"; sourceTree = "<group>"; };
 		D4CE6B7112F225EF0084683F /* MNXSpeedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXSpeedView.h; sourceTree = "<group>"; };
@@ -207,6 +212,7 @@
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
 				D4CE70B612F310940084683F /* MNXPreferenceController.xib */,
+				D4814F4112F6F0EA0099729F /* MNXSelectionController.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -351,6 +357,8 @@
 			children = (
 				D4CE70AF12F3106A0084683F /* MNXPreferenceController.h */,
 				D4CE70B012F3106A0084683F /* MNXPreferenceController.m */,
+				D4814F3812F6F0230099729F /* MNXSelectionController.h */,
+				D4814F3912F6F0230099729F /* MNXSelectionController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -429,6 +437,7 @@
 				D4D56BE112F4959D0041277D /* sidebarStatusAreaBackground.png in Resources */,
 				D44F4F5012F5CF3D00A5DBB1 /* MNX.help in Resources */,
 				D44F508312F607CB00A5DBB1 /* export.png in Resources */,
+				D4814F4212F6F0EA0099729F /* MNXSelectionController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,6 +475,7 @@
 				D4D56AD812F486660041277D /* MNXWhiteBackgroundView.m in Sources */,
 				D4D56BE812F496B50041277D /* MNXAdditionalSplitDeviderView.m in Sources */,
 				D4D56DBC12F4AF570041277D /* NSData+MBBase64.m in Sources */,
+				D4814F3A12F6F0230099729F /* MNXSelectionController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -494,6 +504,14 @@
 				D444565412EF333E00A181A9 /* English */,
 			);
 			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		D4814F4112F6F0EA0099729F /* MNXSelectionController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D4814F3F12F6F0E50099729F /* English */,
+			);
+			name = MNXSelectionController.xib;
 			sourceTree = "<group>";
 		};
 		D4CE70B612F310940084683F /* MNXPreferenceController.xib */ = {

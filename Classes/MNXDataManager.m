@@ -155,7 +155,13 @@
 	}
 	[tracks setArray:newTracks];
 	[self _updateInfo];
-	[self performSelectorOnMainThread:@selector(_didFinishParsingData:) withObject:tracks waitUntilDone:NO];	
+}
+- (void)appendTracks:(NSArray *)inTracks
+{
+	[tracks addObjectsFromArray:inTracks];
+	[self _updateInfo];
+//	[self saveData];
+	[self performSelector:@selector(saveData) withObject:nil afterDelay:0.5];
 }
 - (NSData *)GPXData
 {
@@ -243,10 +249,10 @@
 }
 - (void)dataParser:(MNXDataParser *)inParser didFinishParsingData:(NSArray *)inTracks
 {
-	[tracks setArray:inTracks];
-	[self saveData];
-	[self _updateInfo];
-	[self performSelectorOnMainThread:@selector(_didFinishParsingData:) withObject:tracks waitUntilDone:NO];
+//	[tracks setArray:inTracks];
+//	[self saveData];
+//	[self _updateInfo];
+	[self performSelectorOnMainThread:@selector(_didFinishParsingData:) withObject:inTracks waitUntilDone:NO];
 }
 - (void)dataParserCancelled:(MNXDataParser *)inParser
 {

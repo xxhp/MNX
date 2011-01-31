@@ -14,12 +14,15 @@
 	[dateFormatter release];
 	[dataManager release];
 	[preferenceController release];
+	[selectionController release];
 	[super dealloc];
 }
 
 - (void)awakeFromNib
 {
 	preferenceController = [[MNXPreferenceController alloc] init];
+	selectionController = [[MNXSelectionController alloc] init];
+	[selectionController setDelegate:(id)self];
 	
 	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"toolbar"] autorelease];
 	[toolbar setDelegate:self];
@@ -91,6 +94,7 @@
 	dataManager = [[MNXDataManager alloc] init];
 	dataManager.delegate = self;
 	[self updatePorts];
+	[tracksTableView reloadData];	
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAddPorts:) name:AMSerialPortListDidAddPortsNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRemovePorts:) name:AMSerialPortListDidRemovePortsNotification object:nil];
@@ -257,7 +261,7 @@
 	}
 	MNXTrack *aTrack = [dataManager.tracks objectAtIndex:[tracksTableView selectedRow]];	
 	NSString *filePath = [dataManager tempFilePathWithExtension:@"html"];
-	[[aTrack HTML] writeToURL:[NSURL fileURLWithPath:filePath] atomically:YES];
+	[[aTrack HTML] writeToURL:[NSURL fileURLWithPath:filePath] atomically:YES encoding:NSUTF8StringEncoding error:nil];
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:filePath]];
 }
 - (IBAction)showWindow:(id)sender
@@ -280,6 +284,18 @@
 	}
 	[savePanel setNameFieldStringValue:filename];
 }
+- (IBAction)openHomepage:(id)sender
+{
+	NSURL *URL = [NSURL URLWithString:@"https://github.com/zonble/MNX"];
+	[[NSWorkspace sharedWorkspace] openURL:URL];
+}
+- (IBAction)feedback:(id)sender
+{
+	NSURL *URL = [NSURL URLWithString:@"https://github.com/zonble/MNX/issues"];
+	[[NSWorkspace sharedWorkspace] openURL:URL];
+}
+
+#pragma mark -
 
 - (void)refresh
 {
@@ -445,13 +461,20 @@
 	[progressIndicator setUsesThreadedAnimation:YES];
 	[progressIndicator setIndeterminate:YES];	
 }
+- (void)_delayedShowSelectionWindow:(NSArray *)tracks
+{
+	selectionController.tracks = tracks;
+	[NSApp beginSheet:[selectionController window] modalForWindow:window modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[[selectionController window] orderFront:self];
+}
+
 - (void)downloadManager:(MNXDataManager *)inManager didFinishParsingData:(NSArray *)inTracks
 {
-	[tracksTableView reloadData];
-	[pointsTableView reloadData];
 	[progressIndicator stopAnimation:self];
+
 	[NSApp endSheet:sheetWindow];
-	[sheetWindow orderOut:self];	
+	[sheetWindow orderOut:self];
+	[self performSelector:@selector(_delayedShowSelectionWindow:) withObject:inTracks afterDelay:0.3];
 }
 - (void)downloadManagerCancelled:(MNXDataManager *)inManager
 {
@@ -460,6 +483,22 @@
 		[NSApp endSheet:sheetWindow];
 		[sheetWindow orderOut:self];		
 	}
+}
+
+#pragma mark -
+
+- (void)selectionController:(MNXSelectionController *)inController didSelectTracks:(NSArray *)inTracks
+{
+	[dataManager appendTracks:inTracks];
+	[tracksTableView reloadData];
+	[NSApp endSheet:[selectionController window]];
+	[[selectionController window] orderOut:self];
+	[self refresh];
+}
+- (void)selectionControllerCancelled:(MNXSelectionController *)inController
+{
+	[NSApp endSheet:[selectionController window]];
+	[[selectionController window] orderOut:self];
 }
 
 #pragma mark -

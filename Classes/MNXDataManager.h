@@ -41,6 +41,7 @@
 - (NSString *)savedDataPath;
 - (void)saveData;
 - (void)loadSavedData;
+- (void)appendTracks:(NSArray *)inTracks;
 - (NSData *)GPXData;
 - (NSData *)KMLData;
 - (NSData *)TCXData;

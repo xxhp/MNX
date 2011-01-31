@@ -12,7 +12,7 @@ static NSString *const kCheckStatusCommand = @"$3\r\n";
 static unichar kDwonloadChunkFirst = 0x15; //NAK
 static unichar kDownloadChunkNext = 0x06; //ACK
 static unichar kDownloadAbort = 0x18; // CAN
-static unichar kInitStandard[2] = {0x0f, 0x06};
+//static unichar kInitStandard[2] = {0x0f, 0x06};
 
 static NSString *const kOK = @"$OK!";
 static NSString *const kFinish = @"$FINISH\r\n";
@@ -91,7 +91,7 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 	NSString *NAK = [NSString stringWithCharacters:&kDwonloadChunkFirst length:1];
 	NSString *ACK = [NSString stringWithCharacters:&kDownloadChunkNext length:1];
 	NSString *CAN = [NSString stringWithCharacters:&kDownloadAbort length:1];
-	NSString *initStandard = [NSString stringWithCharacters:&kInitStandard length:2];
+//	NSString *initStandard = [NSString stringWithCharacters:&kInitStandard length:2];
 	
 	NSError *e = nil;
 	[port writeString:NAK usingEncoding:NSUTF8StringEncoding error:NULL];	
@@ -99,7 +99,7 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 		NSData *d = [port readBytes:132 error:&e];
 		if ([d length] < 132) {
 			[port writeString:CAN usingEncoding:NSUTF8StringEncoding error:&e];
-			[port writeString:initStandard usingEncoding:NSUTF8StringEncoding error:&e];
+//			[port writeString:initStandard usingEncoding:NSUTF8StringEncoding error:&e];
 			*outErrorCode = MNXDownloadOperationDataTransferError;
 			return nil;
 		}
@@ -113,12 +113,12 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 	}
 	if ([self isCancelled]) {
 		[port writeString:CAN usingEncoding:NSUTF8StringEncoding error:&e];
-		[port writeString:initStandard usingEncoding:NSUTF8StringEncoding error:&e];
+//		[port writeString:initStandard usingEncoding:NSUTF8StringEncoding error:&e];
 		[delegate downloadOperationCancelled:self];
 		return nil;
 	}
 
-	[port writeString:initStandard usingEncoding:NSUTF8StringEncoding error:&e];
+//	[port writeString:initStandard usingEncoding:NSUTF8StringEncoding error:&e];
 	*outLogSize = logSize;
 	return data;
 }

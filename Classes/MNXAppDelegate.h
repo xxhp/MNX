@@ -5,6 +5,7 @@
 #import "AMSerialPortList.h"
 #import "MNXSpeedView.h"
 #import "MNXPreferenceController.h"
+#import "MNXSelectionController.h"
 
 @interface MNXAppDelegate : NSObject
 	<NSApplicationDelegate,
@@ -46,6 +47,7 @@
 	NSMenuItem *deviceListMenuItem;
 	
 	MNXPreferenceController *preferenceController;
+	MNXSelectionController *selectionController;
 	
 	NSView *filetypeView;
 	NSPopUpButton *filetypePopUpButton;
@@ -60,6 +62,8 @@
 - (IBAction)showWindow:(id)sender;
 - (IBAction)showPreference:(id)sender;
 - (IBAction)changeExportFileType:(id)sender;
+- (IBAction)openHomepage:(id)sender;
+- (IBAction)feedback:(id)sender;
 
 - (void)refresh;
 
