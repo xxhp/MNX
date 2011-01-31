@@ -1,6 +1,7 @@
 #import "MNXAppDelegate.h"
 #import "NSLocale+MNXExtension.h"
 #import "NSString+Extension.h"
+#import "MNXTrackCell.h"
 
 @implementation MNXAppDelegate(TableView)
 
@@ -26,6 +27,15 @@
 - (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
 	if (aTableView == tracksTableView) {
+		MNXTrackCell *cell = (MNXTrackCell *)aCell;
+		MNXTrack *track = [dataManager.tracks objectAtIndex:rowIndex];
+		CGFloat distance = track.totalDistanceKM;
+		NSString *unit = NSLocalizedString(@"km", @"");
+		if ([NSLocale usingUSMeasurementUnit]) {
+			distance = track.totalDistanceMile;
+			unit = NSLocalizedString(@"ml", @"");
+		}
+		cell.additionalText = [NSString stringWithFormat:@"%.1f %@", distance, unit];
 	}
 	else if (aTableView == pointsTableView) {
 		[aCell setFont:[NSFont systemFontOfSize:10.0]];

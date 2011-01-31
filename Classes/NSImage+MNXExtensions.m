@@ -30,7 +30,7 @@
 	[backgroundImage drawInRect:imageBounds fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
 	
 	NSMutableDictionary *attr = [NSMutableDictionary dictionary];
-	[attr setObject:[NSFont boldSystemFontOfSize:180.0] forKey:NSFontAttributeName];
+	[attr setObject:[NSFont fontWithName:@"Helvetica Bold" size:180.0] forKey:NSFontAttributeName];
 	[attr setObject:[NSColor colorWithCalibratedHue:0.0 saturation:0.0 brightness:0.0 alpha:0.9] forKey:NSForegroundColorAttributeName];
 	NSMutableParagraphStyle *p = [[[NSMutableParagraphStyle alloc] init] autorelease];
 	[p setAlignment:NSCenterTextAlignment];
@@ -41,7 +41,7 @@
 	[monthAttr setObject:[NSColor colorWithCalibratedHue:0.0 saturation:0.0 brightness:1.0 alpha:0.9] forKey:NSForegroundColorAttributeName];
 	[monthAttr setObject:p forKey:NSParagraphStyleAttributeName];
 	
-	NSRect dayFrame = NSMakeRect(90.0, 80.0, imageBounds.size.width - 90.0, 200.0);
+	NSRect dayFrame = NSMakeRect(80.0, 80.0, imageBounds.size.width - 80.0, 200.0);
 	NSRect monthFrame = NSMakeRect(120.0, 255.0, 150.0, 90.0);	
 	
 	NSAffineTransform *transform = [NSAffineTransform transform];

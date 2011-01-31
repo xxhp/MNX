@@ -13,7 +13,7 @@ static NSString *const kCheckStatusCommand = @"$3\r\n";
 static unichar kDwonloadChunkFirst = 0x15; //NAK
 static unichar kDownloadChunkNext = 0x06; //ACK
 static unichar kDownloadAbort = 0x18; // CAN
-//static unichar kInitStandard[2] = {0x0f, 0x06};
+static unichar kInitStandard[2] = {0x0f, 0x06};
 
 static NSString *const kOK = @"$OK!";
 static NSString *const kFinish = @"$FINISH";
@@ -100,7 +100,7 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 	NSString *NAK = [NSString stringWithCharacters:&kDwonloadChunkFirst length:1];
 	NSString *ACK = [NSString stringWithCharacters:&kDownloadChunkNext length:1];
 	NSString *CAN = [NSString stringWithCharacters:&kDownloadAbort length:1];
-//	NSString *initStandard = [NSString stringWithCharacters:&kInitStandard length:2];
+	NSString *initStandard = [NSString stringWithCharacters:kInitStandard length:2];
 	
 	NSError *e = nil;
 	[port writeString:NAK usingEncoding:NSUTF8StringEncoding error:NULL];	
@@ -108,7 +108,7 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 		NSData *d = [port readBytes:132 error:&e];
 		if ([d length] < 132) {
 			[port writeString:CAN usingEncoding:NSUTF8StringEncoding error:&e];
-//			[port writeString:initStandard usingEncoding:NSUTF8StringEncoding error:&e];
+			[port writeString:initStandard usingEncoding:NSUTF8StringEncoding error:&e];
 			*outErrorCode = MNXDownloadOperationDataTransferError;
 			return nil;
 		}
@@ -122,16 +122,14 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 	}
 	if ([self isCancelled]) {
 		[port writeString:CAN usingEncoding:NSUTF8StringEncoding error:&e];
-//		[port writeString:initStandard usingEncoding:NSUTF8StringEncoding error:&e];
+		[port writeString:initStandard usingEncoding:NSUTF8StringEncoding error:&e];
 		return nil;
 	}
 
-//	[port writeString:initStandard usingEncoding:NSUTF8StringEncoding error:&e];
+	[port writeString:initStandard usingEncoding:NSUTF8StringEncoding error:&e];
 	*outLogSize = logSize;
 	return data;
 }
-
-#pragma mark -
 
 - (void)purgeDataWithError:(out NSInteger *)outErrorCode logSize:(out NSInteger *)outLogSize
 {
@@ -141,15 +139,18 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 		return;
 	}
 	
+	[port setReadTimeout:1.0];
 	NSData *d = [self _communicate:kPurgeLogCommand];
-	NSString *r = nil;
+	NSString *r = [[[NSString alloc] initWithData:d encoding:NSASCIIStringEncoding] autorelease];
 	while (![r hasPrefix:kFinish] && ![self isCancelled]) {
-		sleep(1);
+		NSError *e = nil;
+		d = [port readAndReturnError:&e];
 		r = [[[NSString alloc] initWithData:d encoding:NSASCIIStringEncoding] autorelease];
-		if (![r hasPrefix:kOK]) {
-			*outErrorCode = MNXDownloadOperationFailToPurgeData;
-			break;
-		}
+		NSLog(@"r:%@", r);
+//		if (![r hasPrefix:kOK]) {
+//			*outErrorCode = MNXDownloadOperationFailToPurgeData;
+//			break;
+//		}
 	}
 }
 
