@@ -44,6 +44,8 @@
 	totalDistanceKM = newDistanceKM;
 	totalDistanceMile = newDistanceMile;
 	totalDuration = newDuration;
+	
+	[delegate dataManagerUpdated:self];
 }
 @end
 
@@ -160,9 +162,15 @@
 {
 	[tracks addObjectsFromArray:inTracks];
 	[self _updateInfo];
-//	[self saveData];
 	[self performSelector:@selector(saveData) withObject:nil afterDelay:0.5];
 }
+- (void)deleteTrack:(MNXTrack *)inTrack
+{
+	[tracks removeObject:inTrack];
+	[self _updateInfo];
+	[self performSelector:@selector(saveData) withObject:nil afterDelay:0.5];	
+}
+
 - (NSData *)GPXData
 {
 	NSXMLElement *container = nil;
@@ -209,11 +217,11 @@
 
 - (void)downloadOperationDidStartDownloadingData:(MNXDownloadOperation *)inOperation
 {
-	[(id)delegate performSelectorOnMainThread:@selector(downloadManagerDidStartDownloadingData:) withObject:self waitUntilDone:NO];
+	[(id)delegate performSelectorOnMainThread:@selector(dataManagerDidStartDownloadingData:) withObject:self waitUntilDone:NO];
 }
 - (void)_didDownloadData:(NSNumber *)inProgress
 {
-	[delegate downloadManager:self didDownloadData:[inProgress floatValue]];
+	[delegate dataManager:self didDownloadData:[inProgress floatValue]];
 }
 - (void)downloadOperation:(MNXDownloadOperation *)inOperation didDownloadData:(CGFloat)inProgress
 {
@@ -221,16 +229,16 @@
 }
 - (void)downloadOperation:(MNXDownloadOperation *)inOperation didFinishDownloadingData:(NSData *)inData logSize:(NSUInteger)logSize
 {
-	[(id)delegate performSelectorOnMainThread:@selector(downloadManagerDidFinishDownloadingData:) withObject:self waitUntilDone:NO];
+	[(id)delegate performSelectorOnMainThread:@selector(dataManagerDidFinishDownloadingData:) withObject:self waitUntilDone:NO];
 	[dataParser parseData:inData logSize:logSize];
 }
 - (void)downloadOperationCancelled:(MNXDownloadOperation *)inOperation
 {
-	[(id)delegate performSelectorOnMainThread:@selector(downloadManagerCancelled:) withObject:self waitUntilDone:NO];
+	[(id)delegate performSelectorOnMainThread:@selector(dataManagerCancelled:) withObject:self waitUntilDone:NO];
 }
 - (void)_didFailWithError:(NSError *)inError
 {
-	[delegate downloadManager:self didFaileWithError:inError];
+	[delegate dataManager:self didFaileWithError:inError];
 }
 - (void)downloadOperation:(MNXDownloadOperation *)inOperation didFailWithError:(NSError *)inError;
 {
@@ -241,11 +249,11 @@
 
 - (void)dataParserDidStartParsingData:(MNXDataParser *)inParser
 {
-	[(id)delegate performSelectorOnMainThread:@selector(downloadManagerDidStartParsingData:) withObject:self waitUntilDone:NO];
+	[(id)delegate performSelectorOnMainThread:@selector(dataManagerDidStartParsingData:) withObject:self waitUntilDone:NO];
 }
 - (void)_didFinishParsingData:(NSArray *)inTracks
 {
-	[delegate downloadManager:self didFinishParsingData:inTracks];
+	[delegate dataManager:self didFinishParsingData:inTracks];
 }
 - (void)dataParser:(MNXDataParser *)inParser didFinishParsingData:(NSArray *)inTracks
 {
@@ -262,7 +270,7 @@
 
 - (NSArray *)tracks
 {
-	return [NSArray arrayWithArray:tracks];
+	return tracks;
 }
 
 @synthesize delegate;
@@ -273,5 +281,6 @@
 @synthesize averagePaceMile;
 @synthesize averageSpeedKM;
 @synthesize averageSpeedMile;
+@synthesize undoManager;
 
 @end

@@ -9,14 +9,14 @@
 
 @protocol MNXDataManagerDelegate <NSObject>;
 
-- (void)downloadManagerDidStartDownloadingData:(MNXDataManager *)inManager;
-- (void)downloadManager:(MNXDataManager *)inManager didDownloadData:(CGFloat)inProgress;
-- (void)downloadManagerDidFinishDownloadingData:(MNXDataManager *)inManager;
-- (void)downloadManagerDidStartParsingData:(MNXDataManager *)inManager;
-- (void)downloadManager:(MNXDataManager *)inManager didFinishParsingData:(NSArray *)inTracks;
-- (void)downloadManagerCancelled:(MNXDataManager *)inManager;
-- (void)downloadManager:(MNXDataManager *)inManager didFaileWithError:(NSError *)inError;
-
+- (void)dataManagerDidStartDownloadingData:(MNXDataManager *)inManager;
+- (void)dataManager:(MNXDataManager *)inManager didDownloadData:(CGFloat)inProgress;
+- (void)dataManagerDidFinishDownloadingData:(MNXDataManager *)inManager;
+- (void)dataManagerDidStartParsingData:(MNXDataManager *)inManager;
+- (void)dataManager:(MNXDataManager *)inManager didFinishParsingData:(NSArray *)inTracks;
+- (void)dataManagerCancelled:(MNXDataManager *)inManager;
+- (void)dataManager:(MNXDataManager *)inManager didFaileWithError:(NSError *)inError;
+- (void)dataManagerUpdated:(MNXDataManager *)inManager;
 @end
 
 @interface MNXDataManager : NSObject <MNXDownloadOperationDelegate, MNXDataParserDelegate>
@@ -33,6 +33,8 @@
 	NSTimeInterval averagePaceMile;
 	CGFloat averageSpeedKM;
 	CGFloat averageSpeedMile;
+	
+	NSUndoManager *undoManager;
 }
 
 - (void)downloadDataFromPort:(AMSerialPort *)inPort;
@@ -42,6 +44,7 @@
 - (void)saveData;
 - (void)loadSavedData;
 - (void)appendTracks:(NSArray *)inTracks;
+- (void)deleteTrack:(MNXTrack *)inTrack;
 - (NSData *)GPXData;
 - (NSData *)KMLData;
 - (NSData *)TCXData;
@@ -56,6 +59,6 @@
 @property (readonly) NSTimeInterval averagePaceMile;
 @property (readonly) CGFloat averageSpeedKM;
 @property (readonly) CGFloat averageSpeedMile;
-
+@property (assign) NSUndoManager *undoManager;
 
 @end

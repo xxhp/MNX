@@ -56,6 +56,7 @@
 - (IBAction)download:(id)sender;
 - (IBAction)cancelDownload:(id)sener;
 - (IBAction)selectDevice:(id)sender;
+- (IBAction)deleteTrack:(id)sender;
 - (IBAction)export:(id)sender;
 - (IBAction)googleEarth:(id)sender;
 - (IBAction)viewHTML:(id)sender;

@@ -93,6 +93,7 @@
 {
 	dataManager = [[MNXDataManager alloc] init];
 	dataManager.delegate = self;
+	dataManager.undoManager = [[self window] undoManager];
 	[self updatePorts];
 	[tracksTableView reloadData];	
 	
@@ -132,6 +133,29 @@
 - (IBAction)selectDevice:(id)sender
 {
 	[portListArrayController setSelectionIndex:[sender tag]];
+}
+
+- (void)deleteAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+	if (returnCode == NSOKButton) {
+		MNXTrack *aTrack = (MNXTrack *)contextInfo;
+		[dataManager deleteTrack:aTrack];
+	}
+}
+
+- (IBAction)deleteTrack:(id)sender
+{
+	if ([tracksTableView selectedRow] < 0) {
+		return;
+	}
+	if (![dataManager.tracks count]) {
+		return;
+	}
+
+	MNXTrack *aTrack = [dataManager.tracks objectAtIndex:[tracksTableView selectedRow]];	
+	NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Do you really want to delete this activity?", @"") defaultButton:NSLocalizedString(@"Delete", @"") alternateButton:NSLocalizedString(@"Cancel", @"") otherButton:nil informativeTextWithFormat:@""];
+	
+	[alert beginSheetModalForWindow:window modalDelegate:self didEndSelector:@selector(deleteAlertDidEnd:returnCode:contextInfo:) contextInfo:aTrack];
 }
 
 - (NSString *)allowedFileExtensionWithTag:(NSInteger)tag
@@ -419,19 +443,18 @@
 
 #pragma mark -
 
-- (void)alertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+- (void)downloadErrorAlertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
 	[progressIndicator stopAnimation:self];
 	[NSApp endSheet:sheetWindow];
 	[sheetWindow orderOut:self];	
 }
-
-- (void)downloadManager:(MNXDataManager *)inManager didFaileWithError:(NSError *)inError;
+- (void)dataManager:(MNXDataManager *)inManager didFaileWithError:(NSError *)inError;
 {
 	NSAlert *alert = [NSAlert alertWithError:inError];
-	[alert beginSheetModalForWindow:sheetWindow modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+	[alert beginSheetModalForWindow:sheetWindow modalDelegate:self didEndSelector:@selector(downloadErrorAlertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 }
-- (void)downloadManagerDidStartDownloadingData:(MNXDataManager *)inManager
+- (void)dataManagerDidStartDownloadingData:(MNXDataManager *)inManager
 {
 	NSLog(@"%s", __PRETTY_FUNCTION__);
 	[NSApp beginSheet:sheetWindow modalForWindow:window modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
@@ -442,7 +465,7 @@
 	[progressIndicator startAnimation:self];
 
 }
-- (void)downloadManager:(MNXDataManager *)inManager didDownloadData:(CGFloat)inProgress
+- (void)dataManager:(MNXDataManager *)inManager didDownloadData:(CGFloat)inProgress
 {
 	NSLog(@"%s %f", __PRETTY_FUNCTION__, inProgress);
 	[messageLabel setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Downloading data, %d%% completed...", @""), (NSInteger)(inProgress * 100)]];
@@ -452,10 +475,10 @@
 	[progressIndicator setDoubleValue:(double)inProgress];
 	
 }
-- (void)downloadManagerDidFinishDownloadingData:(MNXDataManager *)inManager
+- (void)dataManagerDidFinishDownloadingData:(MNXDataManager *)inManager
 {
 }
-- (void)downloadManagerDidStartParsingData:(MNXDataManager *)inManager
+- (void)dataManagerDidStartParsingData:(MNXDataManager *)inManager
 {
 	[messageLabel setStringValue:NSLocalizedString(@"Start parsing data...", @"")];
 	[progressIndicator setUsesThreadedAnimation:YES];
@@ -468,7 +491,7 @@
 	[[selectionController window] orderFront:self];
 }
 
-- (void)downloadManager:(MNXDataManager *)inManager didFinishParsingData:(NSArray *)inTracks
+- (void)dataManager:(MNXDataManager *)inManager didFinishParsingData:(NSArray *)inTracks
 {
 	[progressIndicator stopAnimation:self];
 
@@ -476,13 +499,18 @@
 	[sheetWindow orderOut:self];
 	[self performSelector:@selector(_delayedShowSelectionWindow:) withObject:inTracks afterDelay:0.3];
 }
-- (void)downloadManagerCancelled:(MNXDataManager *)inManager
+- (void)dataManagerCancelled:(MNXDataManager *)inManager
 {
 	if ([window attachedSheet]) {
 		[progressIndicator stopAnimation:self];
 		[NSApp endSheet:sheetWindow];
 		[sheetWindow orderOut:self];		
 	}
+}
+- (void)dataManagerUpdated:(MNXDataManager *)inManager
+{
+	[tracksTableView reloadData];
+	[self refresh];
 }
 
 #pragma mark -
@@ -543,6 +571,7 @@
 	}		
 	if (([menuItem action] == @selector(export:) && ![menuItem tag]) ||
 		[menuItem action] == @selector(googleEarth:) ||
+		[menuItem action] == @selector(deleteTrack:) ||
 		[menuItem action] == @selector(viewHTML:)
 		) {
 		if ([tracksTableView selectedRow] < 0) {
@@ -572,6 +601,7 @@
 	}	
 	if (([theItem action] == @selector(export:) && ![theItem tag]) ||
 		[theItem action] == @selector(googleEarth:) ||
+		[theItem action] == @selector(deleteTrack:) ||
 		[theItem action] == @selector(viewHTML:)
 		) {
 		if ([tracksTableView selectedRow] < 0) {
