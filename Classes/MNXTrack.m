@@ -456,6 +456,9 @@ static NSDateFormatter *sharedFormatter;
 		}
 		currentPoint.distanceKM = newDistanceKM;
 		currentPoint.speedKM = aDistanceKM / fabs([currentPoint.date timeIntervalSinceDate:previousPoint.date]) * 60.0 * 60.0;
+		if (i == 1 && [pointArray count] > 2) {
+			[(MNXPoint *)[pointArray objectAtIndex:0] setSpeedKM:currentPoint.speedKM];
+		}		
 		if (currentPoint.speedKM > newMaxSpeedKM) {
 			newMaxSpeedKM = currentPoint.speedKM;
 		}
@@ -468,6 +471,9 @@ static NSDateFormatter *sharedFormatter;
 		}
 		currentPoint.distanceMile = newDistanceMile;
 		currentPoint.speedMile = aDistanceMile / fabs([currentPoint.date timeIntervalSinceDate:previousPoint.date]) * 60.0 * 60.0;
+		if (i == 1 && [pointArray count] > 2) {
+			[(MNXPoint *)[pointArray objectAtIndex:0] setSpeedMile:currentPoint.speedMile];
+		}		
 		if (currentPoint.speedMile > newMaxSpeedMile) {
 			newMaxSpeedMile = currentPoint.speedMile;
 		}
