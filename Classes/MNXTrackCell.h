@@ -5,6 +5,6 @@
 	NSString *additionalText;
 }
 
-@property (copy, nonatomic) NSString *additionalText;
+@property (copy) NSString *additionalText;
 
 @end

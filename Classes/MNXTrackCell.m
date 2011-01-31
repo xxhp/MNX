@@ -4,7 +4,7 @@
 
 - (void)dealloc
 {
-	[additionalText release];
+	self.additionalText = nil;
 	[super dealloc];
 }
 
@@ -14,6 +14,7 @@
 	self = [super init];
 	if (self != nil) {
 		[self setFont:[NSFont boldSystemFontOfSize:12.0]];
+		self.additionalText = nil;
 	}
 	return self;
 }

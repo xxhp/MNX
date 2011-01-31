@@ -9,12 +9,12 @@
 	NSTimeInterval duration;
 	
 	CGFloat totalDistanceKM;
-	CGFloat averagePaceKM;
+	NSTimeInterval averagePaceKM;
 	CGFloat averageSpeedKM;
 	CGFloat maxSpeedKM;
 
 	CGFloat totalDistanceMile;
-	CGFloat averagePaceMile;
+	NSTimeInterval averagePaceMile;
 	CGFloat averageSpeedMile;
 	CGFloat maxSpeedMile;	
 }

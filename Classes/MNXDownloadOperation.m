@@ -146,7 +146,7 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 		NSError *e = nil;
 		d = [port readAndReturnError:&e];
 		r = [[[NSString alloc] initWithData:d encoding:NSASCIIStringEncoding] autorelease];
-		NSLog(@"r:%@", r);
+//		NSLog(@"r:%@", r);
 //		if (![r hasPrefix:kOK]) {
 //			*outErrorCode = MNXDownloadOperationFailToPurgeData;
 //			break;

@@ -14,7 +14,7 @@
 - (NSRect)drawingFrame
 {
 	CGFloat frameWidth = [self frameWidth];
-	NSRect drawingFrame = CGRectMake(frameWidth, frameWidth, [self bounds].size.width - (frameWidth * 2) , [self bounds].size.height - (frameWidth * 2));
+	NSRect drawingFrame = NSMakeRect(frameWidth, frameWidth, [self bounds].size.width - (frameWidth * 2) , [self bounds].size.height - (frameWidth * 2));
 	return drawingFrame;
 }
 @end
@@ -48,10 +48,10 @@
 	CGFloat frameWidth = [self frameWidth];
 	NSRect drawingFrame = [self drawingFrame];
 	
-	CGRect zeroFrame = CGRectMake(0.0, NSMinY(drawingFrame) - 20.0, frameWidth - 10.0, 13.0);
+	NSRect zeroFrame = NSMakeRect(0.0, NSMinY(drawingFrame) - 20.0, frameWidth - 10.0, 13.0);
 	[@"0" drawInRect:zeroFrame withAttributes:attr];
 	
-	CGRect speedUnitFrame = CGRectMake(0.0, NSMaxY(drawingFrame) + 20.0, frameWidth, 13.0);
+	NSRect speedUnitFrame = NSMakeRect(0.0, NSMaxY(drawingFrame) + 20.0, frameWidth, 13.0);
 	[@"km/h" drawInRect:speedUnitFrame withAttributes:attr];
 	
 	if ([self.currentTrack.points count] < 2) {
@@ -147,7 +147,7 @@
 	for (NSUInteger i = 1; (CGFloat)(i * speedInterval) < maxSpeed ; i++) {
 		CGFloat y = (CGFloat)(i * speedInterval) / maxSpeed * drawingFrame.size.height + NSMinY(drawingFrame);
 		
-		CGRect labelFrame = CGRectMake(0.0, y - 5.0, frameWidth - 10.0, 13.0);
+		NSRect labelFrame = NSMakeRect(0.0, y - 5.0, frameWidth - 10.0, 13.0);
 		NSString *labelText = [NSString stringWithFormat:@"%d", (i * speedInterval)];
 		[labelText drawInRect:labelFrame withAttributes:attr];
 
@@ -171,14 +171,14 @@
 			[[NSColor blackColor] setStroke];
 			[intervalLine stroke];
 			
-			CGRect labelFrame = CGRectMake(x - (frameWidth / 2.0), NSMinY(drawingFrame) - 20.0, frameWidth, 13.0);
+			NSRect labelFrame = NSMakeRect(x - (frameWidth / 2.0), NSMinY(drawingFrame) - 20.0, frameWidth, 13.0);
 			NSString *labelText = [NSString stringWithFormat:@"%d %@", (i * distanceInterval),  NSLocalizedString(@"km", @"")];
 			[labelText drawInRect:labelFrame withAttributes:attr];
 			
 		}
 	}
 	else {
-		CGRect labelFrame = CGRectMake(NSMaxX(drawingFrame) - frameWidth, NSMinY(drawingFrame) - 20.0, frameWidth, 13.0);
+		NSRect labelFrame = NSMakeRect(NSMaxX(drawingFrame) - frameWidth, NSMinY(drawingFrame) - 20.0, frameWidth, 13.0);
 		[style setAlignment:NSRightTextAlignment];
 		NSString *labelText = [NSString stringWithFormat:@"%.2f %@", self.currentTrack.totalDistanceKM, NSLocalizedString(@"km", @"")];
 		[labelText drawInRect:labelFrame withAttributes:attr];		
@@ -233,10 +233,10 @@
 	CGFloat frameWidth = [self frameWidth];
 	NSRect drawingFrame = [self drawingFrame];
 	
-	CGRect zeroFrame = CGRectMake(0.0, NSMinY(drawingFrame) - 20.0, frameWidth - 10.0, 13.0);
+	NSRect zeroFrame = NSMakeRect(0.0, NSMinY(drawingFrame) - 20.0, frameWidth - 10.0, 13.0);
 	[@"0" drawInRect:zeroFrame withAttributes:attr];
 	
-	CGRect speedUnitFrame = CGRectMake(0.0, NSMaxY(drawingFrame) + 20.0, frameWidth, 13.0);
+	NSRect speedUnitFrame = NSMakeRect(0.0, NSMaxY(drawingFrame) + 20.0, frameWidth, 13.0);
 	[@"ml/h" drawInRect:speedUnitFrame withAttributes:attr];
 	
 	if ([self.currentTrack.points count] < 2) {
@@ -330,7 +330,7 @@
 	for (NSUInteger i = 1; (CGFloat)(i * speedInterval) < maxSpeed ; i++) {
 		CGFloat y = (CGFloat)(i * speedInterval) / maxSpeed * drawingFrame.size.height + NSMinY(drawingFrame);
 		
-		CGRect labelFrame = CGRectMake(0.0, y - 5.0, frameWidth - 10.0, 13.0);
+		NSRect labelFrame = NSMakeRect(0.0, y - 5.0, frameWidth - 10.0, 13.0);
 		NSString *labelText = [NSString stringWithFormat:@"%d", (i * speedInterval)];
 		[labelText drawInRect:labelFrame withAttributes:attr];
 
@@ -354,14 +354,14 @@
 			[[NSColor blackColor] setStroke];
 			[intervalLine stroke];
 			
-			CGRect labelFrame = CGRectMake(x - (frameWidth / 2.0), NSMinY(drawingFrame) - 20.0, frameWidth, 13.0);
+			NSRect labelFrame = NSMakeRect(x - (frameWidth / 2.0), NSMinY(drawingFrame) - 20.0, frameWidth, 13.0);
 			NSString *labelText = [NSString stringWithFormat:@"%d %@", (i * distanceInterval),  NSLocalizedString(@"ml", @"")];
 			[labelText drawInRect:labelFrame withAttributes:attr];
 			
 		}
 	}
 	else {
-		CGRect labelFrame = CGRectMake(NSMaxX(drawingFrame) - frameWidth, NSMinY(drawingFrame) - 20.0, frameWidth, 13.0);
+		NSRect labelFrame = NSMakeRect(NSMaxX(drawingFrame) - frameWidth, NSMinY(drawingFrame) - 20.0, frameWidth, 13.0);
 		[style setAlignment:NSRightTextAlignment];
 		NSString *labelText = [NSString stringWithFormat:@"%.2f %@", self.currentTrack.totalDistanceMile, NSLocalizedString(@"ml", @"")];
 		[labelText drawInRect:labelFrame withAttributes:attr];
