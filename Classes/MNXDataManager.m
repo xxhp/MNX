@@ -125,17 +125,26 @@
 	path = [path stringByAppendingPathComponent:@"SavedActivities.plist"];
 	return path;
 }
+- (void)_saveData
+{
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
+	@synchronized(self) {
+		NSMutableArray *array = [NSMutableArray array];
+		for (MNXTrack *aTrack in [[tracks copy] autorelease]) {
+			NSMutableArray *a = [NSMutableArray array];
+			for (MNXPoint *aPoint in aTrack.points) {
+				[a addObject:[aPoint dictionary]];
+			}
+			[array addObject:a];
+		}
+		[array writeToURL:[NSURL fileURLWithPath:[self savedDataPath]] atomically:YES];	
+	}
+	[pool drain];
+}
 - (void)saveData
 {
-	NSMutableArray *array = [NSMutableArray array];
-	for (MNXTrack *aTrack in tracks) {
-		NSMutableArray *a = [NSMutableArray array];
-		for (MNXPoint *aPoint in aTrack.points) {
-			[a addObject:[aPoint dictionary]];
-		}
-		[array addObject:a];
-	}
-	[array writeToURL:[NSURL fileURLWithPath:[self savedDataPath]] atomically:YES];
+	[self performSelectorInBackground:@selector(_saveData) withObject:nil];
 }
 - (void)loadSavedData
 {
@@ -158,17 +167,47 @@
 	[tracks setArray:newTracks];
 	[self _updateInfo];
 }
+- (void)_undoAppendingTracks:(NSArray *)inTracks
+{
+	[undoManager beginUndoGrouping];
+	[[undoManager prepareWithInvocationTarget:self] appendTracks:inTracks];
+	[tracks removeObjectsInArray:inTracks];
+	[self _updateInfo];
+	[self performSelector:@selector(saveData) withObject:nil afterDelay:0.5];
+	[undoManager endUndoGrouping];	
+}
 - (void)appendTracks:(NSArray *)inTracks
 {
+	[undoManager beginUndoGrouping];
+	[[undoManager prepareWithInvocationTarget:self] _undoAppendingTracks:inTracks];
+	[undoManager setActionName:NSLocalizedString(@"Adding Activites", @"")];
 	[tracks addObjectsFromArray:inTracks];
 	[self _updateInfo];
 	[self performSelector:@selector(saveData) withObject:nil afterDelay:0.5];
+	[undoManager endUndoGrouping];
+}
+- (void)_undoDeletingTrack:(MNXTrack *)inTrack atIndex:(NSInteger)inIndex
+{
+	[undoManager beginUndoGrouping];
+	[[undoManager prepareWithInvocationTarget:self] deleteTrack:inTrack];
+	[tracks insertObject:inTrack atIndex:inIndex];
+	[self _updateInfo];
+	[self performSelector:@selector(saveData) withObject:nil afterDelay:0.5];
+	[undoManager endUndoGrouping];	
 }
 - (void)deleteTrack:(MNXTrack *)inTrack
 {
+	NSInteger index = [tracks indexOfObject:inTrack];
+	if (index == NSNotFound) {
+		return;
+	}	
+	[undoManager beginUndoGrouping];
+	[[undoManager prepareWithInvocationTarget:self] _undoDeletingTrack:inTrack atIndex:index];
+	[undoManager setActionName:NSLocalizedString(@"Deleting Activity", @"")];	
 	[tracks removeObject:inTrack];
 	[self _updateInfo];
 	[self performSelector:@selector(saveData) withObject:nil afterDelay:0.5];	
+	[undoManager endUndoGrouping];
 }
 
 - (NSData *)GPXData
@@ -257,9 +296,6 @@
 }
 - (void)dataParser:(MNXDataParser *)inParser didFinishParsingData:(NSArray *)inTracks
 {
-//	[tracks setArray:inTracks];
-//	[self saveData];
-//	[self _updateInfo];
 	[self performSelectorOnMainThread:@selector(_didFinishParsingData:) withObject:inTracks waitUntilDone:NO];
 }
 - (void)dataParserCancelled:(MNXDataParser *)inParser
