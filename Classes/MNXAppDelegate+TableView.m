@@ -24,18 +24,13 @@
 	}	
 	return 0;
 }
-- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)inTableColumn row:(NSInteger)rowIndex
 {
 	if (aTableView == tracksTableView) {
-		MNXTrackCell *cell = (MNXTrackCell *)aCell;
-		MNXTrack *track = [dataManager.tracks objectAtIndex:rowIndex];
-		CGFloat distance = track.totalDistanceKM;
-		NSString *unit = NSLocalizedString(@"km", @"");
-		if ([NSLocale usingUSMeasurementUnit]) {
-			distance = track.totalDistanceMile;
-			unit = NSLocalizedString(@"ml", @"");
+		NSString *ci = [inTableColumn identifier];
+		if ([ci isEqualToString:@"distance"]) {
+			[aCell setFont:[NSFont systemFontOfSize:8.0]];
 		}
-		cell.additionalText = [NSString stringWithFormat:@"%.1f %@", distance, unit];
 	}
 	else if (aTableView == pointsTableView) {
 		[aCell setFont:[NSFont systemFontOfSize:10.0]];
@@ -48,7 +43,18 @@
 - (id)tableView:(NSTableView *)inTableView objectValueForTableColumn:(NSTableColumn *)inTableColumn row:(NSInteger)inRow
 {
 	if (inTableView == tracksTableView) {
+		NSString *ci = [inTableColumn identifier];
 		MNXTrack *track = [dataManager.tracks objectAtIndex:inRow];
+		if ([ci isEqualToString:@"distance"]) {
+			CGFloat distance = track.totalDistanceKM;
+			NSString *unit = NSLocalizedString(@"km", @"");
+			if ([NSLocale usingUSMeasurementUnit]) {
+				distance = track.totalDistanceMile;
+				unit = NSLocalizedString(@"ml", @"");
+			}
+			return [NSString stringWithFormat:@"%.1f %@", distance, unit];
+		}
+		
 		NSString *title = [track title];
 		return title;
 	}
