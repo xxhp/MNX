@@ -1,0 +1,183 @@
+﻿/* No comment provided by engineer. */
+"%@ - MNX" = "%@ - MNX";
+
+/* No comment provided by engineer. */
+"Adding Activites" = "Adding Activites";
+
+/* No comment provided by engineer. */
+"As System Time Zone on My Mac (%@)" = "As System Time Zone on My Mac (%@)";
+
+/* No comment provided by engineer. */
+"Cancel" = "Cancel";
+
+/* Undo action */
+"Changing Time Zone Setting" = "Changing Time Zone Setting";
+
+/* No comment provided by engineer. */
+"Delete" = "Delete";
+
+/* No comment provided by engineer. */
+"Deleting Activity" = "Deleting Activity";
+
+/* No comment provided by engineer. */
+"Device" = "Device";
+
+/* No comment provided by engineer. */
+"Devices" = "Devices";
+
+/* No comment provided by engineer. */
+"Do you really want to delete this activity?" = "Do you really want to delete this activity?";
+
+/* No comment provided by engineer. */
+"Download" = "Download";
+
+/* No comment provided by engineer. */
+"Download data from your GPS device." = "Download data from your GPS device.";
+
+/* No comment provided by engineer. */
+"Downloading data, %d%% completed..." = "Downloading data, %d%% completed...";
+
+/* No comment provided by engineer. */
+"Elevation:" = "Elevation:";
+
+/* No comment provided by engineer. */
+"End" = "End";
+
+/* No comment provided by engineer. */
+"Export" = "Export";
+
+/* No comment provided by engineer. */
+"Export All" = "Export All";
+
+/* No comment provided by engineer. */
+"Export all activities." = "Export all activities.";
+
+/* No comment provided by engineer. */
+"Export All..." = "Export All...";
+
+/* No comment provided by engineer. */
+"Export As:" = "Export As:";
+
+/* No comment provided by engineer. */
+"Export selected activity." = "Export selected activity.";
+
+/* No comment provided by engineer. */
+"Export..." = "Export...";
+
+/* No comment provided by engineer. */
+"ft" = "ft";
+
+/* No comment provided by engineer. */
+"Google Earth" = "Google Earth";
+
+/* No comment provided by engineer. */
+"Google Earth is not installed." = "Google Earth is not installed.";
+
+/* No comment provided by engineer. */
+"GPS Device" = "GPS Device";
+
+/* No comment provided by engineer. */
+"hr" = "hr";
+
+/* No comment provided by engineer. */
+"KM" = "KM";
+
+/* No comment provided by engineer. */
+"km" = "km";
+
+/* No comment provided by engineer. */
+"km/h" = "km/h";
+
+/* No comment provided by engineer. */
+"m" = "m";
+
+/* No comment provided by engineer. */
+"Miles" = "Miles";
+
+/* No comment provided by engineer. */
+"min" = "min";
+
+/* No comment provided by engineer. */
+"ml" = "ml";
+
+/* No comment provided by engineer. */
+"ml/h" = "ml/h";
+
+/* No comment provided by engineer. */
+"MNX" = "MNX";
+
+/* No comment provided by engineer. */
+"MNX Activities" = "MNX Activities";
+
+/* No comment provided by engineer. */
+"No Device" = "No Device";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* No comment provided by engineer. */
+"per kilometre" = "per kilometre";
+
+/* No comment provided by engineer. */
+"per mile" = "per mile";
+
+/* No comment provided by engineer. */
+"Please try again." = "Please try again.";
+
+/* No comment provided by engineer. */
+"Please install Google Earth." = "Please install Google Earth.";
+
+/* No comment provided by engineer. */
+"Purge Data" = "Purge Data";
+
+/* No comment provided by engineer. */
+"Purge data on your GPS device." = "Purge data on your GPS device.";
+
+/* No comment provided by engineer. */
+"Purging data..." = "Purging data...";
+
+/* No comment provided by engineer. */
+"sec" = "sec";
+
+/* No comment provided by engineer. */
+"Select the desired device." = "Select the desired device.";
+
+/* No comment provided by engineer. */
+"Speed:" = "Speed:";
+
+/* No comment provided by engineer. */
+"Start" = "Start";
+
+/* No comment provided by engineer. */
+"Start downloading data..." = "Start downloading data...";
+
+/* No comment provided by engineer. */
+"Start parsing data..." = "Start parsing data...";
+
+/* No comment provided by engineer. */
+"The connection between the device and your Mac is lost." = "The connection between the device and your Mac is lost.";
+
+/* No comment provided by engineer. */
+"The device might be turned off, or you are trying to downlaod data from a non-Mainnav GPS device." = "The device might be turned off, or you are trying to downlaod data from a non-Mainnav GPS device.";
+
+/* MNXDownloadOperationNoDataOnDevice */
+"There is no data stored on the device..." = "There is no data stored on the device...";
+
+/* No comment provided by engineer. */
+"There is nothing to download." = "There is nothing to download.";
+
+/* MNXDownloadOperationUnableToOpenDevice */
+"Unable to communicate with the device." = "Unable to communicate with the device.";
+
+/* MNXDownloadOperationNoDataOnDevice */
+"Unable to initiate the download." = "Unable to initiate the download.";
+
+/* MNXDownloadOperationDataTransferError */
+"Unable to read data from the device." = "Unable to read data from the device.";
+
+/* MNXDownloadOperationUnknowError */
+"Unknow error happened." = "Unknow error happened.";
+
+/* No comment provided by engineer. */
+"View in Google Earth." = "View in Google Earth.";
+

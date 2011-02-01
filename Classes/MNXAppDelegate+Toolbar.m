@@ -15,7 +15,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 		NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:kPortPopUpButtonItem] autorelease];
 		[item setLabel:NSLocalizedString(@"GPS Device", @"")];
 		[item setToolTip:NSLocalizedString(@"Select the desired device.", @"")];
-		[item setPaletteLabel:NSLocalizedString(@"Device", @"")];
+		[item setPaletteLabel:NSLocalizedString(@"GPS Device", @"")];
 		[item setView:portPopUpButton];
 		[item setMaxSize:NSMakeSize(200.0, 32.0)];
 		[item setMinSize:NSMakeSize(120.0, 32.0)];

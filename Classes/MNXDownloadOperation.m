@@ -184,23 +184,23 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 		switch (errorCode) {
 			case MNXDownloadOperationUnknowError:
 				message = NSLocalizedString(@"Unknow error happened.", @"MNXDownloadOperationUnknowError");
-				reason = NSLocalizedString(@"Please  try again.", @"");
+				reason = NSLocalizedString(@"Please try again.", @"");
 				break;
 			case MNXDownloadOperationUnableToOpenDevice:
 				message = NSLocalizedString(@"Unable to communicate with the device.", @"MNXDownloadOperationUnableToOpenDevice");
-				reason = NSLocalizedString(@"The device might be turned off, or you are trying to downlaod data from a non-MainNav GPS device.", @"");
+				reason = NSLocalizedString(@"The device might be turned off, or you are trying to downlaod data from a non-Mainnav GPS device.", @"");
 				break;
 			case MNXDownloadOperationDataTransferError:
 				message = NSLocalizedString(@"Unable to read data from the device.", @"MNXDownloadOperationDataTransferError");
 				reason = NSLocalizedString(@"The connection between the device and your Mac is lost.", @"");
 				break;
 			case MNXDownloadOperationNoDataOnDevice:
-				message = NSLocalizedString(@"There is no data stored on the device..", @"MNXDownloadOperationNoDataOnDevice");
+				message = NSLocalizedString(@"There is no data stored on the device...", @"MNXDownloadOperationNoDataOnDevice");
 				reason = NSLocalizedString(@"There is nothing to download.", @"");
 				break;
 			case MNXDownloadOperationInitFailed:
 				message = NSLocalizedString(@"Unable to initiate the download.", @"MNXDownloadOperationNoDataOnDevice");
-				reason = NSLocalizedString(@"The device might be turned off, or you are trying to downlaod data from a none MainNav GPS device.", @"");
+				reason = NSLocalizedString(@"The device might be turned off, or you are trying to downlaod data from a non-Mainnav GPS device.", @"");
 				break;
 			default:
 				break;

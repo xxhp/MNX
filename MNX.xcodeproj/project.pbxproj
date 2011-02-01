@@ -15,6 +15,7 @@
 		D444565512EF333E00A181A9 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = D444565312EF333E00A181A9 /* Credits.rtf */; };
 		D444566812EF34EF00A181A9 /* MNXTrackCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D444566712EF34EF00A181A9 /* MNXTrackCell.m */; };
 		D444568112EF3A4600A181A9 /* pinHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = D444568012EF3A4600A181A9 /* pinHighlight.png */; };
+		D44CB61E12F8AFAA0042F162 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D44CB61C12F8AFAA0042F162 /* Localizable.strings */; };
 		D44F4F5012F5CF3D00A5DBB1 /* MNX.help in Resources */ = {isa = PBXBuildFile; fileRef = D44F4F3412F5CF3D00A5DBB1 /* MNX.help */; };
 		D44F508312F607CB00A5DBB1 /* export.png in Resources */ = {isa = PBXBuildFile; fileRef = D44F508212F607CB00A5DBB1 /* export.png */; };
 		D452073A12EDC18500FF0DA2 /* MNXAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D452073912EDC18500FF0DA2 /* MNXAppDelegate.m */; };
@@ -76,6 +77,13 @@
 		D444566612EF34EF00A181A9 /* MNXTrackCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXTrackCell.h; sourceTree = "<group>"; };
 		D444566712EF34EF00A181A9 /* MNXTrackCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXTrackCell.m; sourceTree = "<group>"; };
 		D444568012EF3A4600A181A9 /* pinHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinHighlight.png; sourceTree = "<group>"; };
+		D44CB61D12F8AFAA0042F162 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D44CB62012F8AFC90042F162 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		D44CB64B12F8B1D40042F162 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/MNXPreferenceController.xib"; sourceTree = "<group>"; };
+		D44CB65612F8B2AE0042F162 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/MNXSelectionController.xib"; sourceTree = "<group>"; };
+		D44CB65812F8B2D70042F162 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hant"; path = "zh-Hant.lproj/MainMenu.xib"; sourceTree = "<group>"; };
+		D44CB6BB12F8BC5B0042F162 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		D44CB6C912F8BD230042F162 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = "zh-Hant"; path = "zh-Hant.lproj/Credits.rtf"; sourceTree = "<group>"; };
 		D44F4F3412F5CF3D00A5DBB1 /* MNX.help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MNX.help; sourceTree = "<group>"; };
 		D44F508212F607CB00A5DBB1 /* export.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = export.png; sourceTree = "<group>"; };
 		D452073812EDC18500FF0DA2 /* MNXAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXAppDelegate.h; sourceTree = "<group>"; };
@@ -220,6 +228,7 @@
 				D452124512EF03F900FF0DA2 /* Images */,
 				D452075A12EDC7F000FF0DA2 /* Test Data */,
 				8D1107310486CEB800E47090 /* MNX-Info.plist */,
+				D44CB61C12F8AFAA0042F162 /* Localizable.strings */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
 				D4CE70B612F310940084683F /* MNXPreferenceController.xib */,
@@ -425,6 +434,7 @@
 				Japanese,
 				French,
 				German,
+				"zh-Hant",
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* MNX */;
 			projectDirPath = "";
@@ -457,6 +467,7 @@
 				D44F508312F607CB00A5DBB1 /* export.png in Resources */,
 				D4814F4212F6F0EA0099729F /* MNXSelectionController.xib in Resources */,
 				D481525612F758680099729F /* trash.png in Resources */,
+				D44CB61E12F8AFAA0042F162 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -508,6 +519,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				089C165DFE840E0CC02AAC07 /* English */,
+				D44CB6BB12F8BC5B0042F162 /* zh-Hant */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -516,6 +528,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				1DDD58150DA1D0A300B32029 /* English */,
+				D44CB65812F8B2D70042F162 /* zh-Hant */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -524,14 +537,25 @@
 			isa = PBXVariantGroup;
 			children = (
 				D444565412EF333E00A181A9 /* English */,
+				D44CB6C912F8BD230042F162 /* zh-Hant */,
 			);
 			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		D44CB61C12F8AFAA0042F162 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D44CB61D12F8AFAA0042F162 /* English */,
+				D44CB62012F8AFC90042F162 /* zh-Hant */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 		D4814F4112F6F0EA0099729F /* MNXSelectionController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				D4814F3F12F6F0E50099729F /* English */,
+				D44CB65612F8B2AE0042F162 /* zh-Hant */,
 			);
 			name = MNXSelectionController.xib;
 			sourceTree = "<group>";
@@ -540,6 +564,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				D4CE70B412F3108F0084683F /* English */,
+				D44CB64B12F8B1D40042F162 /* zh-Hant */,
 			);
 			name = MNXPreferenceController.xib;
 			sourceTree = "<group>";

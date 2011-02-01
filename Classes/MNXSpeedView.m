@@ -55,7 +55,7 @@ static CGEventRef MyEventTapCallBack (CGEventTapProxy proxy, CGEventType type, C
 - (void)drawWithMetricUnit
 {
 	NSMutableDictionary *attr = [NSMutableDictionary dictionary];
-	[attr setObject:[NSFont boldSystemFontOfSize:12.0] forKey:NSFontAttributeName];
+	[attr setObject:[NSFont boldSystemFontOfSize:11.0] forKey:NSFontAttributeName];
 	[attr setObject:[NSColor blackColor] forKey:NSForegroundColorAttributeName];
 	NSMutableParagraphStyle *style = [[[NSMutableParagraphStyle alloc] init] autorelease];
 	[style setAlignment:NSRightTextAlignment];
@@ -295,7 +295,7 @@ static CGEventRef MyEventTapCallBack (CGEventTapProxy proxy, CGEventType type, C
 - (void)drawWithUSUnit
 {
 	NSMutableDictionary *attr = [NSMutableDictionary dictionary];
-	[attr setObject:[NSFont boldSystemFontOfSize:12.0] forKey:NSFontAttributeName];
+	[attr setObject:[NSFont boldSystemFontOfSize:11.0] forKey:NSFontAttributeName];
 	[attr setObject:[NSColor blackColor] forKey:NSForegroundColorAttributeName];
 	NSMutableParagraphStyle *style = [[[NSMutableParagraphStyle alloc] init] autorelease];
 	[style setAlignment:NSRightTextAlignment];
@@ -637,6 +637,31 @@ static CGEventRef MyEventTapCallBack (CGEventTapProxy proxy, CGEventType type, C
 
 - (void)showInfoWindowWithEvent:(CGEventRef)inEvent
 {
+	if (![NSApp isActive]) {
+		if ([infoWindow isVisible]) {
+			[[self window] removeChildWindow:infoWindow];
+			[infoWindow orderOut:self];
+		}
+		return;
+	}
+	
+	if (![[self window] isMainWindow] || ![[self window] isKeyWindow]) {
+		if ([infoWindow isVisible]) {
+			[[self window] removeChildWindow:infoWindow];
+			[infoWindow orderOut:self];
+		}		
+		return;
+	}
+	
+	if ([[self window] attachedSheet]) {
+		if ([infoWindow isVisible]) {
+			[[self window] removeChildWindow:infoWindow];
+			[infoWindow orderOut:self];
+		}		
+		return;		
+	}
+	
+	
 	if (CGEventGetType(inEvent) == kCGEventMouseMoved) {
 		CGPoint p = CGEventGetLocation(inEvent);
 		p.y = [[NSScreen mainScreen] frame].size.height - p.y;
