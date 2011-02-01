@@ -1,5 +1,6 @@
 #import "MNXSpeedView.h"
 #import "NSLocale+MNXExtension.h"
+#import "NSColor+MNXExtension.h"
 
 @interface MNXSpeedView (Private)
 - (CGFloat)frameWidth;
@@ -63,12 +64,15 @@
 	
 	[style setAlignment:NSRightTextAlignment];
 	
-	CGFloat maxSpeed = 0.0;	
+	CGFloat maxSpeed = 0.0;
+	CGFloat maxElevation = 0.0;
+	CGFloat minElevation = 0.0;
 	NSInteger maxPointCount = 100.0;
 	NSMutableArray *a = [NSMutableArray array];
 	NSInteger pointPerSection = (NSInteger)([self.currentTrack.points count] / maxPointCount);
 	NSUInteger count = 0;
 	CGFloat aSpeed = 0.0;
+	CGFloat anElevation = 0.0;
 	
 	for (MNXPoint *point in self.currentTrack.points) {
 		if (point == [self.currentTrack.points objectAtIndex:0]) {
@@ -76,29 +80,44 @@
 			NSMutableDictionary *p = [NSMutableDictionary dictionary];	
 			[p setObject:[NSNumber numberWithFloat:point.distanceKM] forKey:@"distance"];
 			[p setObject:[NSNumber numberWithFloat:speed] forKey:@"speed"];
+			[p setObject:[NSNumber numberWithFloat:point.elevation] forKey:@"elevation"];
 			maxSpeed = speed;
+			minElevation = point.elevation;
+			maxElevation = point.elevation;
 			[a addObject:p];
 		}
 		else {
 			CGFloat speed = 0.0;
+			CGFloat elevation = 0.0;
 			if (count < pointPerSection) {
 				if (point.speedKM > 0.0) {
 					aSpeed += point.speedKM;
 				}
+				anElevation += point.elevation;
 				count++;
 				continue;
 			}
 			else {
 				speed = aSpeed / count;
+				elevation = anElevation / count;
 				count = 0;
 				aSpeed = 0.0;
+				anElevation = 0.0;
 			}
 			NSMutableDictionary *p = [NSMutableDictionary dictionary];	
 			[p setObject:[NSNumber numberWithFloat:point.distanceKM] forKey:@"distance"];
 			[p setObject:[NSNumber numberWithFloat:speed] forKey:@"speed"];
+			[p setObject:[NSNumber numberWithFloat:elevation] forKey:@"elevation"];
 			if (speed > maxSpeed) {
 				maxSpeed = speed;
 			}
+			if (elevation > maxElevation) {
+				maxElevation = elevation;
+			}
+			if (elevation < minElevation) {
+				minElevation = elevation;
+			}			
+			
 			[a addObject:p];
 		}
 	}
@@ -109,6 +128,8 @@
 	else {
 		maxSpeed = maxSpeed * 1.25;
 	}
+	maxElevation += 10.0;
+	minElevation -= 10.0;
 	
 	NSInteger speedInterval = maxSpeed / 5;
 	
@@ -201,11 +222,38 @@
 		}
 	}
 	
+	NSBezierPath *elevationPath = [NSBezierPath bezierPath];
+	[elevationPath setLineJoinStyle:NSRoundLineJoinStyle];
+	
+	for (NSDictionary *p in a) {
+		CGFloat x = frameWidth + ([[p objectForKey:@"distance"] floatValue] / self.currentTrack.totalDistanceKM) * drawingFrame.size.width;
+		CGFloat y = frameWidth + ([[p objectForKey:@"elevation"] floatValue] - minElevation) / (maxElevation - minElevation) * drawingFrame.size.height * 0.5;
+		if (p == [a objectAtIndex:0]) {
+			[elevationPath moveToPoint:NSMakePoint(x, y)];
+		}
+		else {
+			[elevationPath lineToPoint:NSMakePoint(x, y)];
+		}
+		if (p == [a lastObject]) {
+			[elevationPath lineToPoint:NSMakePoint(NSMaxX(drawingFrame), y)];
+		}
+	}
+	
 	[[NSGraphicsContext currentContext] saveGraphicsState];
 	[[NSBezierPath bezierPathWithRect:[self drawingFrame]] setClip];
 	
-	NSColor *lineColor = [NSColor colorWithCalibratedHue:0.5 saturation:1.0 brightness:0.5 alpha:1.0];
-	NSColor *backgroundColor = [NSColor colorWithCalibratedHue:0.5 saturation:1.0 brightness:0.5 alpha:0.6];
+	NSColor *lineColor = [NSColor speedLineColor];
+	NSColor *backgroundColor = [NSColor speedBackgroundColorColor];
+
+	NSColor *elevationLineColor = [NSColor elevationLineColor];
+	NSColor *elevationBackgroundColor = [NSColor elevationBackgroundColorColor];
+
+	NSBezierPath *elevationBackgroundPath = [[elevationPath copy] autorelease];
+	[elevationBackgroundPath lineToPoint:NSMakePoint(NSMaxX(drawingFrame), NSMinY(drawingFrame))];
+	[elevationBackgroundPath lineToPoint:NSMakePoint(NSMinX(drawingFrame), NSMinY(drawingFrame))];
+	[elevationBackgroundPath closePath];
+	[elevationBackgroundColor setFill];
+	[elevationBackgroundPath fill];	
 	
 	NSBezierPath *backgroundPath = [[path copy] autorelease];
 	[backgroundPath lineToPoint:NSMakePoint(NSMaxX(drawingFrame), NSMinY(drawingFrame))];
@@ -213,6 +261,10 @@
 	[backgroundPath closePath];
 	[backgroundColor setFill];
 	[backgroundPath fill];
+	
+	[elevationLineColor setStroke];
+	[elevationPath setLineWidth:5.0];
+	[elevationPath stroke];
 	
 	[lineColor setStroke];
 	[path setLineWidth:5.0];
@@ -247,11 +299,14 @@
 	}
 	
 	CGFloat maxSpeed = 0.0;	
+	CGFloat maxElevation = 0.0;
+	CGFloat minElevation = 0.0;
 	NSInteger maxPointCount = 100.0;
 	NSMutableArray *a = [NSMutableArray array];
 	NSInteger pointPerSection = (NSInteger)([self.currentTrack.points count] / maxPointCount);
 	NSUInteger count = 0;
 	CGFloat aSpeed = 0.0;
+	CGFloat anElevation = 0.0;
 	
 	for (MNXPoint *point in self.currentTrack.points) {
 		if (point == [self.currentTrack.points objectAtIndex:0]) {
@@ -260,28 +315,42 @@
 			[p setObject:[NSNumber numberWithFloat:point.distanceMile] forKey:@"distance"];
 			[p setObject:[NSNumber numberWithFloat:speed] forKey:@"speed"];
 			maxSpeed = speed;
+			minElevation = point.elevation;
+			maxElevation = point.elevation;
 			[a addObject:p];
 		}
 		else {
 			CGFloat speed = 0.0;
+			CGFloat elevation = 0.0;
 			if (count < pointPerSection) {
 				if (point.speedMile > 0.0) {
 					aSpeed += point.speedMile;
 				}
+				anElevation += point.elevation;
 				count++;
 				continue;
 			}
 			else {
 				speed = aSpeed / count;
+				elevation = anElevation / count;
 				count = 0;
 				aSpeed = 0.0;
+				anElevation = 0.0;
 			}
 			NSMutableDictionary *p = [NSMutableDictionary dictionary];	
 			[p setObject:[NSNumber numberWithFloat:point.distanceMile] forKey:@"distance"];
 			[p setObject:[NSNumber numberWithFloat:speed] forKey:@"speed"];
+			[p setObject:[NSNumber numberWithFloat:elevation] forKey:@"elevation"];
 			if (speed > maxSpeed) {
 				maxSpeed = speed;
 			}
+			if (elevation > maxElevation) {
+				maxElevation = elevation;
+			}
+			if (elevation < minElevation) {
+				minElevation = elevation;
+			}			
+
 			[a addObject:p];
 		}
 	}
@@ -292,6 +361,8 @@
 	else {
 		maxSpeed = maxSpeed * 1.25;
 	}
+	maxElevation += 10.0;
+	minElevation -= 10.0;
 	
 	NSInteger speedInterval = maxSpeed / 5;
 	
@@ -384,11 +455,38 @@
 		}
 	}
 	
+	NSBezierPath *elevationPath = [NSBezierPath bezierPath];
+	[elevationPath setLineJoinStyle:NSRoundLineJoinStyle];
+	
+	for (NSDictionary *p in a) {
+		CGFloat x = frameWidth + ([[p objectForKey:@"distance"] floatValue] / self.currentTrack.totalDistanceMile) * drawingFrame.size.width;
+		CGFloat y = frameWidth + ([[p objectForKey:@"elevation"] floatValue] - minElevation) / (maxElevation - minElevation) * drawingFrame.size.height * 0.5;
+		if (p == [a objectAtIndex:0]) {
+			[elevationPath moveToPoint:NSMakePoint(x, y)];
+		}
+		else {
+			[elevationPath lineToPoint:NSMakePoint(x, y)];
+		}
+		if (p == [a lastObject]) {
+			[elevationPath lineToPoint:NSMakePoint(NSMaxX(drawingFrame), y)];
+		}
+	}	
+	
 	[[NSGraphicsContext currentContext] saveGraphicsState];
 	[[NSBezierPath bezierPathWithRect:[self drawingFrame]] setClip];
 	
-	NSColor *lineColor = [NSColor colorWithCalibratedHue:0.5 saturation:1.0 brightness:0.5 alpha:1.0];
-	NSColor *backgroundColor = [NSColor colorWithCalibratedHue:0.5 saturation:1.0 brightness:0.5 alpha:0.6];
+	NSColor *lineColor = [NSColor speedLineColor];
+	NSColor *backgroundColor = [NSColor speedBackgroundColorColor];
+	
+	NSColor *elevationLineColor = [NSColor elevationLineColor];
+	NSColor *elevationBackgroundColor = [NSColor elevationBackgroundColorColor];
+	
+	NSBezierPath *elevationBackgroundPath = [[elevationPath copy] autorelease];
+	[elevationBackgroundPath lineToPoint:NSMakePoint(NSMaxX(drawingFrame), NSMinY(drawingFrame))];
+	[elevationBackgroundPath lineToPoint:NSMakePoint(NSMinX(drawingFrame), NSMinY(drawingFrame))];
+	[elevationBackgroundPath closePath];
+	[elevationBackgroundColor setFill];
+	[elevationBackgroundPath fill];	
 	
 	NSBezierPath *backgroundPath = [[path copy] autorelease];
 	[backgroundPath lineToPoint:NSMakePoint(NSMaxX(drawingFrame), NSMinY(drawingFrame))];
@@ -396,6 +494,10 @@
 	[backgroundPath closePath];
 	[backgroundColor setFill];
 	[backgroundPath fill];
+
+	[elevationLineColor setStroke];
+	[elevationPath setLineWidth:5.0];
+	[elevationPath stroke];
 	
 	[lineColor setStroke];
 	[path setLineWidth:5.0];
