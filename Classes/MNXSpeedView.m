@@ -2,6 +2,8 @@
 #import "NSLocale+MNXExtension.h"
 #import "NSColor+MNXExtension.h"
 
+static CGEventRef MyEventTapCallBack (CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon);
+
 @interface MNXSpeedView (Private)
 - (CGFloat)frameWidth;
 - (NSRect)drawingFrame;
@@ -22,9 +24,21 @@
 
 @implementation MNXSpeedView
 
-- (void) dealloc
+- (void)dealloc
 {
+	if (source) {
+		CFRunLoopRemoveSource(CFRunLoopGetCurrent(), source, kCFRunLoopCommonModes);
+		CFRelease(source);
+		source = NULL;
+	}
+	
+	if (eventTapPortRef) {
+		CGEventTapEnable(eventTapPortRef, NO);
+		CFRelease(eventTapPortRef);
+		eventTapPortRef = NULL;
+	}
 	[currentTrack release];
+	[infoWindow release];
 	[super dealloc];
 }
 
@@ -33,6 +47,7 @@
     self = [super initWithFrame:frame];
     if (self) {
 		currentTrack = nil;
+		infoWindow = [[MNXTransparentWindow alloc] initWithContentRect:NSMakeRect(0.0, 0.0, 100.0, 100.0) styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:YES screen:nil];
     }
     return self;
 }
@@ -67,9 +82,12 @@
 	CGFloat maxSpeed = 0.0;
 	CGFloat maxElevation = 0.0;
 	CGFloat minElevation = 0.0;
-	NSInteger maxPointCount = 100.0;
+	NSInteger maxPointCount = 200;
 	NSMutableArray *a = [NSMutableArray array];
 	NSInteger pointPerSection = (NSInteger)([self.currentTrack.points count] / maxPointCount);
+	if (pointPerSection < 1) {
+		pointPerSection = 1;
+	}
 	NSUInteger count = 0;
 	CGFloat aSpeed = 0.0;
 	CGFloat anElevation = 0.0;
@@ -128,6 +146,7 @@
 	else {
 		maxSpeed = maxSpeed * 1.25;
 	}
+	currentMaxSpeedKM = maxSpeed;
 	maxElevation += 10.0;
 	minElevation -= 10.0;
 	
@@ -172,13 +191,13 @@
 		NSString *labelText = [NSString stringWithFormat:@"%d", (i * speedInterval)];
 		[labelText drawInRect:labelFrame withAttributes:attr];
 
-//		NSBezierPath *intervalLine = [NSBezierPath bezierPath];		
-//		[intervalLine moveToPoint:NSMakePoint(NSMinX(drawingFrame),  y)];
-//		[intervalLine lineToPoint:NSMakePoint(NSMaxX(drawingFrame), y)];
-//		CGFloat dash[2] = {5.0, 2.0};
-//		[intervalLine setLineDash:dash count:2 phase:0.0];
-//		[[NSColor grayColor] setStroke];
-//		[intervalLine stroke];
+		NSBezierPath *intervalLine = [NSBezierPath bezierPath];		
+		[intervalLine moveToPoint:NSMakePoint(NSMinX(drawingFrame),  y)];
+		[intervalLine lineToPoint:NSMakePoint(NSMaxX(drawingFrame), y)];
+		CGFloat dash[2] = {5.0, 2.0};
+		[intervalLine setLineDash:dash count:2 phase:0.0];
+		[[NSColor grayColor] setStroke];
+		[intervalLine stroke];
 	}
 	
 	[style setAlignment:NSCenterTextAlignment];
@@ -245,15 +264,15 @@
 	NSColor *lineColor = [NSColor speedLineColor];
 	NSColor *backgroundColor = [NSColor speedBackgroundColorColor];
 
-	NSColor *elevationLineColor = [NSColor elevationLineColor];
-	NSColor *elevationBackgroundColor = [NSColor elevationBackgroundColorColor];
+//	NSColor *elevationLineColor = [NSColor elevationLineColor];
+//	NSColor *elevationBackgroundColor = [NSColor elevationBackgroundColorColor];
 
-	NSBezierPath *elevationBackgroundPath = [[elevationPath copy] autorelease];
-	[elevationBackgroundPath lineToPoint:NSMakePoint(NSMaxX(drawingFrame), NSMinY(drawingFrame))];
-	[elevationBackgroundPath lineToPoint:NSMakePoint(NSMinX(drawingFrame), NSMinY(drawingFrame))];
-	[elevationBackgroundPath closePath];
-	[elevationBackgroundColor setFill];
-	[elevationBackgroundPath fill];	
+//	NSBezierPath *elevationBackgroundPath = [[elevationPath copy] autorelease];
+//	[elevationBackgroundPath lineToPoint:NSMakePoint(NSMaxX(drawingFrame), NSMinY(drawingFrame))];
+//	[elevationBackgroundPath lineToPoint:NSMakePoint(NSMinX(drawingFrame), NSMinY(drawingFrame))];
+//	[elevationBackgroundPath closePath];
+//	[elevationBackgroundColor setFill];
+//	[elevationBackgroundPath fill];	
 	
 	NSBezierPath *backgroundPath = [[path copy] autorelease];
 	[backgroundPath lineToPoint:NSMakePoint(NSMaxX(drawingFrame), NSMinY(drawingFrame))];
@@ -262,12 +281,12 @@
 	[backgroundColor setFill];
 	[backgroundPath fill];
 	
-	[elevationLineColor setStroke];
-	[elevationPath setLineWidth:5.0];
-	[elevationPath stroke];
+//	[elevationLineColor setStroke];
+//	[elevationPath setLineWidth:3.0];
+//	[elevationPath stroke];
 	
 	[lineColor setStroke];
-	[path setLineWidth:5.0];
+	[path setLineWidth:3.0];
 	[path stroke];
 	
 	[[NSGraphicsContext currentContext] restoreGraphicsState];
@@ -301,9 +320,12 @@
 	CGFloat maxSpeed = 0.0;	
 	CGFloat maxElevation = 0.0;
 	CGFloat minElevation = 0.0;
-	NSInteger maxPointCount = 100.0;
+	NSInteger maxPointCount = 200;
 	NSMutableArray *a = [NSMutableArray array];
 	NSInteger pointPerSection = (NSInteger)([self.currentTrack.points count] / maxPointCount);
+	if (pointPerSection < 1) {
+		pointPerSection = 1;
+	}	
 	NSUInteger count = 0;
 	CGFloat aSpeed = 0.0;
 	CGFloat anElevation = 0.0;
@@ -361,6 +383,7 @@
 	else {
 		maxSpeed = maxSpeed * 1.25;
 	}
+	currentMaxSpeedMile = maxSpeed;
 	maxElevation += 10.0;
 	minElevation -= 10.0;
 	
@@ -405,13 +428,13 @@
 		NSString *labelText = [NSString stringWithFormat:@"%d", (i * speedInterval)];
 		[labelText drawInRect:labelFrame withAttributes:attr];
 
-//		NSBezierPath *intervalLine = [NSBezierPath bezierPath];
-//		[intervalLine moveToPoint:NSMakePoint(NSMinX(drawingFrame),  y)];
-//		[intervalLine lineToPoint:NSMakePoint(NSMaxX(drawingFrame), y)];
-//		CGFloat dash[2] = {5.0, 2.0};
-//		[intervalLine setLineDash:dash count:2 phase:0.0];
-//		[[NSColor grayColor] setStroke];
-//		[intervalLine stroke];
+		NSBezierPath *intervalLine = [NSBezierPath bezierPath];
+		[intervalLine moveToPoint:NSMakePoint(NSMinX(drawingFrame),  y)];
+		[intervalLine lineToPoint:NSMakePoint(NSMaxX(drawingFrame), y)];
+		CGFloat dash[2] = {5.0, 2.0};
+		[intervalLine setLineDash:dash count:2 phase:0.0];
+		[[NSColor grayColor] setStroke];
+		[intervalLine stroke];
 	}
 	
 	[style setAlignment:NSCenterTextAlignment];
@@ -478,16 +501,16 @@
 	NSColor *lineColor = [NSColor speedLineColor];
 	NSColor *backgroundColor = [NSColor speedBackgroundColorColor];
 	
-	NSColor *elevationLineColor = [NSColor elevationLineColor];
-	NSColor *elevationBackgroundColor = [NSColor elevationBackgroundColorColor];
+//	NSColor *elevationLineColor = [NSColor elevationLineColor];
+//	NSColor *elevationBackgroundColor = [NSColor elevationBackgroundColorColor];
 	
-	NSBezierPath *elevationBackgroundPath = [[elevationPath copy] autorelease];
-	[elevationBackgroundPath lineToPoint:NSMakePoint(NSMaxX(drawingFrame), NSMinY(drawingFrame))];
-	[elevationBackgroundPath lineToPoint:NSMakePoint(NSMinX(drawingFrame), NSMinY(drawingFrame))];
-	[elevationBackgroundPath closePath];
-	[elevationBackgroundColor setFill];
-	[elevationBackgroundPath fill];	
-	
+//	NSBezierPath *elevationBackgroundPath = [[elevationPath copy] autorelease];
+//	[elevationBackgroundPath lineToPoint:NSMakePoint(NSMaxX(drawingFrame), NSMinY(drawingFrame))];
+//	[elevationBackgroundPath lineToPoint:NSMakePoint(NSMinX(drawingFrame), NSMinY(drawingFrame))];
+//	[elevationBackgroundPath closePath];
+//	[elevationBackgroundColor setFill];
+//	[elevationBackgroundPath fill];	
+//	
 	NSBezierPath *backgroundPath = [[path copy] autorelease];
 	[backgroundPath lineToPoint:NSMakePoint(NSMaxX(drawingFrame), NSMinY(drawingFrame))];
 	[backgroundPath lineToPoint:NSMakePoint(NSMinX(drawingFrame), NSMinY(drawingFrame))];
@@ -495,12 +518,12 @@
 	[backgroundColor setFill];
 	[backgroundPath fill];
 
-	[elevationLineColor setStroke];
-	[elevationPath setLineWidth:5.0];
-	[elevationPath stroke];
+//	[elevationLineColor setStroke];
+//	[elevationPath setLineWidth:3.0];
+//	[elevationPath stroke];
 	
 	[lineColor setStroke];
-	[path setLineWidth:5.0];
+	[path setLineWidth:3.0];
 	[path stroke];
 
 	[[NSGraphicsContext currentContext] restoreGraphicsState];
@@ -508,7 +531,6 @@
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-    // Drawing code here.
 	[[NSColor whiteColor] setFill];
 	[NSBezierPath fillRect:[self bounds]];
 		
@@ -540,10 +562,15 @@
 
 - (void)setCurrentTrack:(MNXTrack *)inTrack
 {
+	[self endTracking];
 	id tmp = currentTrack;
 	currentTrack = [inTrack retain];
 	[tmp release];
 	[self setNeedsDisplay:YES];
+
+	if (currentTrack) {
+		[self startTracking];
+	}
 }
 
 - (MNXTrack *)currentTrack
@@ -551,5 +578,90 @@
 	return currentTrack;
 }
 
+#pragma mark -
+
+- (void)startTracking
+{
+	if (!eventTapPortRef) {
+		eventTapPortRef = CGEventTapCreate(kCGSessionEventTap, kCGTailAppendEventTap, 0, CGEventMaskBit(kCGEventMouseMoved), MyEventTapCallBack, self);
+	}
+	if (!source) {
+		source = CFMachPortCreateRunLoopSource(NULL, eventTapPortRef, 0);
+		CFRunLoopAddSource(CFRunLoopGetCurrent(), source, kCFRunLoopCommonModes);
+	}
+	if (!CGEventTapIsEnabled(eventTapPortRef)) {
+		CGEventTapEnable(eventTapPortRef, YES);
+	}
+}
+
+- (void)endTracking
+{
+	if (eventTapPortRef) {
+		CGEventTapEnable(eventTapPortRef, NO);
+	}
+}
+
+- (MNXPoint *)pointFromPoint:(NSPoint)inPoint
+{
+	NSRect aFrame = [self drawingFrame];
+	if (!NSPointInRect(inPoint, aFrame)) {
+		return nil;
+	}
+	if ([self.currentTrack.points count] < 2) {
+		return nil;
+	}
+	CGFloat distance = (inPoint.x - NSMinX(aFrame)) / aFrame.size.width * self.currentTrack.totalDistanceKM;
+	MNXPoint *aPoint = nil;
+	for (MNXPoint *enumPoint in self.currentTrack.points) {
+		if (enumPoint.distanceKM >= distance) {
+			aPoint = enumPoint;
+			break;
+		}
+	}	
+	return aPoint;
+}
+
+- (void)showInfoWindowWithPoint:(MNXPoint *)inPoint atLocation:(NSPoint)inLocation
+{	
+	inLocation = [self convertPoint:inLocation toView:nil];
+	inLocation.y += 5.0;
+	inLocation.x += [[self window] frame].origin.x;
+	inLocation.y += [[self window] frame].origin.y;
+	
+	[infoWindow setPoint:inPoint];
+	NSRect frame = [infoWindow frame];
+	[infoWindow setFrameOrigin:NSMakePoint(inLocation.x - frame.size.width / 2.0, inLocation.y)];
+	[[self window] addChildWindow:infoWindow ordered:NSWindowAbove];
+	[infoWindow orderFront:self];
+}
+
+- (void)showInfoWindowWithEvent:(CGEventRef)inEvent
+{
+	if (CGEventGetType(inEvent) == kCGEventMouseMoved) {
+		CGPoint p = CGEventGetLocation(inEvent);
+		p.y = [[NSScreen mainScreen] frame].size.height - p.y;
+		
+		NSPoint np = NSPointFromCGPoint(p);
+		NSPoint wp = [[self window] convertScreenToBase:np];
+		NSPoint localPoint = [self convertPoint:wp fromView:nil];
+		MNXPoint *point = [self pointFromPoint:localPoint];
+		if (point) {
+			[self showInfoWindowWithPoint:point atLocation:localPoint];
+			return;
+		}
+		[[self window] removeChildWindow:infoWindow];
+		[infoWindow orderOut:self];
+	}	
+}
+
 @end
 
+
+CGEventRef MyEventTapCallBack (CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon)
+{
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
+	MNXSpeedView *view = (MNXSpeedView *)refcon;
+	[view showInfoWindowWithEvent:event];
+	[pool drain];
+	return event;
+}

@@ -40,6 +40,7 @@
 		D481505412F726F20099729F /* MNXSourceListTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = D481505312F726F20099729F /* MNXSourceListTableView.m */; };
 		D481525612F758680099729F /* trash.png in Resources */ = {isa = PBXBuildFile; fileRef = D481525512F758680099729F /* trash.png */; };
 		D481562912F809730099729F /* NSColor+MNXExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = D481562812F809730099729F /* NSColor+MNXExtension.m */; };
+		D481564A12F80FEC0099729F /* MNXTransparentWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = D481564912F80FEC0099729F /* MNXTransparentWindow.m */; };
 		D4CB316B12F035150081D7B7 /* NSString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CB316A12F035150081D7B7 /* NSString+Extension.m */; };
 		D4CE6B7312F225EF0084683F /* MNXSpeedView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6B7212F225EF0084683F /* MNXSpeedView.m */; };
 		D4CE6E5B12F2A0D60084683F /* MNXAppDelegate+TableView.m in Sources */ = {isa = PBXBuildFile; fileRef = D4CE6E5A12F2A0D60084683F /* MNXAppDelegate+TableView.m */; };
@@ -117,6 +118,8 @@
 		D481525512F758680099729F /* trash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trash.png; sourceTree = "<group>"; };
 		D481562712F809730099729F /* NSColor+MNXExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSColor+MNXExtension.h"; sourceTree = "<group>"; };
 		D481562812F809730099729F /* NSColor+MNXExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSColor+MNXExtension.m"; sourceTree = "<group>"; };
+		D481564812F80FEC0099729F /* MNXTransparentWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXTransparentWindow.h; sourceTree = "<group>"; };
+		D481564912F80FEC0099729F /* MNXTransparentWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXTransparentWindow.m; sourceTree = "<group>"; };
 		D4CB316912F035150081D7B7 /* NSString+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Extension.h"; sourceTree = "<group>"; };
 		D4CB316A12F035150081D7B7 /* NSString+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Extension.m"; sourceTree = "<group>"; };
 		D4CE6B7112F225EF0084683F /* MNXSpeedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXSpeedView.h; sourceTree = "<group>"; };
@@ -247,6 +250,8 @@
 				D4D56BE712F496B50041277D /* MNXAdditionalSplitDeviderView.m */,
 				D481505212F726F20099729F /* MNXSourceListTableView.h */,
 				D481505312F726F20099729F /* MNXSourceListTableView.m */,
+				D481564812F80FEC0099729F /* MNXTransparentWindow.h */,
+				D481564912F80FEC0099729F /* MNXTransparentWindow.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -492,6 +497,7 @@
 				D4814F3A12F6F0230099729F /* MNXSelectionController.m in Sources */,
 				D481505412F726F20099729F /* MNXSourceListTableView.m in Sources */,
 				D481562912F809730099729F /* NSColor+MNXExtension.m in Sources */,
+				D481564A12F80FEC0099729F /* MNXTransparentWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

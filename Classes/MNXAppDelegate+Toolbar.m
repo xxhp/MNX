@@ -13,7 +13,7 @@ static NSString *const kGoogleEarthItem = @"kGoogleEarthItem";
 {
 	if ([itemIdentifier isEqualToString:kPortPopUpButtonItem]) {
 		NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:kPortPopUpButtonItem] autorelease];
-		[item setLabel:NSLocalizedString(@"Device", @"")];
+		[item setLabel:NSLocalizedString(@"GPS Device", @"")];
 		[item setToolTip:NSLocalizedString(@"Select the desired device.", @"")];
 		[item setPaletteLabel:NSLocalizedString(@"Device", @"")];
 		[item setView:portPopUpButton];
