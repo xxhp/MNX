@@ -35,7 +35,7 @@
 "Download data from your GPS device." = "Download data from your GPS device.";
 
 /* No comment provided by engineer. */
-"Downloading data, %d%% completed..." = "Downloading data, %d%% completed...";
+"Downloading data, %d%% completed..." = "Downloading data, %d%% completed…";
 
 /* No comment provided by engineer. */
 "Elevation:" = "Elevation:";
@@ -53,7 +53,7 @@
 "Export all activities." = "Export all activities.";
 
 /* No comment provided by engineer. */
-"Export All..." = "Export All...";
+"Export All..." = "Export All…";
 
 /* No comment provided by engineer. */
 "Export As:" = "Export As:";
@@ -62,7 +62,7 @@
 "Export selected activity." = "Export selected activity.";
 
 /* No comment provided by engineer. */
-"Export..." = "Export...";
+"Export..." = "Export…";
 
 /* No comment provided by engineer. */
 "ft" = "ft";
@@ -134,7 +134,7 @@
 "Purge data on your GPS device." = "Purge data on your GPS device.";
 
 /* No comment provided by engineer. */
-"Purging data..." = "Purging data...";
+"Purging data..." = "Purging data…";
 
 /* No comment provided by engineer. */
 "sec" = "sec";
@@ -149,10 +149,10 @@
 "Start" = "Start";
 
 /* No comment provided by engineer. */
-"Start downloading data..." = "Start downloading data...";
+"Start downloading data..." = "Start downloading data…";
 
 /* No comment provided by engineer. */
-"Start parsing data..." = "Start parsing data...";
+"Start parsing data..." = "Start parsing data…";
 
 /* No comment provided by engineer. */
 "The connection between the device and your Mac is lost." = "The connection between the device and your Mac is lost.";
@@ -161,7 +161,7 @@
 "The device might be turned off, or you are trying to downlaod data from a non-Mainnav GPS device." = "The device might be turned off, or you are trying to downlaod data from a non-Mainnav GPS device.";
 
 /* MNXDownloadOperationNoDataOnDevice */
-"There is no data stored on the device..." = "There is no data stored on the device...";
+"There is no data stored on the device..." = "There is no data stored on the device…";
 
 /* No comment provided by engineer. */
 "There is nothing to download." = "There is nothing to download.";
@@ -181,3 +181,4 @@
 /* No comment provided by engineer. */
 "View in Google Earth." = "View in Google Earth.";
 
+"Loading saved data..." = "Loading saved data…";

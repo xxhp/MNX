@@ -91,10 +91,20 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification 
 {
+	[cancelButton setHidden:YES];
+	[messageLabel setStringValue:NSLocalizedString(@"Loading saved data...", @"")];
+	[progressIndicator setUsesThreadedAnimation:YES];
+	[progressIndicator startAnimation:self];
+	[NSApp beginSheet:sheetWindow modalForWindow:window modalDelegate:nil didEndSelector:NULL contextInfo:NULL];	
+	[sheetWindow orderFront:self];
 	dataManager = [[MNXDataManager alloc] init];
 	dataManager.delegate = self;
 	dataManager.undoManager = [[self window] undoManager];
 	[self updatePorts];
+	[NSApp endSheet:sheetWindow];
+	[sheetWindow orderOut:self];
+	[progressIndicator stopAnimation:self];
+	
 	[tracksTableView reloadData];	
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAddPorts:) name:AMSerialPortListDidAddPortsNotification object:nil];
@@ -364,10 +374,10 @@
 		
 		NSString *speed = @"";
 		if ([NSLocale usingUSMeasurementUnit]) {
-			speed = [NSString stringWithFormat:@"%.2f %@", dataManager.averageSpeedMile, @"ml/h"];
+			speed = [NSString stringWithFormat:@"%.2f %@", dataManager.averageSpeedMile, NSLocalizedString(@"ml/h", @"")];
 		}
 		else {
-			speed = [NSString stringWithFormat:@"%.2f %@", dataManager.averageSpeedKM, @"km/h"];
+			speed = [NSString stringWithFormat:@"%.2f %@", dataManager.averageSpeedKM, NSLocalizedString(@"km/h", @"")];
 		}		
 		
 		[totalSpeedLabel setStringValue:speed];	
@@ -412,10 +422,10 @@
 
 		NSString *speed = @"";
 		if ([NSLocale usingUSMeasurementUnit]) {
-			speed = [NSString stringWithFormat:@"%.2f %@", self.currentTrack.averageSpeedMile, @"ml/h"];
+			speed = [NSString stringWithFormat:@"%.2f %@", self.currentTrack.averageSpeedMile, NSLocalizedString(@"ml/h", @"")];
 		}
 		else {
-			speed = [NSString stringWithFormat:@"%.2f %@", self.currentTrack.averageSpeedKM, @"km/h"];
+			speed = [NSString stringWithFormat:@"%.2f %@", self.currentTrack.averageSpeedKM, NSLocalizedString(@"km/h", @"")];
 		}		
 		
 		[trackSpeedLabel setStringValue:speed];		
@@ -495,6 +505,7 @@
 	[messageLabel setStringValue:NSLocalizedString(@"Start parsing data...", @"")];
 	[progressIndicator setUsesThreadedAnimation:YES];
 	[progressIndicator setIndeterminate:YES];	
+	[progressIndicator startAnimation:self];
 }
 - (void)_delayedShowSelectionWindow:(NSArray *)tracks
 {

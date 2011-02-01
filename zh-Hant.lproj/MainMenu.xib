@@ -21,9 +21,11 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="220"/>
-			<integer value="577"/>
 			<integer value="681"/>
+			<integer value="578"/>
+			<integer value="220"/>
+			<integer value="582"/>
+			<integer value="749"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1976,8 +1978,12 @@
 							<object class="NSButtonCell" key="NSCell" id="246855921">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">134217728</int>
-								<string key="NSContents">Cancel</string>
-								<reference key="NSSupport" ref="1044712237"/>
+								<string key="NSContents">取消</string>
+								<object class="NSFont" key="NSSupport" id="1016153752">
+									<string key="NSName">LiHeiPro</string>
+									<double key="NSSize">13</double>
+									<int key="NSfFlags">16</int>
+								</object>
 								<reference key="NSControlView" ref="217652587"/>
 								<int key="NSButtonFlags">-2038284033</int>
 								<int key="NSButtonFlags2">129</int>
@@ -1995,9 +2001,10 @@
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
 			</object>
 			<object class="NSPopUpButton" id="623457519">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<string key="NSFrameSize">{100, 25}</string>
+				<reference key="NSSuperview"/>
 				<bool key="NSEnabled">YES</bool>
 				<object class="NSPopUpButtonCell" key="NSCell" id="640185930">
 					<int key="NSCellFlags">-2076049856</int>
@@ -2073,7 +2080,7 @@
 				<bool key="NSClearsFilterPredicateOnInsertion">YES</bool>
 			</object>
 			<object class="NSCustomView" id="150661807">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2086,8 +2093,8 @@
 						<object class="NSTextFieldCell" key="NSCell" id="781341288">
 							<int key="NSCellFlags">68288064</int>
 							<int key="NSCellFlags2">71304192</int>
-							<string key="NSContents">File Format:</string>
-							<reference key="NSSupport" ref="1044712237"/>
+							<string key="NSContents">資料格式：</string>
+							<reference key="NSSupport" ref="1016153752"/>
 							<reference key="NSControlView" ref="990054672"/>
 							<reference key="NSBackgroundColor" ref="420492097"/>
 							<reference key="NSTextColor" ref="1072079943"/>
@@ -2163,6 +2170,7 @@
 					</object>
 				</object>
 				<string key="NSFrameSize">{374, 64}</string>
+				<reference key="NSSuperview"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 		</object>

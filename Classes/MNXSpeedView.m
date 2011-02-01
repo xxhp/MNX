@@ -308,7 +308,7 @@ static CGEventRef MyEventTapCallBack (CGEventTapProxy proxy, CGEventType type, C
 	[@"0" drawInRect:zeroFrame withAttributes:attr];
 	
 	NSRect speedUnitFrame = NSMakeRect(0.0, NSMaxY(drawingFrame) + 20.0, frameWidth, 13.0);
-	[@"ml/h" drawInRect:speedUnitFrame withAttributes:attr];
+	[NSLocalizedString(@"ml/h", @"") drawInRect:speedUnitFrame withAttributes:attr];
 	
 	if ([self.currentTrack.points count] < 2) {
 		return;
@@ -568,6 +568,11 @@ static CGEventRef MyEventTapCallBack (CGEventTapProxy proxy, CGEventType type, C
 	[tmp release];
 	[self setNeedsDisplay:YES];
 
+	if ([infoWindow isVisible]) {
+		[[self window] removeChildWindow:infoWindow];
+		[infoWindow orderOut:self];
+	}	
+	
 	if (currentTrack) {
 		[self startTracking];
 	}
