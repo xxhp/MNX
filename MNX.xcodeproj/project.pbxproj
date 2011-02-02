@@ -23,7 +23,6 @@
 		D452074612EDC3D000FF0DA2 /* MNXTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = D452074512EDC3D000FF0DA2 /* MNXTrack.m */; };
 		D452075012EDC50D00FF0DA2 /* MNXDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D452074F12EDC50D00FF0DA2 /* MNXDataManager.m */; };
 		D452075612EDC63A00FF0DA2 /* MNXDownloadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D452075512EDC63A00FF0DA2 /* MNXDownloadOperation.m */; };
-		D452075C12EDC7F000FF0DA2 /* data.dat in Resources */ = {isa = PBXBuildFile; fileRef = D452075B12EDC7F000FF0DA2 /* data.dat */; };
 		D45208E112EE02CA00FF0DA2 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D45208E012EE02CA00FF0DA2 /* WebKit.framework */; };
 		D4520BE212EE275800FF0DA2 /* AMSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = D4520BD712EE275800FF0DA2 /* AMSerialPort.m */; };
 		D4520BE312EE275800FF0DA2 /* AMSerialPort_Deprecated.m in Sources */ = {isa = PBXBuildFile; fileRef = D4520BD912EE275800FF0DA2 /* AMSerialPort_Deprecated.m */; };
@@ -96,7 +95,6 @@
 		D452074F12EDC50D00FF0DA2 /* MNXDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXDataManager.m; sourceTree = "<group>"; };
 		D452075412EDC63A00FF0DA2 /* MNXDownloadOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNXDownloadOperation.h; sourceTree = "<group>"; };
 		D452075512EDC63A00FF0DA2 /* MNXDownloadOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNXDownloadOperation.m; sourceTree = "<group>"; };
-		D452075B12EDC7F000FF0DA2 /* data.dat */ = {isa = PBXFileReference; lastKnownFileType = file; path = data.dat; sourceTree = "<group>"; };
 		D45208E012EE02CA00FF0DA2 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		D4520BD412EE275800FF0DA2 /* AMSDKCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSDKCompatibility.h; sourceTree = "<group>"; };
 		D4520BD512EE275800FF0DA2 /* AMSerialErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialErrors.h; sourceTree = "<group>"; };
@@ -226,7 +224,6 @@
 				D44F4F3412F5CF3D00A5DBB1 /* MNX.help */,
 				D444565312EF333E00A181A9 /* Credits.rtf */,
 				D452124512EF03F900FF0DA2 /* Images */,
-				D452075A12EDC7F000FF0DA2 /* Test Data */,
 				8D1107310486CEB800E47090 /* MNX-Info.plist */,
 				D44CB61C12F8AFAA0042F162 /* Localizable.strings */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
@@ -294,14 +291,6 @@
 				D4CE70A312F30F400084683F /* MNXAppConfig.m */,
 			);
 			name = "Data Model";
-			sourceTree = "<group>";
-		};
-		D452075A12EDC7F000FF0DA2 /* Test Data */ = {
-			isa = PBXGroup;
-			children = (
-				D452075B12EDC7F000FF0DA2 /* data.dat */,
-			);
-			path = "Test Data";
 			sourceTree = "<group>";
 		};
 		D4520A7012EE0FC500FF0DA2 /* ExternalLibraries */ = {
@@ -452,7 +441,6 @@
 			files = (
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
-				D452075C12EDC7F000FF0DA2 /* data.dat in Resources */,
 				D452124712EF03FA00FF0DA2 /* download.png in Resources */,
 				D452126912EF061C00FF0DA2 /* pin.png in Resources */,
 				D45212A212EF097900FF0DA2 /* googleearth.png in Resources */,
