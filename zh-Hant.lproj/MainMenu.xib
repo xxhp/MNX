@@ -21,11 +21,11 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="681"/>
-			<integer value="578"/>
-			<integer value="220"/>
-			<integer value="582"/>
 			<integer value="749"/>
+			<integer value="220"/>
+			<integer value="578"/>
+			<integer value="582"/>
+			<integer value="649"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1564,7 +1564,7 @@
 																					<object class="NSTableHeaderCell" key="NSHeaderCell">
 																						<int key="NSCellFlags">75628096</int>
 																						<int key="NSCellFlags2">2048</int>
-																						<string key="NSContents">歷時</string>
+																						<string key="NSContents">步速</string>
 																						<reference key="NSSupport" ref="26"/>
 																						<reference key="NSBackgroundColor" ref="315128649"/>
 																						<reference key="NSTextColor" ref="991713115"/>

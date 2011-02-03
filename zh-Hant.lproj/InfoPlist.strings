@@ -1,5 +1,5 @@
 /* Localized versions of Info.plist keys */
 
-NSHumanReadableCopyright = "Copyright © 2011, Weizhong Yang.\nAll rights reserved.";
+NSHumanReadableCopyright = "Copyright © 2011, Weizhong Yang.\n版權所有";
 CFBundleName = "MNX";
 CFBundleDisplayName = "MNX";

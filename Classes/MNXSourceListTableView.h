@@ -2,7 +2,9 @@
 
 @interface MNXSourceListTableView : NSTableView
 {
-
+	BOOL noData;
 }
+
+@property (assign) BOOL noData;
 
 @end

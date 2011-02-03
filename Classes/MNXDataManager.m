@@ -17,6 +17,7 @@
 	averageSpeedMile= 0.0;
 	
 	if (![tracks count]) {
+		[delegate dataManagerUpdated:self];
 		return;
 	}
 	
@@ -195,8 +196,8 @@
 	[undoManager setActionName:NSLocalizedString(@"Adding Activites", @"")];
 	[tracks addObjectsFromArray:inTracks];
 	[self _updateInfo];
-	[self performSelector:@selector(saveData) withObject:nil afterDelay:0.5];
 	[undoManager endUndoGrouping];
+	[self performSelector:@selector(saveData) withObject:nil afterDelay:0.5];
 }
 - (void)_undoDeletingTrack:(MNXTrack *)inTrack atIndex:(NSInteger)inIndex
 {
@@ -204,8 +205,8 @@
 	[[undoManager prepareWithInvocationTarget:self] deleteTrack:inTrack];
 	[tracks insertObject:inTrack atIndex:inIndex];
 	[self _updateInfo];
-	[self performSelector:@selector(saveData) withObject:nil afterDelay:0.5];
 	[undoManager endUndoGrouping];	
+	[self performSelector:@selector(saveData) withObject:nil afterDelay:0.5];
 }
 - (void)deleteTrack:(MNXTrack *)inTrack
 {
@@ -218,8 +219,8 @@
 	[undoManager setActionName:NSLocalizedString(@"Deleting Activity", @"")];	
 	[tracks removeObject:inTrack];
 	[self _updateInfo];
-	[self performSelector:@selector(saveData) withObject:nil afterDelay:0.5];	
 	[undoManager endUndoGrouping];
+	[self performSelector:@selector(saveData) withObject:nil afterDelay:0.5];	
 }
 
 - (NSData *)GPXData

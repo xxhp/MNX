@@ -43,6 +43,10 @@
 - (id)tableView:(NSTableView *)inTableView objectValueForTableColumn:(NSTableColumn *)inTableColumn row:(NSInteger)inRow
 {
 	if (inTableView == tracksTableView) {
+		if ([dataManager.tracks count] <= inRow) {
+			return nil;
+		}
+		
 		NSString *ci = [inTableColumn identifier];
 		MNXTrack *track = [dataManager.tracks objectAtIndex:inRow];
 		if ([ci isEqualToString:@"distance"]) {

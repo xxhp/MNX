@@ -1,5 +1,6 @@
 #import "MNXAppDelegate.h"
 #import "MNXTrackCell.h"
+#import "MNXSourceListTableView.h"
 #import "NSString+Extension.h"
 #import "NSLocale+MNXExtension.h"
 #import "NSImage+MNXExtensions.h"
@@ -343,6 +344,8 @@
 - (void)refresh
 {
 	NSTableColumn *aColumn = [paceTableView tableColumnWithIdentifier:@"unit"];
+	
+	[(MNXSourceListTableView *)tracksTableView setNoData:([dataManager.tracks count] < 1)];
 
 	if ([NSLocale usingUSMeasurementUnit]) {
 		[[aColumn headerCell] setStringValue:NSLocalizedString(@"Miles", @"")];
