@@ -196,7 +196,7 @@ static NSString *const kAborted = @"\x06\x06\x06\x06";
 				break;
 			case MNXDownloadOperationNoDataOnDevice:
 				message = NSLocalizedString(@"There is no data stored on the device...", @"MNXDownloadOperationNoDataOnDevice");
-				reason = NSLocalizedString(@"There is nothing to download.", @"");
+				reason = NSLocalizedString(@"There is nothing to download or delete.", @"");
 				break;
 			case MNXDownloadOperationInitFailed:
 				message = NSLocalizedString(@"Unable to initiate the download.", @"MNXDownloadOperationNoDataOnDevice");

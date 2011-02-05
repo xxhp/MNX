@@ -164,7 +164,7 @@
 "There is no data stored on the device..." = "There is no data stored on the device…";
 
 /* No comment provided by engineer. */
-"There is nothing to download." = "There is nothing to download.";
+"There is nothing to download or delete." = "There is nothing to download or delete.";
 
 /* MNXDownloadOperationUnableToOpenDevice */
 "Unable to communicate with the device." = "Unable to communicate with the device.";
